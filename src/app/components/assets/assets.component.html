@@ -1,0 +1,172 @@
+<div class="rounded bg-white p-y-30 p-x-24 m-b-30 overflow-hidden">
+    <div class="d-flex align-items-center justify-content-between">
+      <form>
+        <div class="row">
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Project</mat-label>
+              <mat-select multiple>
+                <mat-option *ngFor="let project of projects">{{project}}</mat-option>
+               
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Brand</mat-label>
+              <mat-select multiple>
+                <mat-option *ngFor="let vendor of vendors">{{vendor}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Part No</mat-label>
+              <mat-select multiple>
+                <mat-option *ngFor="let partno of partNo">{{partno}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select OS Type</mat-label>
+              <mat-select multiple>
+                <mat-option *ngFor="let ostype of ostypes">{{ostype}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Firmware Version </mat-label>
+              <mat-select multiple>
+                <mat-option *ngFor="let fwVersion of fwVersion">{{fwVersion}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4 mt-2">
+            <button mat-raised-button color="primary">Reset Filters</button>
+            <button mat-raised-button color="primary mx-3" [routerLink]="['/cve/create-asset']">Create</button>
+          </div>
+          <div class="col-3" style="margin-left: 60px;">
+            <div class="browse">
+              <a href="/assets/Inventory List-Oceanshield.xlsx" target="_blank">
+                <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" title="Sample format" />
+              </a>
+              <input class="browse__file" value="Upload Assets" type="file" />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+ 
+  <mat-card class="cardWithShadow">
+    <mat-card-content class="p-24">
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+          <ng-container matColumnDef="#">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox color="primary">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox color="primary">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="project">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">Project</th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.project }}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="brand">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Brand
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.vendor }}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="osType">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              OS Type
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.osType }}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="partNo">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Part Number
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.partNo }}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="productDesc">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Product Descritpion
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.productDesc }}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Type
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.type }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="serialNo">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Serial No
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.serialNo }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="firmwareVersion">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Firmware Version
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.firmwareVersion }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="vulnerabilities">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Total No of Vulnerabilities
+            </th>
+            <td mat-cell *matCellDef="let element" class="f-s-14">
+              {{ element.vulnerabilities }}
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
+              Action
+            </th>
+            <td mat-cell *matCellDef="let element" class="action-link">
+              <a class="m-r-10 cursor-pointer" (click)="openDialog('Update', element)"><i-tabler name="edit" class="icon-18"></i-tabler></a>
+              <a class="m-r-10 cursor-pointer">
+                <i-tabler name="trash" class="icon-18"></i-tabler>
+              </a>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>

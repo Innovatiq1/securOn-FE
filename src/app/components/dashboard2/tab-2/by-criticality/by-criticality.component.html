@@ -1,0 +1,15 @@
+
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0">Vulnerability Distribution by Criticality</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+        <apx-chart [series]="criticalChartOptions1.series" [plotOptions]="criticalChartOptions1.plotOptions"
+            [dataLabels]="criticalChartOptions1.dataLabels" [chart]="criticalChartOptions1.chart"
+            [legend]="criticalChartOptions1.legend" [colors]="criticalChartOptions1.colors"
+            [tooltip]="criticalChartOptions1.tooltip" [labels]="criticalChartOptions1.labels"
+            [stroke]="criticalChartOptions1.stroke">
+        </apx-chart>
+        <h4 style="float: right; margin-top: 10px;">Total: {{byCriticality?.totalCount}} </h4>
+    </mat-card-content>
+</mat-card>

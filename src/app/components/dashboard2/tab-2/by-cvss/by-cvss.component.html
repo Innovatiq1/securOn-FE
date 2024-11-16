@@ -1,0 +1,14 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0">Vulnerability Distribution by CVSS V3.0</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+        <apx-chart [series]="scoreChartOptions1.series" [plotOptions]="scoreChartOptions1.plotOptions"
+            [dataLabels]="scoreChartOptions1.dataLabels" [chart]="scoreChartOptions1.chart"
+            [legend]="scoreChartOptions1.legend" [colors]="scoreChartOptions1.colors"
+            [tooltip]="scoreChartOptions1.tooltip" [labels]="scoreChartOptions1.labels"
+            [stroke]="scoreChartOptions1.stroke">
+        </apx-chart>
+        <h4 style="float: right; margin-top: 10px;">Total: 13 </h4>
+    </mat-card-content>
+</mat-card>

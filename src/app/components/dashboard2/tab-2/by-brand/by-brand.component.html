@@ -1,0 +1,16 @@
+
+    <mat-card class="cardWithShadow theme-card">
+        <mat-card-header>
+            <mat-card-title class="m-b-0">Vulnerability Distribution by Brands</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="b-t-1">
+            <apx-chart [series]="brandChartOptions1.series" [plotOptions]="brandChartOptions1.plotOptions"
+                [dataLabels]="brandChartOptions1.dataLabels" [chart]="brandChartOptions1.chart"
+                [legend]="brandChartOptions1.legend" [colors]="brandChartOptions1.colors"
+                [tooltip]="brandChartOptions1.tooltip" [labels]="brandChartOptions1.labels"
+                [stroke]="brandChartOptions1.stroke">
+            </apx-chart>
+            <h4  style="float: right; margin-top: 10px;">Total: {{totalCount || 0}} </h4>
+        </mat-card-content>
+    </mat-card>
+

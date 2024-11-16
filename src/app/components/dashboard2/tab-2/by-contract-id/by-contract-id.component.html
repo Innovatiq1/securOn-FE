@@ -1,0 +1,14 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0">Vulnerability Distribution by Contract ID</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+        <apx-chart [series]="contractChartOptions1.series" [plotOptions]="contractChartOptions1.plotOptions"
+            [dataLabels]="contractChartOptions1.dataLabels" [chart]="contractChartOptions1.chart"
+            [legend]="contractChartOptions1.legend" [colors]="contractChartOptions1.colors"
+            [tooltip]="contractChartOptions1.tooltip" [labels]="contractChartOptions1.labels"
+            [stroke]="contractChartOptions1.stroke">
+        </apx-chart>
+        <h4 style="float: right; margin-top: 10px;">Total: {{totalCount || 0}} </h4>
+    </mat-card-content>
+</mat-card>

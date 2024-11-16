@@ -1,0 +1,88 @@
+<div class="row overflow-hidden">
+    <div class="col-lg-2">
+        <mat-card class="cardWithShadow bg-primary text-white overflow-hidden">
+            <img src="assets/images/backgrounds/top-error-shape.png" class="top-img" />
+          <mat-card-content>
+            <div class="m-t-35">
+              <h5 class="f-w-600 f-s-21 m-0">
+                2358
+              </h5>
+              <span class="f-s-16">Total Vedors</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-lg-2">
+        <mat-card class="cardWithShadow bg-primary text-white overflow-hidden">
+            <img src="assets/images/backgrounds/top-info-shape.png" class="top-img" />
+          <mat-card-content>
+            <div class="m-t-35">
+              <h5 class="f-w-600 f-s-21 m-0">
+                {{byCriticality?.totalCount || 0}}
+              </h5>
+              <span class="f-s-16">Total</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    <div class="col-lg-2">
+      <mat-card class="cardWithShadow bg-primary text-white overflow-hidden">
+        <img
+          src="assets/images/backgrounds/top-info-fail.png"
+          class="top-img"
+        />
+        <mat-card-content>
+          <div class="m-t-35">
+            <h5 class="f-w-600 f-s-21 m-0">
+              {{byCriticality?.criticalCount || 0}}
+            </h5>
+            <span class="f-s-16">Critical</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-2">
+      <mat-card class="cardWithShadow bg-primary text-white overflow-hidden">
+        <img
+          src="assets/images/backgrounds/top-info-warning.png"
+          class="top-img"
+        />
+        <mat-card-content>
+          <div class="m-t-35">
+            <h5 class="f-w-600 f-s-21 m-0">
+              {{byCriticality?.highCount || 0}}
+            </h5>
+            <span class="f-s-16">High</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-2">
+      <mat-card class="cardWithShadow bg-primary text-white overflow-hidden">
+        <img src="assets/images/backgrounds/top-warning-shape.png" class="top-img" />
+        <mat-card-content>
+          <div class="m-t-35">
+            <h5 class="f-w-600 f-s-21 m-0">
+              {{byCriticality?.mediumCount || 0 }}
+            </h5>
+            <span class="f-s-16">Medium</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-2">
+      <mat-card class="cardWithShadow bg-primary text-white overflow-hidden">
+        <img src="assets/images/backgrounds/top-info-success.png" class="top-img" />
+        <mat-card-content>
+          <div class="m-t-35">
+            <h5 class="f-w-600 f-s-21 m-0">
+              {{byCriticality?.lowCount || 0}}
+            </h5>
+            <span class="f-s-16">Low</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+   
+  </div>
+  

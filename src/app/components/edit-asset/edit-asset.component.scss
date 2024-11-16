@@ -1,0 +1,34 @@
+.asset-edit {
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+
+    // &__header {
+    //    font-size: 18px;
+    //    line-height: 22px;
+    //    font-weight: 500px;
+    // }
+
+    &__form {
+        margin-top: 32px;       
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
+        column-gap: 15px;
+
+        mat-form-field {
+            width: 210px;
+        }
+        .mat-mdc-radio-button {
+            margin-left: 6px;
+         }
+    }
+
+    &__controlls {
+        margin-top: 32px;
+        button {
+            margin-left: 4px;
+        }
+    }
+
+}

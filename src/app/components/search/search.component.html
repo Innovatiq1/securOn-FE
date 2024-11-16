@@ -1,0 +1,218 @@
+<div class="rounded bg-white p-y-30 p-x-24 m-b-30 overflow-hidden">
+    <div class="d-flex align-items-center justify-content-between">
+        <form>
+            <div class="f-w-600 pb-3">
+                <h3> Search CVE ID</h3>
+            </div>
+            <div class="row mt-2">
+                <div class="col-4">
+                    <mat-label class=" f-w-600 m-b-8">CVE ID</mat-label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="ex: CVE-2024-1234" />
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-label class="f-w-600 m-b-8">Project ID</mat-label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-select placeholder="Select Project ID" multiple>
+                            <mat-option>All</mat-option>
+                            <mat-option>TBC</mat-option>
+                            <mat-option>TBA</mat-option>
+                            <mat-option>Sns-3695-k9</mat-option>
+                            <mat-option>Nexus 9336c-fx2</mat-option>
+                            <mat-option>Firepower 2110</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-label class=" f-w-600 m-b-8 ">Vendor</mat-label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-select placeholder="Select Vendor" multiple>
+                            <mat-option>All</mat-option>
+                            <mat-option>Cisco</mat-option>
+                            <mat-option>Dell</mat-option>
+                            <mat-option>Microsoft</mat-option>
+                            <mat-option>F5</mat-option>
+                            <mat-option>Fortinet</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <mat-label class=" f-w-600 m-b-8">OS Type</mat-label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-select placeholder="Search OS Type" multiple>
+                            <mat-option>All</mat-option>
+                            <mat-option>Ios Xr</mat-option>
+                            <mat-option>Ios</mat-option>
+                            <mat-option>Ios Xe</mat-option>
+                            <mat-option>TBC</mat-option>
+                            <mat-option>Firepower Threat Defense</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-label class=" f-w-600 m-b-8">Part No</mat-label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-select placeholder="Select Part No" multiple>
+                            <mat-option>All</mat-option>
+                            <mat-option>Big-ip</mat-option>
+                            <mat-option>Catalyst</mat-option>
+                            <mat-option>Catalyst3850-12s-s</mat-option>
+                            <mat-option>Fortigate 1500d</mat-option>
+                            <mat-option>SolarWinds Platform</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-4">
+                    <mat-label class="f-w-600 m-b-8">FW Version</mat-label>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-select placeholder="Select FW Version" multiple>
+                            <mat-option>All</mat-option>
+                            <mat-option>16.6</mat-option>
+                            <mat-option>15.5(3)s9</mat-option>
+                            <mat-option>7.0(3)i5(2)</mat-option>
+                            <mat-option>2.7.0</mat-option>
+                            <mat-option>12.2(53)se2</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row" style="float: right;">
+                <div class="col-3 mt-2">
+                    <button mat-raised-button color="primary">Search</button>
+                </div>
+                <div class="col-3 mt-2">
+                    <button mat-raised-button color="primary mx-3">Reset</button>
+                </div>
+                <div class="col-3 mx-4">
+                    <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<mat-card class="cardWithShadow">
+    <mat-card-content class="p-24">
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" class="w-100">
+                <ng-container matColumnDef="#">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox color="primary">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox color="primary">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cve">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">CVE ID</th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.cve }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="project">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">Project ID</th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.project }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="osType">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        OS Type
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.osType }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="partNo">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Part Number
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.partNo }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="firmwareVersion">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Firmware Version
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.firmwareVersion }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="serialNo">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Serial No
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.serialNo }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="vendor">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Vendor
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.vendor }}</td>
+                </ng-container>
+
+
+
+                <ng-container matColumnDef="product">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Product
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.product}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sevierity">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Sevierity
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.sevierity }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="fix">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Fix Avaialable
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.fix }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="affected">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Affected by CVE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14">
+                        {{ element.affected }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+                        Action
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="action-link">
+                        <a class="m-r-10 cursor-pointer" [routerLink]="['/cve/view-search']">
+                            <i-tabler name="eye" class="icon-18"></i-tabler>
+                        </a>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

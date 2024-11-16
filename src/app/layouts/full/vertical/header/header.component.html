@@ -1,0 +1,124 @@
+<mat-toolbar class="topbar">
+  <!-- --------------------------------------------------------------- -->
+  <!-- Desktop Menu -->
+  @if(showToggle) {
+  <button mat-icon-button (click)="toggleCollapsed.emit()" class="d-flex justify-content-center">
+    <i-tabler name="align-left" class="icon-20 d-flex"></i-tabler>
+  </button>
+  }
+
+  <!-- Mobile Menu -->
+  @if(!showToggle) {
+  <button mat-icon-button (click)="toggleMobileNav.emit()" class="d-flex justify-content-center">
+    <i-tabler name="align-left" class="icon-20 d-flex"></i-tabler>
+  </button>
+  }
+
+  <!-- --------------------------------------------------------------- -->
+
+  <div class="d-none d-lg-flex">
+    <!-- --------------------------------------------------------------- -->
+    <!--  Links -->
+    <!-- --------------------------------------------------------------- -->
+  
+    <h3>CVE- Vulnerability Alerts</h3>
+  </div>
+
+  <span class="flex-1-auto"></span>
+
+  <!-- Mobile Menu -->
+  <button
+    mat-icon-button
+    (click)="toggleMobileFilterNav.emit()"
+    class="d-flex d-lg-none justify-content-center"
+  >
+    <i-tabler name="grid-dots" class="icon-20 d-flex"></i-tabler>
+  </button>
+
+  <!-- --------------------------------------------------------------- -->
+  <!--  Search -->
+  <!-- --------------------------------------------------------------- -->
+  
+  <div class="col-lg-6">
+    <div class="d-flex align-items-center gap-2">
+      <button mat-stroked-button class="d-none d-lg-flex " >
+        <div class="d-flex align-items-center gap-2">
+          <p>Refine with..</p>
+          <div>
+              <input type="text" placeholder="Date Range" class=" border rounded-3" bsDaterangepicker [(ngModel)]="_selectedRange.value"
+                  [bsConfig]="{ ranges: ranges,  rangeInputFormat : 'DD-MM-YYYY', dateInputFormat: 'DD-MM-YYYY' }"  (ngModelChange)="onDateRangeChange($event)"/>
+    
+          </div>
+    
+      </div>
+      </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+  <!-- --------------------------------------------------------------- -->
+  <!-- profile Dropdown -->
+  <!-- --------------------------------------------------------------- -->
+  <button mat-fab extended color="inherit" [matMenuTriggerFor]="profileMenu" aria-label="Notifications">
+    <div class="d-flex align-items-center">
+      <img src="/assets/images/profile/user5.jpg" class="rounded-circle object-cover" width="40" />
+
+      <div class="m-l-16 text-left d-none d-lg-flex">
+        <div>
+          <h5 class="f-s-16">{{user | titlecase}}</h5>
+          <span class="f-s-14 mat-body-1">Admin</span>
+        </div>
+      </div>
+    </div>
+  </button>
+  <mat-menu #profileMenu="matMenu" xPosition="before" class="topbar-dd cardWithShadow">
+    <ng-scrollbar class="position-relative" style="height: 495px">
+      <div class="p-x-32 p-y-16">
+        <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">User Profile</h6>
+
+        <div class="d-flex align-items-center p-b-24 b-b-1 m-t-16">
+          <img src="/assets/images/profile/user5.jpg" class="rounded-circle" width="95" />
+          <div class="m-l-16">
+            <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">{{user | titlecase}}</h6>
+            <span class="f-s-14 mat-body-1 d-block m-b-4">Admin</span>
+            <span class="d-flex align-items-center">
+              <i-tabler name="mail" class="icon-15 m-r-4"></i-tabler>
+              info&#64;spike.com
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="p-x-32">
+        @for(profile of profiledd; track profile.title) {
+        <a class="p-y-16 text-decoration-none d-block text-hover-primary" [routerLink]="[profile.link]">
+          <div class="d-flex align-items-center">
+            <span class="text-{{ profile.color }} bg-light-{{
+                profile.color
+              }} icon-50 d-flex align-items-center justify-content-center shadow-none rounded">
+              <i-tabler [name]="profile.img" class="icon-20" />
+            </span>
+
+            <div class="m-l-16">
+              <h5 class="f-s-14 f-w-600 m-0 textprimary mat-subtitle-1 hover-text">
+                {{ profile.title }}
+              </h5>
+              <span class="mat-body-1">{{ profile.subtitle }}</span>
+            </div>
+          </div>
+        </a>
+        }
+      </div>
+
+      <div class="p-y-12 p-x-32">
+        <button [routerLink]="['/authentication/login']" mat-flat-button color="primary" class="w-100">
+          Logout
+        </button>
+      </div>
+    </ng-scrollbar>
+  </mat-menu>
+</mat-toolbar>

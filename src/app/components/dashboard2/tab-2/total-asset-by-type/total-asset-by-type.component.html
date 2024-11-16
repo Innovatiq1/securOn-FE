@@ -1,0 +1,14 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0">Total Asset by Types</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+        <apx-chart [series]="typeChart.series" [plotOptions]="typeChart.plotOptions"
+            [dataLabels]="typeChart.dataLabels" [chart]="typeChart.chart"
+            [legend]="typeChart.legend" [colors]="typeChart.colors"
+            [tooltip]="typeChart.tooltip" [labels]="typeChart.labels"
+            [stroke]="typeChart.stroke">
+        </apx-chart>
+        <h4 style="float: right; margin-top: 10px;">Total: 13 </h4>
+    </mat-card-content>
+</mat-card>
