@@ -6,11 +6,13 @@ import {
   Validators,
   FormsModule,
   ReactiveFormsModule,
+  FormBuilder,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 import { UserService } from 'src/app/services/user.service';
 import { CommonModule } from '@angular/common';
+import { MiscellaneousConstant } from 'src/app/services/auth/miscalleneous-constants';
 
 @Component({
   selector: 'app-side-login',
@@ -22,18 +24,40 @@ export class AppSideLoginComponent {
   options = this.settings.getOptions();
   _showError: boolean = false;
   submitted: boolean = false;
+  forgot: boolean = false;
+  resetForm: FormGroup;
+  form: FormGroup;
+  hide = true;
 
   constructor(
     private settings: CoreService,
     private router: Router,
     public userService: UserService,
-    private cdr: ChangeDetectorRef 
-  ) {}
-
-  form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    private cdr: ChangeDetectorRef,
+    private formBuilder: FormBuilder, 
+  ) {
+    this.form = this.formBuilder.group({
+      email: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(MiscellaneousConstant.emailPatternWithCaps),
+        ]),
+      ],
     password: new FormControl('', [Validators.required]),
   });
+  this.resetForm = this.formBuilder.group({
+    email: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern(MiscellaneousConstant.emailPatternWithCaps),
+      ]),
+    ],
+  });
+}
+
+  
 
   get f() {
     return this.form.controls;
@@ -65,5 +89,25 @@ export class AppSideLoginComponent {
         console.error('Error while logging in:', error);
       }
     ); 
+  }
+  public hasError = (controlName: string, errorName: string) => {
+    return this.form.controls[controlName].hasError(errorName);
+  };
+  reset() {
+    this.userService.forgotPassword(this.resetForm.value).subscribe(
+      (response) => {
+        console.log('Password reset response:', response);
+      },
+      (error) => {
+        console.error('Error while resetting password:', error);
+      }
+    );
+  }
+  forgotPsw() {
+    this.forgot = true;
+  }
+
+  signIn() {
+    this.forgot = false;
   }
 }
