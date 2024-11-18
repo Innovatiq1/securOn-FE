@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
     route: 'cve/messages',
   },
   {
-    displayName: 'Administratoion',
+    displayName: 'Administration',
     iconName: 'point',
     bgcolor: 'success',
     route: 'cve/admin',

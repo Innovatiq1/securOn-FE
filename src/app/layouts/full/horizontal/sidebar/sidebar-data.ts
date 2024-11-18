@@ -35,7 +35,7 @@ export const navItems: NavItem[] = [
         route: 'messages',
       },
       {
-        displayName: 'Administratoion',
+        displayName: 'Administration',
         iconName: 'point',
         route: 'admin',
       },

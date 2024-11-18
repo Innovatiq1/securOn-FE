@@ -1,1 +1,38 @@
-<p>messages works!</p>
+<mat-card class="cardWithShadow">
+    <mat-card-content class="p-24">
+      <form>
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">CVEID+OEM </mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput >
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Choose Date </mat-label>
+            <div class="d-flex align-items-center gap-2">
+                <button mat-stroked-button class="d-none d-lg-flex date" >
+                  <div class="d-flex align-items-center gap-2">
+                    <div>
+                        <input type="text" placeholder="Date Range" class=" border rounded-3" bsDaterangepicker />
+              
+                    </div>
+              
+                </div>
+                </button>
+          
+              </div>
+          </div>
+        </div>
+        <div class="row" style="float: right;">
+          <div class="col-md-3 mb-5">
+            <div class="d-flex gap-3 justify-content-between">
+              <button mat-raised-button color="primary" >Save</button>
+              <button mat-raised-button color="warn" style="margin-left: 10px;">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      </mat-card-content>
+      </mat-card>
+   
