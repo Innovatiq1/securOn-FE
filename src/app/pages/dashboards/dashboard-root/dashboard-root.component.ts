@@ -3,7 +3,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AppDashboard2Component } from "../dashboard2/dashboard2.component";
 import { UpdatedCveChartsComponent } from "../updated-cve-charts/updated-cve-charts.component";
 import { Observable, Subject, firstValueFrom, of } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import { CommonModule } from '@angular/common';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';

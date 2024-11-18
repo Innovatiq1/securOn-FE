@@ -20,7 +20,7 @@ import { MaterialModule } from '../../../material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { ChartOptions } from 'src/app/pages/charts/area/area.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CommonModule } from '@angular/common';
 
 export interface revenuetwoChart {

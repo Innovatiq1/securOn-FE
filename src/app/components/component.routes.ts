@@ -41,7 +41,7 @@ export const ComponentRoutes: Routes = [
         },
       },
       {
-        path:'view-search',
+        path:'view-search/:id',
         component: ViewSearchComponent,
         data: {
           title: '',

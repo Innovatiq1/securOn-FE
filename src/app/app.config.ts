@@ -41,6 +41,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { StoreModule } from '@ngrx/store';
 import { VulnerabilitiesService } from './services/api/vulnerabilities.service';
 import { VulnerabilityDataService } from './services/api/shared.service';
+import { ToastrModule } from 'ngx-toastr';
+import { vulnerabilitiesReducer } from './store/vulnerabilities.reducers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -65,7 +67,9 @@ export const appConfig: ApplicationConfig = {
       NgxPermissionsModule.forRoot(),
       StoreModule.forRoot(),
       TablerIconsModule.pick(TablerIcons),
-      NgScrollbarModule,
+      NgScrollbarModule,  
+      ToastrModule.forRoot(),
+      StoreModule.forFeature('vulnerabilities', vulnerabilitiesReducer), 
       CalendarModule.forRoot({
         provide: DateAdapter,
         useFactory: adapterFactory,

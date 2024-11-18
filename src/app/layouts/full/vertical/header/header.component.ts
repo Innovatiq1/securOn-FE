@@ -19,7 +19,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import * as moment from 'moment';
+import moment from 'moment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';

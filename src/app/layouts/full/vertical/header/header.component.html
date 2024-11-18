@@ -43,9 +43,9 @@
     <div class="d-flex align-items-center gap-2">
       <button mat-stroked-button class="d-none d-lg-flex " >
         <div class="d-flex align-items-center gap-2">
-          <p>Refine with..</p>
+          <p class="pt-2">Refine with..</p>
           <div>
-              <input type="text" placeholder="Date Range" class=" border rounded-3" bsDaterangepicker [(ngModel)]="_selectedRange.value"
+              <input type="text" placeholder="Date Range" class="rounded-3" style="background: none; color: white; border: none;" bsDaterangepicker [(ngModel)]="_selectedRange.value"
                   [bsConfig]="{ ranges: ranges,  rangeInputFormat : 'DD-MM-YYYY', dateInputFormat: 'DD-MM-YYYY' }"  (ngModelChange)="onDateRangeChange($event)"/>
     
           </div>
