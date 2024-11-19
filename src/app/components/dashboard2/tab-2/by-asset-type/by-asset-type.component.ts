@@ -4,6 +4,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChartOptions } from '../by-criticality/by-criticality.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-by-asset-type',
@@ -17,7 +18,7 @@ export class ByAssetTypeComponent {
   @Input() isActive = false;
   byAssets: any;
   totalCount: any;
-  constructor(private vulnerabilityDataService: VulnerabilityDataService){
+  constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
   }
   
@@ -42,9 +43,15 @@ export class ByAssetTypeComponent {
         },
         height: 270,
         events: {
-          mouseMove: function() {  
-          }
-        }
+          dataPointSelection: (
+            event: any,
+            chartContext: any,
+            config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }
+          ) => {
+            const label = config.w.config.labels[config.dataPointIndex]; 
+            this._openVulnerability(label); 
+          },
+        },
       },
       colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
       plotOptions: {
@@ -123,6 +130,17 @@ export class ByAssetTypeComponent {
         },
       };
     }
+  }
+  _openVulnerability(seviarity: string): void {
+    const seviarityPayload = {
+      allData: false,
+      duration: '',
+      fromDate: localStorage.getItem('startDate'),
+      type: seviarity,
+      toDate: localStorage.getItem('endDate'),
+    };
+  
+    this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
   getLabelStyle(index: number, total: number) {
     const startAngle = this.byAssets

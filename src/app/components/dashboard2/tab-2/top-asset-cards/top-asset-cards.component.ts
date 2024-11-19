@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { Router } from '@angular/router';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 @Component({
@@ -13,11 +14,21 @@ export class TopAssetCardsComponent {
   byCriticality: any;
 
 
-  constructor(private vulnerabilityDataService: VulnerabilityDataService){}
+  constructor(private vulnerabilityDataService: VulnerabilityDataService, public router: Router){}
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byCriticality = data?.byCriticality;
     });
   }
+  seviarityList(seviarity: string) {
+    const seviarityPayload = {
+      allData: false,
+      duration: '',
+      fromDate: localStorage.getItem('startDate'),
+      seviarity: seviarity,
+      toDate: localStorage.getItem('endDate'),
+    };
 
+    this.router.navigate(['cve/vulnerabilties'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
+  }
 }

@@ -1,0 +1,23 @@
+.score-chip {
+    width: 53px;
+    display: flex;
+    text-align: center;
+    padding-left: 13px;
+    border-radius: 4px;
+
+    &._low {
+         background-color: #2773AE;
+         color: #fff
+    }
+    &._critical {
+        background-color: #E92040;
+        color: #fff
+    }
+    &._high {
+        background-color: #FFAE3B;
+    }
+    &._medium {
+        background-color: #378562;
+        color: #fff
+    }
+}

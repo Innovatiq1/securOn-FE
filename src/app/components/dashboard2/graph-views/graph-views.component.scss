@@ -1,0 +1,76 @@
+
+
+
+    // .low {
+    //      background-color: #175803;
+    //      color: #fff;
+    //      padding: 2px;
+    //      border-radius: 2px;
+    // }
+    // .critical {
+    //     background-color: #ee2d77;
+    //     color: #fff;
+    //     padding: 2px;
+    //     border-radius: 2px;
+    // }
+    // .high {
+    //     background-color: #fa6926;
+    //     color: #fff;
+    //     padding: 2px;
+    //     border-radius: 2px;
+    // }
+    // .medium {
+    //     background-color: #FFAE3B;
+    //     color: #fff;
+    //     padding: 2px;
+    //     border-radius: 2px;
+    // }
+    .value-container {
+        word-break: break-word; /* Ensures long text breaks properly */
+        overflow-wrap: anywhere; /* Alternative for older browsers */
+        text-align: left; /* Align text to the left for readability */
+      }
+      
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      
+      .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 5px 10px;
+      }
+      
+      .f-w-700 {
+        font-weight: 700;
+      }
+      
+      .f-s-15 {
+        font-size: 15px;
+      }
+      
+      .severity-badge {
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: center;
+        color: #fff;
+      }
+      
+      .low {
+        background-color: #28a745; /* Green */
+      }
+      
+      .medium {
+        background-color: #ffc107; /* Yellow */
+      }
+      
+      .high {
+        background-color: #fd7e14; /* Orange */
+      }
+      
+      .critical {
+        background-color: #dc3545; /* Red */
+      }
+      

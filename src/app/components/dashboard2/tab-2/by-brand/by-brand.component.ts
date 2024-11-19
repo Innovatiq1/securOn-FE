@@ -1,6 +1,11 @@
 import { CommonModule} from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { Router } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { MaterialModule } from 'src/app/material.module';
 import { NgApexchartsModule} from 'ng-apexcharts';
 import { ChartOptions } from '../by-criticality/by-criticality.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
@@ -17,7 +22,7 @@ export class ByBrandComponent {
   @Input() isActive = false;
   byBrands: any;
   totalCount: any;
-  constructor(private vulnerabilityDataService: VulnerabilityDataService){
+  constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
   }
   
@@ -31,7 +36,6 @@ export class ByBrandComponent {
   }
 
   private initializeCharts() {
-
     const baseChartOptions = {
       chart: {
         type: 'donut',
@@ -42,10 +46,15 @@ export class ByBrandComponent {
         },
         height: 270,
         events: {
-          mouseMove: function() {
-            
-          }
-        }
+          dataPointSelection: (
+            event: any,
+            chartContext: any,
+            config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }
+          ) => {
+            const label = config.w.config.labels[config.dataPointIndex]; 
+            this._openVulnerability(label); 
+          },
+        },
       },
       colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
       plotOptions: {
@@ -84,12 +93,11 @@ export class ByBrandComponent {
       },
     };
   
-  
     if (this.byBrands && this.byBrands.length > 0) {
-      const labels = this.byBrands.map((item: { vendorName: any; }) => item.vendorName);
-      const series = this.byBrands.map((item: { count: any; }) => item.count);
-      this.totalCount = this.byBrands.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
-    
+      const labels = this.byBrands.map((item: { vendorName: any }) => item.vendorName);
+      const series = this.byBrands.map((item: { count: any }) => item.count);
+      this.totalCount = this.byBrands.reduce((sum: any, item: { count: any }) => sum + item.count, 0);
+  
       this.brandChartOptions1 = {
         ...baseChartOptions,
         series: series, 
@@ -98,9 +106,9 @@ export class ByBrandComponent {
     } else {
       this.brandChartOptions1 = {
         ...baseChartOptions,
-        series: [1],  
-        labels: ['No Data'],
-        colors: ['#d3d3d3'],  
+        series: [1], 
+        labels: ['No Data'], 
+        colors: ['#d3d3d3'], 
         plotOptions: {
           pie: {
             donut: {
@@ -152,4 +160,16 @@ export class ByBrandComponent {
   
   
   
+  
+  _openVulnerability(seviarity: string): void {
+    const seviarityPayload = {
+      allData: false,
+      duration: '',
+      fromDate: localStorage.getItem('startDate'),
+      vendorName: seviarity,
+      toDate: localStorage.getItem('endDate'),
+    };
+  
+    this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
+  }
 }
