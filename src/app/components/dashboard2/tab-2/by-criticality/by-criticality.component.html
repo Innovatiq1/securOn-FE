@@ -1,15 +1,47 @@
-
 <mat-card class="cardWithShadow theme-card">
     <mat-card-header>
-        <mat-card-title class="m-b-0">Vulnerability Distribution by Criticality</mat-card-title>
+      <mat-card-title class="m-b-0">Vulnerability Distribution by Criticality</mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
-        <apx-chart [series]="criticalChartOptions1.series" [plotOptions]="criticalChartOptions1.plotOptions"
-            [dataLabels]="criticalChartOptions1.dataLabels" [chart]="criticalChartOptions1.chart"
-            [legend]="criticalChartOptions1.legend" [colors]="criticalChartOptions1.colors"
-            [tooltip]="criticalChartOptions1.tooltip" [labels]="criticalChartOptions1.labels"
-            [stroke]="criticalChartOptions1.stroke">
-        </apx-chart>
-        <h4 style="float: right; margin-top: 10px;">Total: {{byCriticality?.totalCount}} </h4>
+        <div class="chart-container" style=" position: relative;">
+            <apx-chart 
+              [series]="criticalChartOptions1.series" 
+              [plotOptions]="criticalChartOptions1.plotOptions"
+              [dataLabels]="criticalChartOptions1.dataLabels" 
+              [chart]="criticalChartOptions1.chart"
+              [legend]="criticalChartOptions1.legend" 
+              [colors]="criticalChartOptions1.colors"
+              [tooltip]="criticalChartOptions1.tooltip" 
+              [labels]="criticalChartOptions1.labels"
+              [stroke]="criticalChartOptions1.stroke">
+            </apx-chart>
+          
+            <!-- Custom labels -->
+            <div class="chart-labels" style=" position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;">
+              <span 
+                class="label" style="  position: absolute;
+                font-size: 12px;
+                font-weight: bold;
+                text-align: center;
+                white-space: nowrap;"
+                *ngFor="let series of criticalChartOptions1.series; let i = index" 
+                [ngStyle]="series > 0 ? getLabelStyle(i, byCriticality?.totalCount) : {}"
+                >
+                <div *ngIf="series > 0">
+                {{ series }}
+            </div>
+              </span>
+            </div>
+          </div>
+          
+      <h4 style="float: right; margin-top: 10px;">
+        Total: {{byCriticality?.totalCount || 0}}
+      </h4>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+  

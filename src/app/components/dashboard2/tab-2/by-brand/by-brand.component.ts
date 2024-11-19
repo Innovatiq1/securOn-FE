@@ -134,18 +134,23 @@ export class ByBrandComponent {
   getLabelStyle(index: number, total: number) {
     const startAngle = this.byBrands
       .slice(0, index)
-      .reduce((sum: number, item: { count: number; }) => sum + (item.count / total) * 360, 0);
+      .reduce(
+        (sum: number, item: { count: number }) =>
+          sum + (item.count / total) * 360,
+        0
+      );
     const segmentAngle = (this.byBrands[index].count / total) * 360;
     const angle = startAngle + segmentAngle / 2 - 90;
   
-    const radius = 55;
+    const radius = 60;
     const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
     let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
     if (index > 0) {
-      const previousY = this.getLabelStyle(index - 1, total).top;
-      const diff = Math.abs(parseFloat(previousY) - y);
+      const previousLabel = this.getLabelStyle(index - 1, total);
+      const previousY = parseFloat(previousLabel.top);
+      const diffY = Math.abs(previousY - y);
   
-      if (diff < 5) {
+      if (diffY < 5) {
         y += 5 * (index % 2 === 0 ? 1 : -1);
       }
     }
@@ -155,6 +160,7 @@ export class ByBrandComponent {
       left: `${x}%`,
       transform: 'translate(-50%, -50%)',
       fontWeight: 'bold',
+      whiteSpace: 'nowrap',
     };
   }
   

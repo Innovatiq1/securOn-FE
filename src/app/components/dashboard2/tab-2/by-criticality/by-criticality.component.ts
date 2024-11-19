@@ -71,7 +71,7 @@ private initializeCharts() {
       toolbar: {
         show: false,
       },
-      height: 270,
+      height: 290,
       events: {
         dataPointSelection: (event: any, chartContext: any, config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }) => {
          
@@ -176,4 +176,27 @@ _openVulnerability(seviarity: string): void {
 
   this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
 }
+getLabelStyle(index: number, total: number) {
+  const startAngle = this.criticalChartOptions1.series
+    .slice(0, index)
+    .reduce((sum: number, value: number) => sum + (value / total) * 360, 0);
+  const segmentAngle = (this.criticalChartOptions1.series[index] / total) * 360;
+  const angle = startAngle + segmentAngle / 2 - 90;
+
+  const radius = 27;
+  const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
+  const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+
+  return {
+    top: `${y}%`,
+    left: `${x}%`,
+    transform: 'translate(-50%, -50%)',
+    fontWeight: 'bold',
+    color: '#000',
+    background: '#f4f4f4',
+    padding: '4px 6px',
+    borderRadius: '4px',
+  };
+}
+
 }

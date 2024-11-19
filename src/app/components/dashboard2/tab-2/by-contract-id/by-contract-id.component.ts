@@ -49,13 +49,13 @@ export class ByContractIdComponent {
   private initializeCharts() {
     const baseChartOptions = {
       chart: {
-        type: 'donut',
+        type: 'pie',
         fontFamily: 'inherit',
         foreColor: '#a1aab2',
         toolbar: {
           show: false,
         },
-        height: 270,
+        height: 290,
         events: {
           dataPointSelection: (
             event: any,
@@ -67,11 +67,33 @@ export class ByContractIdComponent {
           },
         },
       },
-      colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
+      colors: [
+        '#0070BA',
+        '#F98D2B',
+        '#43A047',
+        '#0288D1',
+        '#118e8683',
+        '#FFCA28',
+        '#217544',
+        '#F39C12',
+        '#00ACC1',
+        '#F06292',
+        '#054c8f83',
+        '#cb0c6f',
+        '#cb0c0c9d',
+        '#6fcb0ce8',
+        '#57701ee8',
+        '#704f1ee8',
+        '#601e70e8',
+        '#10d2e0e8',
+        '#563f8aef',
+        '#8a3f53a2'
+
+      ],
       plotOptions: {
         pie: {
-          donut: {
-            size: '65%',
+          pie: {
+            size: '75%',
             background: 'none',
             labels: {
               show: true,
@@ -96,14 +118,17 @@ export class ByContractIdComponent {
         show: false,
       },
       legend: {
-        show: false,
+        show: true,
+        labels: {
+          colors: '#ffffff',
+        },
+        position: 'bottom',
       },
       tooltip: {
         theme: 'dark',
         fillSeriesColor: false,
       },
     };
-  
   
     if (this.byContractId && this.byContractId.length > 0) {
       const labels = this.byContractId.map((item: { project: any; }) => item.project);
@@ -122,7 +147,7 @@ export class ByContractIdComponent {
         colors: ['#d3d3d3'],  
         plotOptions: {
           pie: {
-            donut: {
+            pie: {
               labels: {
                 show: true,
                 name: {
@@ -154,30 +179,38 @@ export class ByContractIdComponent {
   
     this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
-  getLabelStyle(index: number, total: number) {
-    const startAngle = this.byContractId
-      .slice(0, index)
-      .reduce((sum: number, item: { count: number; }) => sum + (item.count / total) * 360, 0);
-    const segmentAngle = (this.byContractId[index].count / total) * 360;
-    const angle = startAngle + segmentAngle / 2 - 90;
+  // getLabelStyle(index: number, total: number) {
+  //   const startAngle = this.byContractId
+  //     .slice(0, index)
+  //     .reduce((sum: number, item: { count: number }) => sum + (item.count / total) * 360, 0);
+  //   const segmentAngle = (this.byContractId[index].count / total) * 360;
+  //   const angle = startAngle + segmentAngle / 2 - 90;
   
-    const radius = 55;
-    const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
-    let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
-    if (index > 0) {
-      const previousY = this.getLabelStyle(index - 1, total).top;
-      const diff = Math.abs(parseFloat(previousY) - y);
+  //   const radius = 45;
+  //   const chartWidthPercentage = 47;
   
-      if (diff < 5) {
-        y += 5 * (index % 2 === 0 ? 1 : -1);
-      }
-    }
+  //   let x = chartWidthPercentage + radius * Math.cos((angle * Math.PI) / 180);
+  //   let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+  //   if (x < 50) {
+  //     x += 4;
+  //   }
+  //   if (index > 0) {
+  //     const previousLabel = this.getLabelStyle(index - 1, total);
+  //     const previousY = parseFloat(previousLabel.top);
+  //     const diffY = Math.abs(previousY - y);
   
-    return {
-      top: `${y}%`,
-      left: `${x}%`,
-      transform: 'translate(-50%, -50%)',
-      fontWeight: 'bold',
-    };
-  }
+  //     if (diffY < 5) {
+  //       y += 5 * (index % 2 === 0 ? 1 : -1);
+  //     }
+  //   }
+  
+  //   return {
+  //     top: `${y}%`,
+  //     left: `${x}%`,
+  //     transform: 'translate(-50%, -50%)',
+  //     fontWeight: 'bold',
+  //   };
+  // }
+  
+  
 }
