@@ -76,7 +76,6 @@ export class AppSideRegisterComponent implements OnInit{
         (error: any) => {
           this.submitted = true;
           this.email = error
-          console.log("=====", error)
         }
       );
     }
