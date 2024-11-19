@@ -41,7 +41,7 @@ export class ByAssetTypeComponent {
         toolbar: {
           show: false,
         },
-        height: 290,
+        height: 270,
         events: {
           dataPointSelection: (
             event: any,
@@ -57,7 +57,7 @@ export class ByAssetTypeComponent {
       plotOptions: {
         pie: {
           donut: {
-            size: '75%',
+            size: '65%',
             background: 'none',
             labels: {
               show: true,
@@ -90,10 +90,13 @@ export class ByAssetTypeComponent {
       },
     };
   
-  
     if (this.byAssets && this.byAssets.length > 0) {
       const labels = this.byAssets.map((item: { type: any; }) => item.type);
       const series = this.byAssets.map((item: { count: any; }) => item.count);
+      if (!series.length || !labels.length) {
+        console.error('Error: Series or Labels data is empty.');
+        return;
+      }
       this.totalCount = this.byAssets.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
       this.assetChartOptions1 = {
         ...baseChartOptions,
@@ -115,7 +118,7 @@ export class ByAssetTypeComponent {
                   show: true,
                   text: 'No Data Available',
                   fontSize: '16px',
-                  color: '#a1aab2',
+                  color: undefined,
                   offsetY: 0,
                 },
                 value: {
@@ -138,5 +141,31 @@ export class ByAssetTypeComponent {
     };
   
     this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
+  }
+  getLabelStyle(index: number, total: number) {
+    const startAngle = this.byAssets
+      .slice(0, index)
+      .reduce((sum: number, item: { count: number; }) => sum + (item.count / total) * 360, 0);
+    const segmentAngle = (this.byAssets[index].count / total) * 360;
+    const angle = startAngle + segmentAngle / 2 - 90;
+  
+    const radius = 55;
+    const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
+    let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+    if (index > 0) {
+      const previousY = this.getLabelStyle(index - 1, total).top;
+      const diff = Math.abs(parseFloat(previousY) - y);
+  
+      if (diff < 5) {
+        y += 5 * (index % 2 === 0 ? 1 : -1);
+      }
+    }
+  
+    return {
+      top: `${y}%`,
+      left: `${x}%`,
+      transform: 'translate(-50%, -50%)',
+      fontWeight: 'bold',
+    };
   }
 }

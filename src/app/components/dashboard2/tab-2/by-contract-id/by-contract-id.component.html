@@ -3,12 +3,19 @@
         <mat-card-title class="m-b-0">Vulnerability Distribution by Contract ID</mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
+        <div class="chart-container">
         <apx-chart [series]="contractChartOptions1.series" [plotOptions]="contractChartOptions1.plotOptions"
             [dataLabels]="contractChartOptions1.dataLabels" [chart]="contractChartOptions1.chart"
             [legend]="contractChartOptions1.legend" [colors]="contractChartOptions1.colors"
             [tooltip]="contractChartOptions1.tooltip" [labels]="contractChartOptions1.labels"
             [stroke]="contractChartOptions1.stroke">
         </apx-chart>
+        <div class="chart-labels">
+            <span class="label" *ngFor="let item of byContractId; let i = index" [ngStyle]="getLabelStyle(i, totalCount)">
+              {{ item.project }}: {{ item.count }}
+            </span>
+          </div>
+          </div>
         <h4 style="float: right; margin-top: 10px;">Total: {{totalCount || 0}} </h4>
     </mat-card-content>
 </mat-card>

@@ -71,7 +71,7 @@ private initializeCharts() {
       toolbar: {
         show: false,
       },
-      height: 290,
+      height: 270,
       events: {
         dataPointSelection: (event: any, chartContext: any, config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }) => {
          
@@ -84,7 +84,7 @@ private initializeCharts() {
     plotOptions: {
       pie: {
         donut: {
-          size: '75%',
+          size: '65%',
           background: 'none',
           labels: {
             show: true,
@@ -109,7 +109,11 @@ private initializeCharts() {
       show: false,
     },
     legend: {
-      show: false,
+      show: true,
+      labels: {
+        colors: '#ffffff',
+      },
+      position: 'bottom',
     },
     tooltip: {
       theme: 'dark',

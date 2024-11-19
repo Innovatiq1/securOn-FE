@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -23,7 +24,7 @@ import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
   selector: 'app-by-contract-id',
   standalone: true,
   imports: [NgApexchartsModule,
-    MaterialModule],
+    MaterialModule, CommonModule],
   templateUrl: './by-contract-id.component.html',
   styleUrl: './by-contract-id.component.scss'
 })
@@ -54,7 +55,7 @@ export class ByContractIdComponent {
         toolbar: {
           show: false,
         },
-        height: 290,
+        height: 270,
         events: {
           dataPointSelection: (
             event: any,
@@ -70,7 +71,7 @@ export class ByContractIdComponent {
       plotOptions: {
         pie: {
           donut: {
-            size: '75%',
+            size: '65%',
             background: 'none',
             labels: {
               show: true,
@@ -153,5 +154,30 @@ export class ByContractIdComponent {
   
     this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
+  getLabelStyle(index: number, total: number) {
+    const startAngle = this.byContractId
+      .slice(0, index)
+      .reduce((sum: number, item: { count: number; }) => sum + (item.count / total) * 360, 0);
+    const segmentAngle = (this.byContractId[index].count / total) * 360;
+    const angle = startAngle + segmentAngle / 2 - 90;
   
+    const radius = 55;
+    const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
+    let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+    if (index > 0) {
+      const previousY = this.getLabelStyle(index - 1, total).top;
+      const diff = Math.abs(parseFloat(previousY) - y);
+  
+      if (diff < 5) {
+        y += 5 * (index % 2 === 0 ? 1 : -1);
+      }
+    }
+  
+    return {
+      top: `${y}%`,
+      left: `${x}%`,
+      transform: 'translate(-50%, -50%)',
+      fontWeight: 'bold',
+    };
+  }
 }

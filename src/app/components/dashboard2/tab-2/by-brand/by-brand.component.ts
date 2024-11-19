@@ -1,63 +1,19 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { CommonModule} from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexYAxis,
-  ApexLegend,
-  ApexXAxis,
-  ApexTooltip,
-  ApexTheme,
-  ApexGrid,
-  ApexPlotOptions,
-  ApexFill,
-  NgApexchartsModule,
-} from 'ng-apexcharts';
 import { MaterialModule } from 'src/app/material.module';
+import { NgApexchartsModule} from 'ng-apexcharts';
+import { ChartOptions } from '../by-criticality/by-criticality.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  yaxis: ApexYAxis;
-  stroke: any;
-  theme: ApexTheme;
-  tooltip: ApexTooltip;
-  dataLabels: ApexDataLabels;
-  legend: ApexLegend;
-  colors: string[];
-  markers: any;
-  grid: ApexGrid;
-  plotOptions: ApexPlotOptions;
-  fill: ApexFill;
-  labels: string[];
-};
 
 @Component({
   selector: 'app-by-brand',
   standalone: true,
-  imports: [  CommonModule,
-    MatCardModule,
-    MatIconModule,
-    TablerIconsModule,
-    DatePipe,
-    MatTabsModule,
-    MatCardModule,
-    MatIconModule,
-    TablerIconsModule,
-    DatePipe,
-    MatButtonModule,
-    NgApexchartsModule,
-    MaterialModule,],
+  imports: [MatCardModule,NgApexchartsModule,CommonModule],
   templateUrl: './by-brand.component.html',
   styleUrl: './by-brand.component.scss'
 })
@@ -88,7 +44,7 @@ export class ByBrandComponent {
         toolbar: {
           show: false,
         },
-        height: 290,
+        height: 270,
         events: {
           dataPointSelection: (
             event: any,
@@ -104,7 +60,7 @@ export class ByBrandComponent {
       plotOptions: {
         pie: {
           donut: {
-            size: '75%',
+            size: '65%',
             background: 'none',
             labels: {
               show: true,
@@ -175,6 +131,34 @@ export class ByBrandComponent {
       };
     }
   }
+  getLabelStyle(index: number, total: number) {
+    const startAngle = this.byBrands
+      .slice(0, index)
+      .reduce((sum: number, item: { count: number; }) => sum + (item.count / total) * 360, 0);
+    const segmentAngle = (this.byBrands[index].count / total) * 360;
+    const angle = startAngle + segmentAngle / 2 - 90;
+  
+    const radius = 55;
+    const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
+    let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+    if (index > 0) {
+      const previousY = this.getLabelStyle(index - 1, total).top;
+      const diff = Math.abs(parseFloat(previousY) - y);
+  
+      if (diff < 5) {
+        y += 5 * (index % 2 === 0 ? 1 : -1);
+      }
+    }
+  
+    return {
+      top: `${y}%`,
+      left: `${x}%`,
+      transform: 'translate(-50%, -50%)',
+      fontWeight: 'bold',
+    };
+  }
+  
+  
   
   
   _openVulnerability(seviarity: string): void {
