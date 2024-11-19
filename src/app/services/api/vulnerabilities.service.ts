@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, throwError } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
@@ -184,6 +184,7 @@ public selectedVersion$: Observable<string[]> =
   }
 
   public deleteAssets(assets: any[]): void {
+    console.log("hello ",assets)
     this.store$.dispatch(deleteAssets({ assets }));
   }
 
@@ -251,7 +252,22 @@ public selectedVersion$: Observable<string[]> =
     const url = `${environment.baseUrl}/fetchcves`;
     return this.httpClient.post(url, body);
   }
+ 
+  deleteAsset(requestData: any): Observable<any> {
+    const url = environment.baseUrl + '/deleteAssets';
+    return this.httpClient
+      .post<any>(url, requestData, { headers: this.userService.getRequestHeaders().headers })
+      .pipe(
+        map((response) => response),
+        catchError((error: any) => {
+          console.error('Error deleting asset:', error);
+          return throwError(() => new Error('Failed to delete the asset.'));
+        })
+      );
+}
 
+  
+  
   public loadVulnerabilitiesByDateRange(req: any): Observable<any> {
     const body = {
       fromDate: req.fromDate,
