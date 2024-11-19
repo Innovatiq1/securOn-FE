@@ -74,13 +74,13 @@ export class AppProductSalesComponent {
         toolbar: {
           show: false,
         },
-        height: 290,
+        height: 270,
       },
       colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
       plotOptions: {
         pie: {
           donut: {
-            size: '75%',
+            size: '65%',
             background: 'none',
             labels: {
               show: true,
@@ -105,7 +105,11 @@ export class AppProductSalesComponent {
         show: false,
       },
       legend: {
-        show: false,
+        show: true,
+        labels: {
+          colors: '#ffffff',
+        },
+        position: 'bottom',
       },
       tooltip: {
         theme: 'dark',
