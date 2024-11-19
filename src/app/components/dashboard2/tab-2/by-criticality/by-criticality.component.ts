@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { Router } from '@angular/router';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -47,7 +48,7 @@ export class ByCriticalityComponent {
   @Input() isActive = false;
   byCriticality: any;
 
-constructor(private vulnerabilityDataService: VulnerabilityDataService){
+constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
 }
 
@@ -72,8 +73,11 @@ private initializeCharts() {
       },
       height: 270,
       events: {
-        mouseMove: function() { 
-        }
+        dataPointSelection: (event: any, chartContext: any, config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }) => {
+         
+          const label = config.w.config.labels[config.dataPointIndex]; 
+          this._openVulnerability(label.toUpperCase());  
+        },
       } 
     },
     colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
@@ -161,5 +165,15 @@ private initializeCharts() {
     };
   }
 }
-  
+_openVulnerability(seviarity: string): void {
+  const seviarityPayload = {
+    allData: false,
+    duration: '',
+    fromDate: localStorage.getItem('startDate'),
+    seviarity: seviarity.toUpperCase(),
+    toDate: localStorage.getItem('endDate'),
+  };
+
+  this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
+}
 }

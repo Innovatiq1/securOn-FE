@@ -90,7 +90,6 @@ export class AssetsComponent {
 
     this.formattedStartDate = startDate.toString();
     this.formattedEndDate = endDate.toString();
-    console.log(`Start Date: ${startDate} - ${this.formattedEndDate}`);
     this.loadAssets();
     this.resetPagination();
     this.paginate();
@@ -124,12 +123,6 @@ export class AssetsComponent {
               this.fwVersion.push(item.firmwareVersion);
             }
           });
-
-          console.log('Projects:', this.projects);
-          console.log('Vendors:', this.vendors);
-          console.log('OSTypes:', this.ostypes);
-          console.log('no:', this.partNo);
-          console.log('fw:', this.fwVersion);
         }
 
         this.cdr.detectChanges();

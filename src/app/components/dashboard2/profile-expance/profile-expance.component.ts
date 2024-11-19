@@ -57,7 +57,6 @@ export class AppProfileExpanceCpmponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesTrendsData$.subscribe((data) => {
       this.trendsData = data;
-      console.log( this.trendsData ,"trends")
       if (this.trendsData) {
         this.trends();  
       }
