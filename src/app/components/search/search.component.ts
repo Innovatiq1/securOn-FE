@@ -115,7 +115,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
   selectedEnd: string;
   formattedStartDate: string;
   formattedEndDate: string;
-
+  private storageInterval: any;
+  previousStartDate: string | null;
+  previousEndDate: string | null;
   constructor(
     private cdr: ChangeDetectorRef,
     public searchService: SearchService,
@@ -206,11 +208,46 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     this.isAssetsRoute = this.router.url.includes('/assets');
     this.loadData();
+    this.startStorageWatcher();
   }
 
   ngAfterViewInit() {
     // this.loadData();
   }
+  startStorageWatcher(): void {
+    this.previousStartDate = localStorage.getItem('startDate');
+    this.previousEndDate = localStorage.getItem('endDate');
+
+    if (!this.storageInterval) {
+      this.storageInterval = setInterval(() => {
+        const currentStartDate = localStorage.getItem('startDate');
+        const currentEndDate = localStorage.getItem('endDate');
+
+        if (
+          currentStartDate !== this.previousStartDate ||
+          currentEndDate !== this.previousEndDate
+        ) {;
+
+          this.previousStartDate = currentStartDate;
+          this.previousEndDate = currentEndDate;
+          this.onSearch(); 
+        }
+      }, 1000); 
+    }
+  }
+
+  stopStorageWatcher(): void {
+    if (this.storageInterval) {
+      clearInterval(this.storageInterval); 
+      this.storageInterval = null; 
+    }
+  }
+
+ 
+  ngOnDestroy(): void {
+    this.stopStorageWatcher(); 
+  }
+
 
   onPageChange(event: PageEvent): void {
     this.currentPageIndex = event?.pageIndex;
@@ -285,8 +322,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
       osType: this._selectedOsType,
       page: page,
       limit: this.pageSize,
-      startDate: this.formattedStartDate || '',
-      endDate: this.formattedEndDate || '',
+      startDate:  this.previousStartDate || this.formattedStartDate,
+      endDate:  this.previousEndDate ||this.formattedEndDate,
     };
 
     const cvePartFirmware = this.cvePartFirmware;

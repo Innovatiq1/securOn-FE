@@ -44,7 +44,7 @@ export class ByBrandComponent {
         toolbar: {
           show: false,
         },
-        height: 270,
+        height: 240,
         events: {
           dataPointSelection: (
             event: any,

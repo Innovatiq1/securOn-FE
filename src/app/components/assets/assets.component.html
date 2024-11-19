@@ -3,35 +3,50 @@
       <form>
         <div class="row">
           <div class="col-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline"  class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Project</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let project of projects">{{project}}</mat-option>
-               
-              </mat-select>
+              <mat-select [(value)]="_selectedPoject" (selectionChange)="_projectChange()" multiple>
+                <mat-form-field ppearance="outline">
+                  <input matInput placeholder="Search Project" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+              <mat-option *ngFor="let project of filteredProjects" [value]="project"
+                >{{project}}</mat-option>
+            </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Brand</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let vendor of vendors">{{vendor}}</mat-option>
+              <mat-select [(value)]="_selectedVendor" (selectionChange)="_vendorChange()" multiple>
+                <mat-form-field>
+                  <input matInput placeholder="Search Brand" [(ngModel)]="vendorFilter" (ngModelChange)="filterVendor()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+                <mat-option *ngFor="let vendor of filteredVendor" [value]="vendor"
+                  >{{vendor}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Part No</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let partno of partNo">{{partno}}</mat-option>
+              <mat-select [(value)]="_selectedProduct" (selectionChange)="_productChange()" multiple>
+                <mat-form-field>
+                  <input type="text" matInput placeholder="Search PartNo" [(ngModel)]="partNoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}" />
+                </mat-form-field>
+                <mat-option *ngFor="let partNo of filteredPartNo" [value]="partNo"
+               >{{partNo}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select OS Type</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let ostype of ostypes">{{ostype}}</mat-option>
+              <mat-select [(value)]="_selectedOsType" (selectionChange)="_osTypeChange()" multiple>
+                <mat-form-field>
+                  <input matInput placeholder="Search OS Type" [(ngModel)]="osTypeFilter" (ngModelChange)="filterOsType()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+                <mat-option *ngFor="let osType of filteredOsType" [value]="osType"
+                >{{osType}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -40,13 +55,17 @@
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Firmware Version </mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let fwVersion of fwVersion">{{fwVersion}}</mat-option>
+              <mat-select [(value)]="_selectedFirmwareVersion" (selectionChange)="_firmwareVersionChange()" multiple>
+                <mat-form-field>
+                  <input matInput placeholder="Search Firmware" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFwVersion()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+                <mat-option *ngFor="let fw of filteredFwVersion" [value]="fw"
+                  >{{fw}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-4" style="margin-top: 10px;">
-            <button mat-raised-button color="primary">Reset Filters</button>
+            <button mat-raised-button color="primary" (click)="resetFilters()">Reset Filters</button>
             <button mat-raised-button color="primary" style="margin-left: 10px;" [routerLink]="['/cve/create-asset']">Create</button>
           </div>
           <div class="col-3" style="margin-left: 40px;">
@@ -161,7 +180,8 @@
               Total No of Vulnerabilities
             </th>
             <td mat-cell *matCellDef="let element" class="f-s-14">
-              {{ element.vulnerabilities }}
+              <a (click)="_showVulnerabilities(element)">
+                {{element.vulnarabilities}} </a>
             </td>
           </ng-container>
   
