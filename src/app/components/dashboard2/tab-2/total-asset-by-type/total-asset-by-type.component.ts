@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import moment from 'moment';
+import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -39,15 +41,56 @@ export type ChartOptions = {
   imports: [MaterialModule,NgApexchartsModule],
   templateUrl: './total-asset-by-type.component.html',
 })
-export class TotalAssetByTypeComponent {
+export class TotalAssetByTypeComponent implements OnInit {
   @Input() isActive = false;
+  public toggleSwitchState: boolean = true;
   public typeChart: Partial<ChartOptions> |  any = {series: [] };
-
-  constructor(){
-    this.initializeCharts();
+  assetByType:any;
+  totalCount=0;
+  constructor(private vulnerabilitiesService:VulnerabilitiesService){
+    // this.initializeCharts();
   }
+ngOnInit(): void {
+  this.getCircularDashboardData();
+}
+getCircularDashboardData() {
+  const fromDate = localStorage.getItem('startDate');
+  const toDate = localStorage.getItem('endDate');
+  const payload = {
+    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+    duration: '',
+    allData: this.toggleSwitchState,
+  };
 
-  private initializeCharts() {
+  // this.vulnerabilityDataService.setDataLoading(true);
+
+  this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe(
+    async (response) => {
+      try {
+        if (response) {
+         
+          this.assetByType = response.assetsByType;
+          if (response.assetsByType) {
+            this.initializeCharts(response.assetsByType);
+          } else {
+            console.warn('assetByBrand is undefined or null.');
+          }
+        }
+      } catch (error) {
+        console.error('Error processing response:', error);
+      }   
+    },
+    (error:any) => {
+      // this.vulnerabilityDataService.setDataLoading(false);
+      console.error('Error fetching data:', error);
+    }
+  );
+}
+  private initializeCharts(asset:any) {
+    const type = asset.map((item: any) => item.type);
+    const counts = asset.map((item: any) => item.count);
+    this.totalCount = counts.reduce((sum: number, current: number) => sum + current, 0);
     const baseChartOptions = {
       chart: {
         type: 'donut',
@@ -102,8 +145,8 @@ export class TotalAssetByTypeComponent {
    
     this.typeChart = {
       ...baseChartOptions,
-      series: [5, 6, 9, 7, 15],
-      labels: ['Firewall', 'Router','NPM', 'Load Balance', 'Switch'],
+      series: counts,
+      labels: type,
     };
   }
 }
