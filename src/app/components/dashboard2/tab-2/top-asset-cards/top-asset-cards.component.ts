@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-
+import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 @Component({
   selector: 'app-top-asset-cards',
   standalone: true,
@@ -12,13 +13,16 @@ import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 export class TopAssetCardsComponent {
   @Input() isActive = false;
   byCriticality: any;
+  totalVender:0;
+  public toggleSwitchState: boolean = true;
 
-
-  constructor(private vulnerabilityDataService: VulnerabilityDataService, public router: Router){}
+  constructor(private vulnerabilityDataService: VulnerabilityDataService,private vulnerabilitiesService:VulnerabilitiesService, public router: Router){}
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byCriticality = data?.byCriticality;
+      console.log("data?.byCriticality;",data?.byCriticality)
     });
+    this.getCircularDashboardData()
   }
   seviarityList(seviarity: string) {
     const seviarityPayload = {
@@ -31,4 +35,21 @@ export class TopAssetCardsComponent {
 
     this.router.navigate(['cve/vulnerabilties'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
+  getCircularDashboardData(){
+    const fromDate = localStorage.getItem('startDate');
+    const toDate = localStorage.getItem('endDate');
+    const payload = {
+      fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+      toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+      duration: '',
+      allData: this.toggleSwitchState
+    };
+    this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe((res)=>{
+      // console.log("req",res.byVendors);
+      this.totalVender=res.byVendors.length;
+
+    })
+  }
+
+
 }

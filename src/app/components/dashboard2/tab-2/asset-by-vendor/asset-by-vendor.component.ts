@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, } from '@angular/core';
+import moment from 'moment';
+import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -39,22 +41,99 @@ export type ChartOptions = {
   imports: [NgApexchartsModule,MaterialModule],
   templateUrl: './asset-by-vendor.component.html',
 })
-export class AssetByVendorComponent {
+export class AssetByVendorComponent implements OnInit{
   @Input() isActive = false;
-
+  public toggleSwitchState: boolean = true;
   public vendorChart: Partial<ChartOptions> |  any = {series: [] };
+  assetByBrand:any;
+constructor(private vulnerabilitiesService:VulnerabilitiesService){
+  // this.affectedBrands();
+  // this.getCircularDashboardData();
+}
+ngOnInit(): void {
+  this.getCircularDashboardData();
+  
+}
+// getCircularDashboardData(){
+//   const fromDate = localStorage.getItem('startDate');
+//   const toDate = localStorage.getItem('endDate');
+//   const payload = {
+//     fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+//     toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+//     duration: '',
+//     allData: this.toggleSwitchState
+//   };
+ 
+// //   this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe((res)=>{
+// //     console.log("getCircular",typeof res.assetsByBrand);
+// //     if (res && res.assetByBrand) {
+// //     this.assetByBrand=res.assetByBrand;
+// //     console.log("venders")
+// //     //  const vendors = res.assetByBrand.map((item: any) => item.vendor);
+// //     //  const counts = res.assetByBrand.map((item: any) => item.count);
+// // //  console.log("venders",vendors)
+// // //  console.log("counts",counts)
+    
+// //  this.affectedBrands();
+// //     }
+// //   })
+// }
+getCircularDashboardData() {
+  const fromDate = localStorage.getItem('startDate');
+  const toDate = localStorage.getItem('endDate');
+  const payload = {
+    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+    duration: '',
+    allData: this.toggleSwitchState,
+  };
 
-constructor(){
-  this.affectedBrands();
+  // this.vulnerabilityDataService.setDataLoading(true);
+
+  this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe(
+    async (response) => {
+      try {
+        if (response) {
+         
+          this.assetByBrand = response.assetsByBrand;
+          if (response.assetsByBrand) {
+            this.affectedBrands(response.assetsByBrand);
+          } else {
+            console.warn('assetByBrand is undefined or null.');
+          }
+        }
+      } catch (error) {
+        console.error('Error processing response:', error);
+      }   
+    },
+    (error:any) => {
+      // this.vulnerabilityDataService.setDataLoading(false);
+      console.error('Error fetching data:', error);
+    }
+  );
 }
 
-  private affectedBrands() {
+  private affectedBrands(asset:any) {
+    const vendors = asset.map((item: any) => item.vendor);
+    const counts = asset.map((item: any) => item.count);
+  
     this.vendorChart = {
       series: [
         {
-          name: '',
-          data: [4],
-        },
+          data:counts
+        }
+        // {
+        //   name: 'Asset1',
+        //   data: [4],
+        // },
+        // {
+        //   name: 'Asset2',
+        //   data: [7],
+        // },
+        // {
+        //   name: 'Asset3',
+        //   data: [6],
+        // },
       ],
 
       chart: {
@@ -89,9 +168,7 @@ constructor(){
         },
       },
       xaxis: {
-        categories: [
-          'Cisco',
-        ],
+        categories: vendors,
         axisBorder: {
           show: true,
         },
