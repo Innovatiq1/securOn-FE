@@ -266,8 +266,44 @@ public selectedVersion$: Observable<string[]> =
       );
 }
 
+public getNistSynchronizationLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getNistLogs`;
+  return this.httpClient.post(url, body);
+}
+
+public getSystemSynLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getSystemLogs`;
+  return this.httpClient.post(url, body);
+}
   
-  
+public getSchedulerLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getSchedulerLogs`;
+  return this.httpClient.post(url, body);
+}
+public getUserActivityLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getUserActivityLogs`;
+  return this.httpClient.post(url, body);
+}
   public loadVulnerabilitiesByDateRange(req: any): Observable<any> {
     const body = {
       fromDate: req.fromDate,
