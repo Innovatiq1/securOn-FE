@@ -53,6 +53,7 @@ export class CreateAssetsComponent {
 console.log("this.assetFormGroup",this.assetFormGroup.value)
   }
   cancel(){
-    this.router.navigate(['/cve/assets']);
+    window.history.back();
+    // this.router.navigate(['/cve/assets']);
   }
 }

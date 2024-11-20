@@ -3,12 +3,19 @@
         <mat-card-title class="m-b-0">Total Asset by Types</mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
-        <apx-chart [series]="typeChart.series" [plotOptions]="typeChart.plotOptions"
-            [dataLabels]="typeChart.dataLabels" [chart]="typeChart.chart"
-            [legend]="typeChart.legend" [colors]="typeChart.colors"
-            [tooltip]="typeChart.tooltip" [labels]="typeChart.labels"
-            [stroke]="typeChart.stroke">
-        </apx-chart>
+        <div class="chart-container">
+            <apx-chart [series]="typeChart.series" [plotOptions]="typeChart.plotOptions"
+                [dataLabels]="typeChart.dataLabels" [chart]="typeChart.chart" [legend]="typeChart.legend"
+                [colors]="typeChart.colors" [tooltip]="typeChart.tooltip" [labels]="typeChart.labels"
+                [stroke]="typeChart.stroke">
+            </apx-chart>
+            <div class="chart-labels">
+                <span class="label" *ngFor="let item of assetByType; let i = index"
+                    [ngStyle]="getLabelStyle(i, totalCount)">
+                    {{ item.type }}: {{ item.count }}
+                </span>
+            </div>
+        </div>
         <h4 style="float: right; margin-top: 10px;">Total: {{totalCount}} </h4>
     </mat-card-content>
 </mat-card>

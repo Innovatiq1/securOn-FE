@@ -141,6 +141,9 @@ export class ListComponent {
         });
     });
 }
+back(){
+  window.history.back();
+}
 }
 
   

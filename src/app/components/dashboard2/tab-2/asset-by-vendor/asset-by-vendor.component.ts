@@ -189,6 +189,26 @@ getCircularDashboardData() {
       },
       tooltip: {
         theme: 'dark',
+        custom: function ({
+          series,
+          seriesIndex,
+          dataPointIndex,
+          w
+        }: {
+          series: number[][];
+          seriesIndex: number;
+          dataPointIndex: number;
+          w: any;
+        }) {
+          const value = series[seriesIndex][dataPointIndex];
+          const category = w.config.xaxis.categories[dataPointIndex];
+      
+          return `<div style="padding: 8px; background-color: #333; color: #fff; border-radius: 4px;">
+          <strong>${category}</strong>: ${value}
+
+                  </div>`;
+        },
+      
       },
     };
   }

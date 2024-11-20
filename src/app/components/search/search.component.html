@@ -15,7 +15,7 @@
                     <mat-label class=" f-w-600 m-b-8 ">Vendor</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-select placeholder="Select Vendor" [(value)]="_selectedVendor" (selectionChange)="_vendorChange()" multiple>
-                            <mat-form-field>
+                            <mat-form-field style="width: 100%;">
                                 <input matInput placeholder="Search Vendor" [(ngModel)]="vendorFilter" (ngModelChange)="filterVendors()" [ngModelOptions]="{standalone: true}" />
                             </mat-form-field>
                             <mat-option *ngFor="let vendor of filteredVendors" [value]="vendor"> {{ vendor }}</mat-option>
@@ -26,7 +26,7 @@
                     <mat-label class="f-w-600 m-b-8">Project ID</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-select placeholder="Select Project ID" [(value)]="_selectedProject"  (selectionChange)="onProjectChange($event.value)" multiple>
-                            <mat-form-field>
+                            <mat-form-field style="width: 100%;">
                                 <input matInput placeholder="Search Project" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}" />
                             </mat-form-field>
                             <mat-option *ngFor="let item of filteredProjects" [value]="item">{{ item }}</mat-option>
@@ -52,7 +52,7 @@
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-select placeholder="Select Part No" [(value)]="_selectedPartNo"
                         (selectionChange)="onPartNoChange($event.value)" multiple>
-                        <mat-form-field>
+                        <mat-form-field style="width: 100%;">
                             <input matInput placeholder="Search Part no" [(ngModel)]="partnoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}"/>
                         </mat-form-field>
                             <mat-option *ngFor="let partNo of filteredPartNo" [value]="partNo">{{ partNo }}</mat-option>
@@ -64,7 +64,7 @@
                     <mat-label class="f-w-600 m-b-8">FW Version</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-select placeholder="Select FW Version" [(value)]="_selectedVersion" (selectionChange)="onVersionChange($event.value)" multiple>
-                            <mat-form-field>
+                            <mat-form-field style="width: 100%;">
                                 <input matInput placeholder="Search FW Version" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFw()" [ngModelOptions]="{standalone: true}"/>
                             </mat-form-field>
                             <mat-option *ngFor="let firmwareVersion of filteredfwVersion" [value]="firmwareVersion">{{ firmwareVersion }}</mat-option>
