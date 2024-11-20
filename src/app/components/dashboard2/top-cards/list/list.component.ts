@@ -28,6 +28,7 @@ export class ListComponent {
 
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
+      
       if (params['data']) {
         const severity = JSON.parse(params['data']); 
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe((data) => {
@@ -39,6 +40,17 @@ export class ListComponent {
             console.error('Unexpected data structure:', data);
           }
         });
+      }else{
+        this.vulerabilityService.getCveDataFromAssets(params).subscribe((data) => {
+          if (Array.isArray(data)) {
+            this.vulerabilities = data.map((v: { cveDetails: any; }) => v.cveDetails);
+            this._allVulnerabilities = this.vulerabilities;
+            this._filteredVulnerabilities = [...this.vulerabilities]; 
+          } else {
+            console.error('Unexpected data structure:', data);
+          }
+        })
+
       }
     });
     this.searchControl.valueChanges.pipe(
@@ -49,6 +61,8 @@ export class ListComponent {
       });
     });
   }
+
+  
   exportToExcel(): void {
     this.toastr.info('Downloading...', 'Info', {
         timeOut: 0,

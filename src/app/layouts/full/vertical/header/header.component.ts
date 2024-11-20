@@ -135,7 +135,6 @@ export class HeaderComponent {
   }
 
 
-
   onDateRangeChange(selectedDateRange: Date[]): void {
     this.selectedDateRange = selectedDateRange;
     const startDate = moment(selectedDateRange[0]);
