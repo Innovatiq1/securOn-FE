@@ -346,10 +346,6 @@ export class AssetsComponent {
     this.filteredFwVersion = Array.from(this._firmwareVersions);
   }
 
- create(){
-  this.router.navigate(['/cve/create-asset']);
-  this.cdr.detectChanges();
- }
  
   openDialog(action: string, obj: any): void {
     obj.action = action;
