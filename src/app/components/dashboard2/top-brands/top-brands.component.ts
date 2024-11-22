@@ -1,16 +1,19 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
 import {
   NgApexchartsModule
 } from 'ng-apexcharts';
 import { MaterialModule } from '../../../material.module';
 import { RouterModule } from '@angular/router';
 import { ChartOptions } from 'src/app/pages/charts/area/area.component';
+import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
+import moment from 'moment';
 export interface productsData {
   id: number;
   vendor: string;
@@ -180,18 +183,56 @@ const SOLAR_DATA: ciscoData[] = [
     RouterModule],
   templateUrl: './top-brands.component.html'
 })
-export class TopBrandsComponent {
+export class TopBrandsComponent implements OnInit {
   public yearlysaleChart: Partial<ChartOptions> | any;
   displayedColumns1: string[] = ['vendor', 'links', 'entries'];
   dataSource1 = PRODUCT_DATA;
   displayedColumns2: string[] = ['productName', 'vulnerabilities'];
-  dataSource2 = CISCO_DATA;
-  dataSource3 = F5_DATA;
-  dataSource4 = FORTINET_DATA;
-  dataSource5 = SOLAR_DATA;
+  // dataSource2 = CISCO_DATA;
+  dataSource2:any;
+  // dataSource3 = F5_DATA;
+  dataSource3:any;
+  // dataSource4 = FORTINET_DATA;
+  dataSource4:any;
+  // dataSource5 = SOLAR_DATA;
+  dataSource5:any;
 
-constructor(){
+constructor(private vulnerabilitiesService:VulnerabilitiesService){
   this.affectedBrands();
+}
+ngOnInit(): void {
+    this.getAffectedProduct("Cisco");
+    this.getAffectedProduct("F5");
+     this.getAffectedProduct("Fortinet");
+    this.getAffectedProduct("Solarwinds");
+}
+
+
+getAffectedProduct(Vendor:any) {
+  const fromDate = localStorage.getItem('startDate');
+  const toDate = localStorage.getItem('endDate');
+  const payload = {
+    vendor: Vendor,
+    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+  };
+
+  this.vulnerabilitiesService.getAffectedProducts(payload).subscribe((res) => {
+   
+
+    // Correct sorting based on vulnerabilitesCount
+    const sortedData = res.sort((a: any, b: any) => b.vulnerabilitesCount - a.vulnerabilitesCount).slice(0, 5);
+    if (Vendor === "Cisco") {
+      this.dataSource2 = sortedData;
+    } else if (Vendor === "F5") {
+      this.dataSource3 = sortedData;
+    } else if (Vendor === "Fortinet") {
+      this.dataSource4 = sortedData;
+    } else if (Vendor === "Solarwinds") {
+      this.dataSource5 = sortedData;
+    }
+   
+  });
 }
 
 private affectedBrands() {
