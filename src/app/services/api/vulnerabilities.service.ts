@@ -265,6 +265,19 @@ public selectedVersion$: Observable<string[]> =
         })
       );
 }
+
+public getFilteredCves(req: any): Observable<any> {
+  const body = {
+    formCvssScore:req.formCvssScore,
+    toCvssScore:req.toCvssScore,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getFilteredCves`;
+  return this.httpClient.post(url, body);
+}
+
 public getAffectedProducts(req: any): Observable<any> {
   const body = {
     vendor:req.vendor,
