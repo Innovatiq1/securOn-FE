@@ -184,7 +184,7 @@ public selectedVersion$: Observable<string[]> =
   }
 
   public deleteAssets(assets: any[]): void {
-    console.log("hello ",assets)
+    // console.log("hello ",assets)
     this.store$.dispatch(deleteAssets({ assets }));
   }
 
@@ -265,7 +265,16 @@ public selectedVersion$: Observable<string[]> =
         })
       );
 }
+public getAffectedProducts(req: any): Observable<any> {
+  const body = {
+    vendor:req.vendor,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
 
+  const url = `${environment.baseUrl}/getAffectedProducts`;
+  return this.httpClient.post(url, body);
+}
 public getNistSynchronizationLogs(req: any): Observable<any> {
   const body = {
     fromDate: req.fromDate,
