@@ -73,7 +73,7 @@ export class AssetsComponent {
   _selectedFirmwareVersion: string[] = [];
   public _selectedPoject: string[] = [];
   public showAlert = false;
-  formattedStartDate: string;
+  formattedStartDate: string = '';
   formattedEndDate: string;
   public _assets: any[] = [];
   dataSource: any[];
@@ -105,6 +105,9 @@ export class AssetsComponent {
   @ViewChild('deleteMultipleConfirm')deleteMultipleConfirm: TemplateRef<HTMLElement>;
   public selection = new SelectionModel<any>(true, []);
   public _selectedCount = 0;
+  previousStartDate: string = '';
+  previousEndDate: string ='';
+  storageInterval: any;
   constructor(
     public dialog: MatDialog,
     private logCveService: LogCveService,
@@ -196,11 +199,32 @@ export class AssetsComponent {
     }
     this.resetPagination();
     this.paginate();
+    this.startStorageWatcher()
   }
+  startStorageWatcher(): void {
+    this.previousStartDate = localStorage.getItem('startDate') || '';
+    this.previousEndDate = localStorage.getItem('endDate') || '';
 
+    if (!this.storageInterval) {
+      this.storageInterval = setInterval(() => {
+        const currentStartDate = localStorage.getItem('startDate');
+        const currentEndDate = localStorage.getItem('endDate');
+
+        if (
+          currentStartDate !== this.previousStartDate ||
+          currentEndDate !== this.previousEndDate
+        ) {;
+console.log('cwww',currentStartDate,currentEndDate)
+          this.previousStartDate = currentStartDate || this.formattedStartDate;
+          this.previousEndDate = currentEndDate || this.formattedEndDate;
+          this.loadAssets(); 
+        }
+      }, 1000); 
+    }
+  }
   public loadAssets() {
     this.logCveService
-      .loadAllAssets(this.formattedStartDate, this.formattedEndDate)
+      .loadAllAssets(this.previousStartDate,  this.previousEndDate)
       .subscribe((data: any[]) => {
         this._assets = data;
         this.dataSource = data;

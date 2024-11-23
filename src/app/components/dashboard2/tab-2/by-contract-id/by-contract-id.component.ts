@@ -33,6 +33,7 @@ export class ByContractIdComponent {
   @Input() isActive = false;
   byContractId: any;
   totalCount: any;
+  byCriticality: any;
   constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
   }
@@ -40,6 +41,7 @@ export class ByContractIdComponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byContractId = data?.byContractId;
+      this.byCriticality = data?.byCriticality;
       if(this.byContractId){
         this.initializeCharts();
       }
@@ -93,7 +95,7 @@ export class ByContractIdComponent {
       plotOptions: {
         pie: {
           pie: {
-            size: '75%',
+            size: '65%',
             background: 'none',
             labels: {
               show: true,
@@ -127,7 +129,29 @@ export class ByContractIdComponent {
       tooltip: {
         theme: 'dark',
         fillSeriesColor: false,
+        custom: (options: { series: number[]; seriesIndex: number; dataPointIndex: number; w: any }) => {
+          const { series, seriesIndex, w } = options;
+          const criticalityData = this.byCriticality || {};
+          const { criticalCount, highCount, mediumCount, lowCount, totalCount } = criticalityData;
+      
+          const criticalityLabel = w.config.labels[seriesIndex];
+          const criticalityCount = series[seriesIndex];
+      
+          return `
+            <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
+              <strong>${criticalityLabel}: ${criticalityCount}</strong><br>
+              <div style="margin-top: 5px;">
+                <strong>Total Count:</strong> ${totalCount}<br>
+                <strong>Critical:</strong> ${criticalCount}<br>
+                <strong>High:</strong> ${highCount}<br>
+                <strong>Medium:</strong> ${mediumCount}<br>
+                <strong>Low:</strong> ${lowCount}
+              </div>
+            </div>
+          `;
+        },
       },
+      
     };
   
     if (this.byContractId && this.byContractId.length > 0) {
