@@ -17,6 +17,7 @@ import {
   ApexFill,
   NgApexchartsModule,
 } from 'ng-apexcharts';
+import { distinctUntilChanged, filter } from 'rxjs';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 export type ChartOptions = {
@@ -47,6 +48,8 @@ export class ByCriticalityComponent {
   public criticalChartOptions1: Partial<ChartOptions> |  any = {series: [] };
   @Input() isActive = false;
   byCriticality: any;
+  projectData: any;
+  byContractId: any;
 
 constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
@@ -55,11 +58,13 @@ constructor(private vulnerabilityDataService: VulnerabilityDataService,public ro
 ngOnInit() {
   this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
     this.byCriticality = data?.byCriticality;
-    if(this.byCriticality){
+    this.byContractId = data?.byContractId; 
+    if (this.byCriticality) {
       this.initializeCharts();
     }
   });
 }
+
 
 private initializeCharts() {
 
@@ -74,11 +79,10 @@ private initializeCharts() {
       height: 290,
       events: {
         dataPointSelection: (event: any, chartContext: any, config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }) => {
-         
-          const label = config.w.config.labels[config.dataPointIndex]; 
-          this._openVulnerability(label.toUpperCase());  
+          const label = config.w.config.labels[config.dataPointIndex];
+          this._openVulnerability(label.toUpperCase());
         },
-      } 
+      }
     },
     colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
     plotOptions: {
@@ -94,10 +98,7 @@ private initializeCharts() {
               color: undefined,
               offsetY: 5,
             },
-            value: {
-              show: false,
-              color: '#98aab4',
-            },
+           
           },
         },
       },
@@ -118,9 +119,33 @@ private initializeCharts() {
     tooltip: {
       theme: 'dark',
       fillSeriesColor: false,
+      custom: (options: { series: number[]; seriesIndex: number; dataPointIndex: number; w: any }) => {
+        const { series, seriesIndex, w } = options;
+    
+        const criticalityLabel = w.config.labels[seriesIndex];
+        const criticalityCount = series[seriesIndex];
+    
+        const projectInfo = this.byContractId && this.byContractId.length
+          ? this.byContractId
+              .map((project: { project: string; count: number }) =>
+                `${project.project}: ${project.count}`
+              )
+              .join(', ') 
+          : 'No project data';
+    
+        return `
+          <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
+            <strong>${criticalityLabel}: ${criticalityCount}</strong><br>
+            <div style="margin-top: 5px;">${projectInfo}</div>
+          </div>
+        `;
+      },
     },
-  };
+    
+    
+    
 
+  };
 
   if (this.byCriticality && 
       (this.byCriticality.criticalCount > 0 || 
@@ -135,7 +160,7 @@ private initializeCharts() {
         this.byCriticality.mediumCount,
         this.byCriticality.lowCount,
       ],
-      labels: ['Critical', 'High', 'Medium', 'Low'],
+      labels: ['Critical', 'High', 'Medium', 'Low'], 
     };
   } else {
     this.criticalChartOptions1 = {
@@ -165,6 +190,13 @@ private initializeCharts() {
     };
   }
 }
+
+
+
+
+
+
+
 _openVulnerability(seviarity: string): void {
   const seviarityPayload = {
     allData: false,

@@ -135,14 +135,28 @@ export class HeaderComponent {
   }
 
 
+  // onDateRangeChange(selectedDateRange: Date[]): void {
+  //   this.selectedDateRange = selectedDateRange;
+  //   const startDate = moment(selectedDateRange[0]);
+  //   const endDate = moment(selectedDateRange[1]);
+  //   console.log(`onDateRangeChange `,startDate)
+  //   if (startDate) localStorage.setItem('startDate', startDate.toString());
+  //   if (endDate) localStorage.setItem('endDate', endDate.toString());
+  // }
   onDateRangeChange(selectedDateRange: Date[]): void {
     this.selectedDateRange = selectedDateRange;
-    const startDate = moment(selectedDateRange[0]);
-    const endDate = moment(selectedDateRange[1]);
-    if (startDate) localStorage.setItem('startDate', startDate.toString());
-    if (endDate) localStorage.setItem('endDate', endDate.toString());
+  
+    // Format dates to 'YYYY-MM-DD'
+    const startDate = moment(selectedDateRange[0]).format('YYYY-MM-DD');
+    const endDate = moment(selectedDateRange[1]).format('YYYY-MM-DD');
+  
+    console.log(`onDateRangeChange Start Date: `, startDate);
+    console.log(`onDateRangeChange End Date: `, endDate);
+  
+    // Store formatted dates in localStorage
+    if (startDate) localStorage.setItem('startDate', startDate);
+    if (endDate) localStorage.setItem('endDate', endDate);
   }
-
   ngOnInit(){
     this.user = localStorage.getItem('userName') ?? '';
 

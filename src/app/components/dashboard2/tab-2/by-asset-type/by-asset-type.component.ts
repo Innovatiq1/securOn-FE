@@ -91,8 +91,8 @@ export class ByAssetTypeComponent {
     };
   
     if (this.byAssets && this.byAssets.length > 0) {
-      const labels = this.byAssets.map((item: { type: any; }) => item.type);
-      const series = this.byAssets.map((item: { count: any; }) => item.count);
+      const labels = this.byAssets.map((item: { type: any; }) => item.type || 'Unknown');
+      const series = this.byAssets.map((item: { count: any; }) => item.count || 0);
       if (!series.length || !labels.length) {
         console.error('Error: Series or Labels data is empty.');
         return;
