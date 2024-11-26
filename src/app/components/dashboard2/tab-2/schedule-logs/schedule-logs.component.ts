@@ -3,6 +3,8 @@ import { MaterialModule } from 'src/app/material.module';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import { CommonModule } from '@angular/common';
 import moment from 'moment';
+import { Subscription } from 'rxjs';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 @Component({
   selector: 'app-schedule-logs',
   standalone: true,
@@ -16,10 +18,30 @@ export class ScheduleLogsComponent implements  OnInit {
   @Input() isActive = false;
   schedulerLogsData:any;
   UserActivityLogsData:any
-  constructor(private vulnerabilitiesService:VulnerabilitiesService){}
+
+  private subscriptions: Subscription = new Subscription();
+  constructor(private vulnerabilitiesService:VulnerabilitiesService,private localStorageService: VulnerabilityDataService){}
   ngOnInit(): void {
     this.getSchedulerLog();
     this.getUserActivityLog();
+
+    this.subscriptions.add(
+      this.localStorageService.startDate$.subscribe(() => {
+        this.getSchedulerLog();
+        this.getUserActivityLog();
+      })
+    );
+
+    // this.subscriptions.add(
+    //   this.localStorageService.endDate$.subscribe(() => {
+    //     this.getSchedulerLog();
+    //     this.getUserActivityLog();
+    //   })
+    // );
+}
+
+ngOnDestroy(): void {
+  this.subscriptions.unsubscribe();
 }
 
 getSchedulerLog(){

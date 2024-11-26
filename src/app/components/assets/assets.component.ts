@@ -250,16 +250,43 @@ console.log('cwww',currentStartDate,currentEndDate)
     this.loadAssets();
   }
  
+  // uploadFile($event: any): void {
+  //   this.vulnerabilitiesService.setDataLoading(true);
+  //   const selectedFile: File = $event.target.files[0];
+  //   if (selectedFile) {
+  //     const formData = new FormData();
+  //     formData.append('xlsx', selectedFile);
+  //     this.vulnerabilitiesService.uploadAssets(formData);
+  //     $event.target.value = null;
+  //     //this.asertMessage = "Assets Uploaded Successfully."
+  //     this.showAlert = true;
+  //   }
+  // }
+
   uploadFile($event: any): void {
     this.vulnerabilitiesService.setDataLoading(true);
     const selectedFile: File = $event.target.files[0];
+  
     if (selectedFile) {
       const formData = new FormData();
       formData.append('xlsx', selectedFile);
-      this.vulnerabilitiesService.uploadAssets(formData);
-      $event.target.value = null;
-      //this.asertMessage = "Assets Uploaded Successfully."
-      this.showAlert = true;
+  
+      this.logCveService.uploadAssets(formData).subscribe({
+        next: (response: any) => {
+          this.showAlert = true;
+          console.log('Upload successful:', response);
+          this.loadAssets(); 
+        },
+        error: (error: any) => {
+          console.error('Upload failed:', error);
+          this.showAlert = false;
+        },
+        complete: () => {
+          this.vulnerabilitiesService.setDataLoading(false);
+          $event.target.value = null;
+          this.loadAssets(); 
+        }
+      });
     }
   }
   private prepareFilters(

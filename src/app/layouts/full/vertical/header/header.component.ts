@@ -28,6 +28,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { Observable, Subject, firstValueFrom, of, takeUntil } from 'rxjs';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 interface notifications {
   id: number;
@@ -128,34 +129,22 @@ export class HeaderComponent {
   constructor(
     private vsidenav: CoreService,
     public dialog: MatDialog,
-    private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,
+    private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,private localStorageService: VulnerabilityDataService
   ) {
     translate.setDefaultLang('en');
     
   }
 
 
-  // onDateRangeChange(selectedDateRange: Date[]): void {
-  //   this.selectedDateRange = selectedDateRange;
-  //   const startDate = moment(selectedDateRange[0]);
-  //   const endDate = moment(selectedDateRange[1]);
-  //   console.log(`onDateRangeChange `,startDate)
-  //   if (startDate) localStorage.setItem('startDate', startDate.toString());
-  //   if (endDate) localStorage.setItem('endDate', endDate.toString());
-  // }
   onDateRangeChange(selectedDateRange: Date[]): void {
     this.selectedDateRange = selectedDateRange;
-  
-    // Format dates to 'YYYY-MM-DD'
     const startDate = moment(selectedDateRange[0]).format('YYYY-MM-DD');
     const endDate = moment(selectedDateRange[1]).format('YYYY-MM-DD');
-  
-    console.log(`onDateRangeChange Start Date: `, startDate);
-    console.log(`onDateRangeChange End Date: `, endDate);
-  
-    // Store formatted dates in localStorage
     if (startDate) localStorage.setItem('startDate', startDate);
     if (endDate) localStorage.setItem('endDate', endDate);
+
+    if (startDate) this.localStorageService.updateStartDate(startDate);
+    if (endDate) this.localStorageService.updateEndDate(endDate);
   }
   ngOnInit(){
     this.user = localStorage.getItem('userName') ?? '';
