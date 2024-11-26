@@ -186,7 +186,8 @@ const SOLAR_DATA: ciscoData[] = [
 export class TopBrandsComponent implements OnInit {
   public yearlysaleChart: Partial<ChartOptions> | any;
   displayedColumns1: string[] = ['vendor', 'links', 'entries'];
-  dataSource1 = PRODUCT_DATA;
+  // dataSource1 = PRODUCT_DATA;
+  dataSource1:any;
   displayedColumns2: string[] = ['productName', 'vulnerabilities'];
   // dataSource2 = CISCO_DATA;
   dataSource2:any;
@@ -196,17 +197,65 @@ export class TopBrandsComponent implements OnInit {
   dataSource4:any;
   // dataSource5 = SOLAR_DATA;
   dataSource5:any;
+  topEffected:any;
 
 constructor(private vulnerabilitiesService:VulnerabilitiesService){
-  this.affectedBrands();
+  //  this.affectedBrands();
 }
 ngOnInit(): void {
-    this.getAffectedProduct("Cisco");
+  // this.getTopAffectedProduct();
+     this.getAffectedProduct("Cisco");
+    // this.getAffectedProduct("Alcatel-Lucent");
     this.getAffectedProduct("F5");
      this.getAffectedProduct("Fortinet");
     this.getAffectedProduct("Solarwinds");
+      this.getTopAffectedProduct();
 }
 
+
+// getTopAffectedProduct() {
+//   const fromDate = localStorage.getItem('startDate');
+//   const toDate = localStorage.getItem('endDate');
+//   const payload = {
+//     vendor:'Alcatel-Lucent',
+//     fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+//     toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+//   };
+
+//   this.vulnerabilitiesService.getTopAffectedProducts(payload).subscribe((res) => {
+   
+//          console.log('getTopAffectedProduct',res)
+//           this.topEffected=res;
+   
+//   });
+// }
+getTopAffectedProduct() {
+  const fromDate = localStorage.getItem('startDate');
+  const toDate = localStorage.getItem('endDate');
+  const payload = {
+    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+  };
+
+  this.vulnerabilitiesService.getTopAffectedProducts(payload).subscribe((res) => {
+    const vendorCounts = res.reduce((acc:any, item:any) => {
+      const vendor = item.vendor;
+      if (!acc[vendor]) {
+        acc[vendor] = 0;
+      }
+      acc[vendor] += item.vulnerabilitesCount;
+      return acc;
+    }, {});
+
+    const result = Object.entries(vendorCounts).map(([vendor, totalCount]) => ({
+      vendor,
+      totalCount,
+    }));
+
+     this.affectedBrands(result);
+    this.dataSource1 = result;
+  });
+}
 
 getAffectedProduct(Vendor:any) {
   const fromDate = localStorage.getItem('startDate');
@@ -235,12 +284,16 @@ getAffectedProduct(Vendor:any) {
   });
 }
 
-private affectedBrands() {
+
+private affectedBrands(asset:any) {
+   const vendors = asset.map((item: any) => item.vendor);
+    const counts = asset.map((item: any) => item.totalCount);
   this.yearlysaleChart = {
     series: [
       {
         name: '',
-        data: [14778, 13950, 13085, 10413, 7360, 500, 500, 500],
+        // data: [1000,20000,3000,4000,5000],
+        data:counts
       },
     ],
 
@@ -276,16 +329,8 @@ private affectedBrands() {
       },
     },
     xaxis: {
-      categories: [
-        'Oracle',
-        'Apple',
-        'Microsoft',
-        'Google',
-        'IBM',
-        'Linux',
-        'Cisco',
-        'Adobe',
-      ],
+      // categories: ["Cisco","F5","MICROSOFT","Fortinet","Solarwinds"],
+      categories:vendors,
       axisBorder: {
         show: false,
       },

@@ -266,15 +266,42 @@ public selectedVersion$: Observable<string[]> =
       );
 }
 
+public getNewUpdatedCves(req: any): Observable<any> {
+  const body = {
+    // fromDate: req.fromDate,
+    // toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getNewUpdatedCves`;
+  return this.httpClient.post(url, body);
+}
+// public getFilteredCves(req: any): Observable<any> {
+//   const body = {
+//     formCvssScore:req.formCvssScore,
+//     toCvssScore:req.toCvssScore,
+//     fromDate: req.fromDate,
+//     toDate: req.toDate,
+//   };
+
+//   const url = `${environment.baseUrl}/getFilteredCves`;
+//   return this.httpClient.post(url, body);
+// }
 public getFilteredCves(req: any): Observable<any> {
   const body = {
-    formCvssScore:req.formCvssScore,
-    toCvssScore:req.toCvssScore,
     fromDate: req.fromDate,
     toDate: req.toDate,
   };
 
   const url = `${environment.baseUrl}/getFilteredCves`;
+  return this.httpClient.post(url, body);
+}
+
+public getTopAffectedProducts(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  const url = `${environment.baseUrl}/getTopAffectedProducts`;
   return this.httpClient.post(url, body);
 }
 
