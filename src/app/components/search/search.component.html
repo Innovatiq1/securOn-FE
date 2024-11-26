@@ -27,7 +27,7 @@
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-select placeholder="Select Project ID" [(value)]="_selectedProject"  (selectionChange)="onProjectChange($event.value)" multiple>
                             <mat-form-field style="width: 100%;">
-                                <input matInput placeholder="Search Project" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}" />
+                                <input matInput placeholder="Search Project ID" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}" />
                             </mat-form-field>
                             <mat-option *ngFor="let item of filteredProjects" [value]="item">{{ item }}</mat-option>
                         </mat-select>
@@ -53,7 +53,7 @@
                         <mat-select placeholder="Select Part No" [(value)]="_selectedPartNo"
                         (selectionChange)="onPartNoChange($event.value)" multiple>
                         <mat-form-field style="width: 100%;">
-                            <input matInput placeholder="Search Part no" [(ngModel)]="partnoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}"/>
+                            <input matInput placeholder="Search Part No" [(ngModel)]="partnoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}"/>
                         </mat-form-field>
                             <mat-option *ngFor="let partNo of filteredPartNo" [value]="partNo">{{ partNo }}</mat-option>
                         </mat-select>

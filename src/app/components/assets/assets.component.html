@@ -31,7 +31,7 @@
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Part No</mat-label>
               <mat-select [(value)]="_selectedProduct" (selectionChange)="_productChange()" multiple>
                 <mat-form-field>
-                  <input type="text" matInput placeholder="Search PartNo" [(ngModel)]="partNoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}" />
+                  <input type="text" matInput placeholder="Search Part No" [(ngModel)]="partNoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}" />
                 </mat-form-field>
                 <mat-option *ngFor="let partNo of filteredPartNo" [value]="partNo"
                >{{partNo}}</mat-option>
@@ -57,7 +57,7 @@
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Firmware Version </mat-label>
               <mat-select [(value)]="_selectedFirmwareVersion" (selectionChange)="_firmwareVersionChange()" multiple>
                 <mat-form-field>
-                  <input matInput placeholder="Search Firmware" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFwVersion()" [ngModelOptions]="{standalone: true}"/>
+                  <input matInput placeholder="Search Firmware Version" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFwVersion()" [ngModelOptions]="{standalone: true}"/>
                 </mat-form-field>
                 <mat-option *ngFor="let fw of filteredFwVersion" [value]="fw"
                   >{{fw}}</mat-option>
