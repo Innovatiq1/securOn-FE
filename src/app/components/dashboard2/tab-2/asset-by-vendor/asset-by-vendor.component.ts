@@ -17,6 +17,7 @@ import {
   NgApexchartsModule,
 } from 'ng-apexcharts';
 import { MaterialModule } from 'src/app/material.module';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -46,12 +47,21 @@ export class AssetByVendorComponent implements OnInit{
   public toggleSwitchState: boolean = true;
   public vendorChart: Partial<ChartOptions> |  any = {series: [] };
   assetByBrand:any;
-constructor(private vulnerabilitiesService:VulnerabilitiesService){
+  byVendor: any;
+constructor(private vulnerabilitiesService:VulnerabilitiesService,private vulnerabilityDataService: VulnerabilityDataService){
   // this.affectedBrands();
   // this.getCircularDashboardData();
 }
 ngOnInit(): void {
-  this.getCircularDashboardData();
+
+  this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
+    this.byVendor = data?.assetsByBrand;
+    if ( this.byVendor) {
+      this.affectedBrands(this.byVendor);
+    } else {
+      console.warn('assetByBrand is undefined or null.');
+    }
+  });
   
 }
 // getCircularDashboardData(){
@@ -78,40 +88,40 @@ ngOnInit(): void {
 // //     }
 // //   })
 // }
-getCircularDashboardData() {
-  const fromDate = localStorage.getItem('startDate');
-  const toDate = localStorage.getItem('endDate');
-  const payload = {
-    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
-    duration: '',
-    allData: this.toggleSwitchState,
-  };
+// getCircularDashboardData() {
+//   const fromDate = localStorage.getItem('startDate');
+//   const toDate = localStorage.getItem('endDate');
+//   const payload = {
+//     fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+//     toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+//     duration: '',
+//     allData: this.toggleSwitchState,
+//   };
 
-  // this.vulnerabilityDataService.setDataLoading(true);
+//   // this.vulnerabilityDataService.setDataLoading(true);
 
-  this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe(
-    async (response) => {
-      try {
-        if (response) {
+//   this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe(
+//     async (response) => {
+//       try {
+//         if (response) {
          
-          this.assetByBrand = response.assetsByBrand;
-          if (response.assetsByBrand) {
-            this.affectedBrands(response.assetsByBrand);
-          } else {
-            console.warn('assetByBrand is undefined or null.');
-          }
-        }
-      } catch (error) {
-        console.error('Error processing response:', error);
-      }   
-    },
-    (error:any) => {
-      // this.vulnerabilityDataService.setDataLoading(false);
-      console.error('Error fetching data:', error);
-    }
-  );
-}
+//           this.assetByBrand = response.assetsByBrand;
+//           if (response.assetsByBrand) {
+//             this.affectedBrands(response.assetsByBrand);
+//           } else {
+//             console.warn('assetByBrand is undefined or null.');
+//           }
+//         }
+//       } catch (error) {
+//         console.error('Error processing response:', error);
+//       }   
+//     },
+//     (error:any) => {
+//       // this.vulnerabilityDataService.setDataLoading(false);
+//       console.error('Error fetching data:', error);
+//     }
+//   );
+// }
 
   private affectedBrands(asset:any) {
     const vendors = asset.map((item: any) => item.vendor);

@@ -20,6 +20,7 @@ import { MaterialModule } from 'src/app/material.module';
 
 import { ChartOptions } from 'src/app/pages/charts/area/area.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 @Component({
   selector: 'app-by-contract-id',
   standalone: true,
@@ -34,7 +35,9 @@ export class ByContractIdComponent {
   byContractId: any;
   totalCount: any;
   byCriticality: any;
-  constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
+  loading: boolean;
+  apiCache: any;
+  constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router,private vulerabilityService: VulnerabilitiesService){
   
   }
   
@@ -49,6 +52,9 @@ export class ByContractIdComponent {
   }
 
   private initializeCharts() {
+    const hoveredSeverities = new Set<string>();
+    this.apiCache = new Map<string, any>(); // Cache for API responses
+  
     const baseChartOptions = {
       chart: {
         type: 'pie',
@@ -59,6 +65,13 @@ export class ByContractIdComponent {
         },
         height: 290,
         events: {
+          dataPointMouseEnter: (event: any, chartContext: any, config: any) => {
+            const label = config.w.config.labels[config.dataPointIndex];
+            if (!hoveredSeverities.has(label)) {
+              hoveredSeverities.add(label);
+              this.fetchData(label); 
+            }
+          },
           dataPointSelection: (
             event: any,
             chartContext: any,
@@ -92,54 +105,30 @@ export class ByContractIdComponent {
         '#8a3f53a2'
 
       ],
-      plotOptions: {
-        pie: {
-          pie: {
-            size: '65%',
-            background: 'none',
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                fontSize: '18px',
-                color: undefined,
-                offsetY: 5,
-              },
-              value: {
-                show: false,
-                color: '#98aab4',
-              },
-            },
-          },
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: false,
-      },
-      legend: {
-        show: true,
-        labels: {
-          colors: '#ffffff',
-        },
-        position: 'bottom',
-      },
       tooltip: {
         theme: 'dark',
         fillSeriesColor: false,
         custom: (options: { series: number[]; seriesIndex: number; dataPointIndex: number; w: any }) => {
           const { series, seriesIndex, w } = options;
-          const criticalityData = this.byCriticality || {};
-          const { criticalCount, highCount, mediumCount, lowCount, totalCount } = criticalityData;
+          const label = w.config.labels[seriesIndex];
       
-          const criticalityLabel = w.config.labels[seriesIndex];
+          const criticalityData = this.apiCache.get(label);
+          
+          if (!criticalityData) {
+            return `
+              <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
+                <strong>${label}</strong><br>
+                <div style="margin-top: 5px;">Loading data...</div>
+              </div>
+            `;
+          }
+      
+          const { criticalCount = 0, highCount = 0, mediumCount = 0, lowCount = 0, totalCount = 0 } = criticalityData;
           const criticalityCount = series[seriesIndex];
       
           return `
             <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
-              <strong>${criticalityLabel}: ${criticalityCount}</strong><br>
+              <strong>${label}: ${criticalityCount}</strong><br>
               <div style="margin-top: 5px;">
                 <strong>Total Count:</strong> ${totalCount}<br>
                 <strong>Critical:</strong> ${criticalCount}<br>
@@ -190,6 +179,67 @@ export class ByContractIdComponent {
         },
       };
     }
+  }
+
+  fetchData(severity: string) {
+    if (this.apiCache.has(severity)) {
+      console.log(`Using cached data for ${severity}`);
+      return;
+    }
+  
+    this.loading = true; 
+  
+    const seviarityPayload = {
+      allData: false,
+      duration: '',
+      fromDate: localStorage.getItem('startDate'),
+      project: severity,
+      toDate: localStorage.getItem('endDate'),
+    };
+  
+    this.vulerabilityService.getCveDataByProject(seviarityPayload).subscribe(
+      (data) => {
+        this.loading = false; 
+        if (Array.isArray(data)) {
+          const severityCounts = this.countSeverities(data);
+          this.apiCache.set(severity, severityCounts);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        console.error('Error fetching data:', error);
+      }
+    );
+  }
+
+  private countSeverities(data: any[]): { criticalCount: number, highCount: number, mediumCount: number, lowCount: number, totalCount: number } {
+    const counts = {
+      criticalCount: 0,
+      highCount: 0,
+      mediumCount: 0,
+      lowCount: 0,
+      totalCount: 0,
+    };
+  
+    data.forEach((item) => {
+      switch (item.seviarity.toUpperCase()) {
+        case 'CRITICAL':
+          counts.criticalCount++;
+          break;
+        case 'HIGH':
+          counts.highCount++;
+          break;
+        case 'MEDIUM':
+          counts.mediumCount++;
+          break;
+        case 'LOW':
+          counts.lowCount++;
+          break;
+      }
+      counts.totalCount++;
+    });
+  
+    return counts;
   }
 
   _openVulnerability(seviarity: string): void {

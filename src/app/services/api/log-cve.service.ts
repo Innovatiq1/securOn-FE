@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environment/environment';
 import { UserService } from '../auth/user.service';
 
@@ -55,6 +55,18 @@ export class LogCveService {
     };
   
     return this.http.get<any>(`${this.BASE_URL}/getAssets`, options);
+  }
+
+  uploadAssets(formData: FormData): Observable<any> {
+    return this.http.post(
+      `${this.BASE_URL + '/uploadAssets'}`,
+      formData,
+      this.userService.getRequestHeaders()
+    ).pipe(
+      tap(() => {
+        this.loadAllAssets();
+      })
+    );
   }
     // loadAllAssets(): Observable<any> {
     //   return this.http.get(

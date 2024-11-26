@@ -11,6 +11,22 @@ export class VulnerabilityDataService {
   private vulnerabilitiesTrendDataSubject = new BehaviorSubject<any>(null);
   vulnerabilitiesTrendsData$ = this.vulnerabilitiesTrendDataSubject.asObservable();
   private _isDataLoading = new BehaviorSubject<boolean>(false);
+
+  private startDateSubject = new BehaviorSubject<string | null>(localStorage.getItem('startDate'));
+  private endDateSubject = new BehaviorSubject<string | null>(localStorage.getItem('endDate'));
+
+  startDate$ = this.startDateSubject.asObservable();
+  endDate$ = this.endDateSubject.asObservable();
+
+  updateStartDate(date: string) {
+    localStorage.setItem('startDate', date);
+    this.startDateSubject.next(date);
+  }
+
+  updateEndDate(date: string) {
+    localStorage.setItem('endDate', date);
+    this.endDateSubject.next(date);
+  }
   setDataLoading(isLoading: boolean): void {
     this._isDataLoading.next(isLoading);
   }
