@@ -50,28 +50,27 @@ export class AppTrafficDistributionComponent implements OnInit {
       const fromDate = localStorage.getItem('startDate');
       const toDate = localStorage.getItem('endDate');
       const payload = {
-        // fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-        // toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+        
       };
   
-      this.vulnerabilitiesService.getNewUpdatedCves(payload).subscribe((res: Record<string, Array<{ id: number; cvssScore: number }>>) => {
-
-        const transformedResult = Object.entries(res).map(([numberOfDays, items]) => ({
-          numberOfDays,
-          count: items.length,
-        }));
-      
-        this.UpdateNewCves(transformedResult)
-        
+      this.vulnerabilitiesService
+        .getNewUpdatedCves(payload)
+        .subscribe((res: Record<string, number>) => {
+          const transformedResult = Object.entries(res).map(([numberOfDays, count]) => ({
+            numberOfDays,
+            count,
+          }));
+          this.UpdateNewCves(transformedResult);
   
-        resolve(); 
-      });
+          resolve();
+        });
     });
   }
-  UpdateNewCves(asset: any) {
-    const counts = asset.map((item: any) => item.count); 
-    const labels = asset.map((item: any) => item.numberOfDays);
-    asset.forEach((item: any) => {
+  
+  UpdateNewCves(asset: { numberOfDays: string; count: number }[]) {
+    const counts = asset.map((item) => item.count); 
+    const labels = asset.map((item) => item.numberOfDays);
+    asset.forEach((item) => {
       if (item.numberOfDays === 'last 1 day') {
         this.counts.last1Day = item.count;
       } else if (item.numberOfDays === 'last 7 days') {
@@ -80,7 +79,6 @@ export class AppTrafficDistributionComponent implements OnInit {
         this.counts.last30Days = item.count;
       }
     });
-  
     this.trafficChart = {
       series: counts, 
       chart: {
@@ -93,7 +91,7 @@ export class AppTrafficDistributionComponent implements OnInit {
         height: 250,
       },
       labels: labels, 
-      colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db', '#6f42c1'], 
+      colors: ['#e7ecf0', '#f8c076', '#fb977d'], 
       plotOptions: {
         pie: {
           donut: {
@@ -130,66 +128,4 @@ export class AppTrafficDistributionComponent implements OnInit {
       },
     };
   }
-  
-// UpdateNewCves(asset:any){
-//   const counts = asset.map((item: any) => item.count);
-//   const vendors = asset.map((item: any) => item.numberOfDays);
-  
-//   this.trafficChart = {
-//     series: counts,
-
-//     chart: {
-//       type: 'donut',
-//       fontFamily: "'Plus Jakarta Sans', sans-serif;",
-//       foreColor: '#adb0bb',
-//       toolbar: {
-//         show: false,
-//       },
-//       height: 250,
-//     },
-//     labels: [
-//       'Others',
-//       'Direct Traffic',
-//       'Refferal Traffic',
-//       'Oragnic Traffic',
-//     ],
-//     colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
-//     plotOptions: {
-//       pie: {
-//         donut: {
-//           size: '75%',
-//           background: 'none',
-//           labels: {
-//             show: true,
-//             name: {
-//               show: true,
-//               fontSize: '18px',
-//               color: undefined,
-//               offsetY: 5,
-//             },
-//             value: {
-//               show: false,
-//               color: '#98aab4',
-//             },
-//           },
-//         },
-//       },
-//     },
-//     dataLabels: {
-//       enabled: false,
-//     },
-//     stroke: {
-//       show: false,
-//     },
-//     legend: {
-//       show: false,
-//     },
-//     tooltip: {
-//       theme: 'dark',
-//       fillSeriesColor: false,
-//     },
-//   };
-// }
-
-
 }
