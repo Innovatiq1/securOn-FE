@@ -72,7 +72,10 @@
 <div class="row ">
     <div class="col-lg-6" >
         <mat-card class="cardWithShadow">
-            <h4 class="m-l-20 text-decoration-underline" >Cisco</h4>
+            <mat-card-header>
+                <mat-card-title>Cisco</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="b-t-1 mt-2">
             <div class="table-responsive m-t-5">
                 <table mat-table [dataSource]="dataSource2" class="w-100">
                     <ng-container matColumnDef="assigned">
@@ -113,11 +116,15 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
                 </table>
             </div>
+            </mat-card-content>
         </mat-card>
     </div>
     <div class="col-lg-6" >
         <mat-card class="cardWithShadow">
-            <h4 class="m-l-20 text-decoration-underline" >F5</h4>
+            <mat-card-header>
+                <mat-card-title>F5</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="b-t-1 mt-2">
             <div class="table-responsive m-t-5">
                 <table mat-table [dataSource]="dataSource3" class="w-100">
                     <ng-container matColumnDef="assigned">
@@ -158,13 +165,17 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
                 </table>
             </div>
+            </mat-card-content>
         </mat-card>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-6" >
         <mat-card class="cardWithShadow">
-            <h4 class="m-l-20 text-decoration-underline" >Fortinet</h4>
+            <mat-card-header>
+                <mat-card-title>Fortinet</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="b-t-1 mt-2">
             <div class="table-responsive m-t-5">
                 <table mat-table [dataSource]="dataSource5" class="w-100">
                     <ng-container matColumnDef="assigned">
@@ -205,11 +216,15 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
                 </table>
             </div>
+            </mat-card-content>
         </mat-card>
     </div>
     <div class="col-lg-6" >
         <mat-card class="cardWithShadow">
-            <h4 class="m-l-20 text-decoration-underline" >Solarwinds</h4>
+            <mat-card-header>
+                <mat-card-title>Solarwinds</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="b-t-1 mt-2">
             <div class="table-responsive m-t-5">
                 <table mat-table [dataSource]="dataSource5" class="w-100">
                     <ng-container matColumnDef="assigned">
@@ -250,6 +265,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
                 </table>
             </div>
+            </mat-card-content>
         </mat-card>
     </div>
 </div>
