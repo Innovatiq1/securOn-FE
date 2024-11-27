@@ -266,6 +266,16 @@ public selectedVersion$: Observable<string[]> =
       );
 }
 
+public getVenderProductCves(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getVenderProductCves`;
+  return this.httpClient.post(url, body);
+}
+
 public getNewUpdatedCves(req: any): Observable<any> {
   const body = {
     // fromDate: req.fromDate,
