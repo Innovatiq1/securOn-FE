@@ -1,7 +1,14 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  input,
+} from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { AppDashboard2Component } from "../dashboard2/dashboard2.component";
-import { UpdatedCveChartsComponent } from "../updated-cve-charts/updated-cve-charts.component";
+import { AppDashboard2Component } from '../dashboard2/dashboard2.component';
+import { UpdatedCveChartsComponent } from '../updated-cve-charts/updated-cve-charts.component';
 import { Observable, Subject, firstValueFrom, of } from 'rxjs';
 import moment from 'moment';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
@@ -12,13 +19,24 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-dashboard-root',
   standalone: true,
-  imports: [MatTabsModule, AppDashboard2Component, UpdatedCveChartsComponent,CommonModule,MatProgressSpinnerModule],
+  imports: [
+    MatTabsModule,
+    AppDashboard2Component,
+    UpdatedCveChartsComponent,
+    CommonModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './dashboard-root.component.html',
 })
 export class DashboardRootComponent implements OnInit, OnDestroy {
   valnerabilitiesResponse: any;
-  
-  constructor(private cdr: ChangeDetectorRef,private vulnerabilitiesService: VulnerabilitiesService,private vulnerabilityDataService: VulnerabilityDataService){}
+  results: { range: string; count: number; }[];
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private vulnerabilitiesService: VulnerabilitiesService,
+    private vulnerabilityDataService: VulnerabilityDataService
+  ) {}
   selectedTab = 0;
   public selectedDateRange: Date[];
   public selectSwitchDate: Date[];
@@ -31,6 +49,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   totalAssets: any[] = [];
   totalContracts: any[] = [];
   private storageInterval: any;
+
   onTabChange(index: number): void {
     setTimeout(() => {
       this.selectedTab = index;
@@ -60,41 +79,53 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
       const currentStartDate = localStorage.getItem('startDate');
       const currentEndDate = localStorage.getItem('endDate');
 
-      if (currentStartDate !== previousStartDate || currentEndDate !== previousEndDate) {
+      if (
+        currentStartDate !== previousStartDate ||
+        currentEndDate !== previousEndDate
+      ) {
         this.onTabChangeDate();
-        
+
         previousStartDate = currentStartDate;
         previousEndDate = currentEndDate;
       }
-    }, 1000); 
+    }, 1000);
   }
 
   onTabChangeDate(): void {
     const fromDate = localStorage.getItem('startDate');
     const toDate = localStorage.getItem('endDate');
-  
+
     const Trendpayload = {
       startDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
       endDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
       duration: '',
-      allData: this.toggleSwitchState
+      allData: this.toggleSwitchState,
     };
     const payload = {
       fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
       toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
       duration: '',
-      allData: this.toggleSwitchState
+      allData: this.toggleSwitchState,
+    };
+    const Cvsspayload = {
+      fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+      toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+      duration: '',
+      allData: this.toggleSwitchState,
     };
     this.loadData(payload);
     this.loadVulnerabilityTrendData(Trendpayload);
+    this.getFilteredCve(Cvsspayload);
   }
 
   async loadVulnerabilityTrendData(requestData: any): Promise<void> {
     try {
-      const response = await firstValueFrom(this.vulnerabilitiesService.loadVulnerabilityTrendData(requestData));
+      const response = await firstValueFrom(
+        this.vulnerabilitiesService.loadVulnerabilityTrendData(requestData)
+      );
       if (response) {
         // this._vulnerabilityTrendData$ = of(response);
-        this.vulnerabilityDataService.setVulnerabilitiesTrendsData(response)
+        this.vulnerabilityDataService.setVulnerabilitiesTrendsData(response);
       }
     } catch (error) {
       console.error('Vulnerability trend data call failed', error);
@@ -103,18 +134,18 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
 
   loadData(req: any) {
     try {
-      this.vulnerabilityDataService.setDataLoading(true);  
+      this.vulnerabilityDataService.setDataLoading(true);
       this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(req).subscribe(
         async (response) => {
           if (response) {
             this.valnerabilitiesResponse = response;
             this.vulnerabilityDataService.setVulnerabilitiesData(response);
           }
-          this.vulnerabilitiesService.setDataLoading(false); 
+          this.vulnerabilitiesService.setDataLoading(false);
           this.cdr.detectChanges();
         },
         (error) => {
-          this.vulnerabilityDataService.setDataLoading(false); 
+          this.vulnerabilityDataService.setDataLoading(false);
           console.error('Call failed', error);
         }
       );
@@ -122,5 +153,22 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
       this.vulnerabilitiesService.setDataLoading(false);
       console.error('Call failed', error);
     }
+  }
+
+  private getFilteredCve(payload:any): Promise<void> {
+    return new Promise((resolve) => {
+      
+      this.vulnerabilitiesService
+        .getFilteredCves(payload)
+        .subscribe((res: Record<string, number>) => {
+          const result = Object.entries(res).map(([range, count]) => ({
+            range,
+            count,
+          }));
+          this.vulnerabilityDataService.setVulnerabilitiesCvssData(result);
+          this.results = result;
+          resolve();
+        });
+    });
   }
 }
