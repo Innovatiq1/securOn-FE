@@ -28,7 +28,11 @@ export class GraphViewsComponent {
     this.activeRoute.queryParams.subscribe((params) => {
       if (params['data']) {
         const severity = JSON.parse(params['data']); 
-        if(severity.seviarity){
+        if(severity.metrics)
+          {
+            this.getVenderProductForGraph(severity)
+          }
+        else if(severity.seviarity){
           this.severity(severity)
         }else if(severity.vendorName){
           this.vendor(severity);
@@ -47,6 +51,18 @@ export class GraphViewsComponent {
         return cve.cveId.toLowerCase().includes(searchText.toLowerCase());
       });
       console.log('Filtered Vulnerabilities:', this._filteredVulnerabilities);
+    });
+  }
+
+  getVenderProductForGraph(severity: string){
+    this.vulerabilityService.getVenderProductForGraphs(severity).subscribe((data) => {
+      if (Array.isArray(data)) {
+        this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
+        this._allVulnerabilities = this.vulerabilities;
+        this._filteredVulnerabilities = [...this.vulerabilities]; 
+      } else {
+        console.error('Unexpected data structure:', data);
+      }
     });
   }
 
