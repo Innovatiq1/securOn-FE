@@ -266,6 +266,17 @@ public selectedVersion$: Observable<string[]> =
       );
 }
 
+public getVenderProductForGraphs(req: any): Observable<any> {
+  const body = {
+    seviarity:req.seviarity,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getVenderProductForGraphs`;
+  return this.httpClient.post(url, body);
+}
+
 public getVenderProductCves(req: any): Observable<any> {
   const body = {
     fromDate: req.fromDate,
