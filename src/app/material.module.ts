@@ -41,9 +41,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserModule } from '@angular/platform-browser';
 @NgModule({
   declarations: [],
+  imports: [
+    CommonModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right', // Adjust position if needed
+      preventDuplicates: true, // Avoid duplicate toasts
+    }), // Move ToastrModule here
+  ],
   exports: [
     MatAutocompleteModule,
     MatCheckboxModule,

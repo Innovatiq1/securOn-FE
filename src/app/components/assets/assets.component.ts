@@ -12,6 +12,7 @@ import { deleteAssets } from 'src/app/store/vulnerabilities.actions';
 import { Store,select } from '@ngrx/store';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 export interface assetData {
   project: string;
   brand: string;
@@ -115,6 +116,7 @@ export class AssetsComponent {
     private cdr: ChangeDetectorRef,
     private store$: Store,
     private router: Router,
+    private toastr: ToastrService,
   ) {
     
   }
@@ -135,7 +137,6 @@ export class AssetsComponent {
       
     this.formattedStartDate = startDate.toString();
     this.formattedEndDate = endDate.toString();
-    console.log(`Start Date: ${startDate} - ${this.formattedEndDate}`);
     this.vulnerabilitiesService.setDataLoading(true);
 
     this.logCveService
@@ -143,7 +144,6 @@ export class AssetsComponent {
       .subscribe((data: any[]) => {
         this._assets = data;
         this.dataSource = data;
-        console.log(this.dataSource);
         if (data.length == 0) {
           this.vulnerabilitiesService.loadAllAssets();
           this.cdr.detectChanges();
@@ -213,8 +213,8 @@ export class AssetsComponent {
         if (
           currentStartDate !== this.previousStartDate ||
           currentEndDate !== this.previousEndDate
-        ) {;
-console.log('cwww',currentStartDate,currentEndDate)
+        ) {
+// console.log('cwww',currentStartDate,currentEndDate)
           this.previousStartDate = currentStartDate || this.formattedStartDate;
           this.previousEndDate = currentEndDate || this.formattedEndDate;
           this.loadAssets(); 
@@ -339,7 +339,7 @@ console.log('cwww',currentStartDate,currentEndDate)
       this._partNo = partNo;
       this._osTypes = osTypes;
       this._firmwareVersions = firmwareVersions;
-      console.log(this._assets);
+      // console.log(this._assets);
       this._assets.forEach((item) => {
         if (item.vendor) {
           this._vendors.add(item.vendor);
@@ -475,7 +475,8 @@ console.log('cwww',currentStartDate,currentEndDate)
        assetsList = [this._assetToDelete];
       }
    this.vulnerabilitiesService.deleteAsset(assetsList).subscribe({ next: () => { 
-    // console.log('Assets deleted successfully');           
+    // console.log('Assets deleted successfully'); 
+    this.toastr.success('Assets deleted successfully')         
     error: (error:any) => {console.error('Error:', error); 
     } }}); }
 
@@ -488,7 +489,6 @@ console.log('cwww',currentStartDate,currentEndDate)
     private paginate(): void {
       const sortedDataSource = [...this.dataSource];
       sortedDataSource.reverse();
-      console.log("data sourse",sortedDataSource)
       this.totalItemCount = sortedDataSource.length;
       if (this.totalItemCount > this.pageSize) {
         const start = localStorage.getItem('start');
