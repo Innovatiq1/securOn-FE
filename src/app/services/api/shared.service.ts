@@ -19,7 +19,16 @@ export class VulnerabilityDataService {
 
   startDate$ = this.startDateSubject.asObservable();
   endDate$ = this.endDateSubject.asObservable();
+  private _loading = new BehaviorSubject<boolean>(false);
+  loading$ = this._loading.asObservable();
 
+  show() {
+    this._loading.next(true);
+  }
+
+  hide() {
+    this._loading.next(false);
+  }
   updateStartDate(date: string) {
     localStorage.setItem('startDate', date);
     this.startDateSubject.next(date);

@@ -10,6 +10,7 @@ import { debounceTime } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import * as ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 @Component({
   selector: 'app-graph-views',
@@ -23,7 +24,7 @@ export class GraphViewsComponent {
   vulerabilities: any[] = [];
   _filteredVulnerabilities: any[] = [];
   _allVulnerabilities: any[] = [];
-  constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public router:Router,public toastr: ToastrService){}
+  constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public router:Router,public toastr: ToastrService, public vulnerabilityDataService: VulnerabilityDataService){}
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
       if (params['data']) {
@@ -55,34 +56,42 @@ export class GraphViewsComponent {
   }
 
   getVenderProductForGraph(severity: string){
+    this.vulnerabilityDataService.show();
     this.vulerabilityService.getVenderProductForGraphs(severity).subscribe((data) => {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = [...this.vulerabilities]; 
+        this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
+        this.vulnerabilityDataService.hide();
       }
     });
   }
 
   severity(severity: string){
+    this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByCriticality(severity).subscribe((data) => {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = [...this.vulerabilities]; 
+        this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
+        this.vulnerabilityDataService.hide();
       }
     });
   }
   vendor(severity: string){
+    this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByBrand(severity).subscribe((data) => {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = [...this.vulerabilities]; 
+        this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
       }
@@ -101,11 +110,13 @@ export class GraphViewsComponent {
   }
 
   byContractId(severity: string){
+    this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByProject(severity).subscribe((data) => {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = [...this.vulerabilities]; 
+        this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
       }

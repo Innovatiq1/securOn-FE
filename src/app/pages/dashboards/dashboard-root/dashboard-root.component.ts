@@ -35,7 +35,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private vulnerabilitiesService: VulnerabilitiesService,
-    private vulnerabilityDataService: VulnerabilityDataService
+    public vulnerabilityDataService: VulnerabilityDataService
   ) {}
   selectedTab = 0;
   public selectedDateRange: Date[];
@@ -119,29 +119,30 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   }
 
   async loadVulnerabilityTrendData(requestData: any): Promise<void> {
+    this.vulnerabilityDataService.show();
     try {
       const response = await firstValueFrom(
         this.vulnerabilitiesService.loadVulnerabilityTrendData(requestData)
       );
       if (response) {
-        // this._vulnerabilityTrendData$ = of(response);
         this.vulnerabilityDataService.setVulnerabilitiesTrendsData(response);
       }
+      this.vulnerabilityDataService.hide();
     } catch (error) {
       console.error('Vulnerability trend data call failed', error);
     }
   }
 
   loadData(req: any) {
+    this.vulnerabilityDataService.show();
     try {
-      this.vulnerabilityDataService.setDataLoading(true);
       this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(req).subscribe(
         async (response) => {
           if (response) {
             this.valnerabilitiesResponse = response;
             this.vulnerabilityDataService.setVulnerabilitiesData(response);
           }
-          this.vulnerabilitiesService.setDataLoading(false);
+          this.vulnerabilityDataService.hide();
           this.cdr.detectChanges();
         },
         (error) => {
@@ -156,6 +157,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   }
 
   private getFilteredCve(payload:any): Promise<void> {
+    this.vulnerabilityDataService.show();
     return new Promise((resolve) => {
       
       this.vulnerabilitiesService
@@ -166,6 +168,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
             count,
           }));
           this.vulnerabilityDataService.setVulnerabilitiesCvssData(result);
+          this.vulnerabilityDataService.hide();
           this.results = result;
           resolve();
         });
