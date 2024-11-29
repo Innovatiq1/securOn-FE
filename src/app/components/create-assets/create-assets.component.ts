@@ -22,7 +22,7 @@ export class CreateAssetsComponent {
   assetFormGroup: FormGroup;
   constructor( 
     private _formBuilder: FormBuilder,
-    private vulnerabilitiesService: VulnerabilitiesService, private router: Router,private cdr: ChangeDetectorRef){
+    private vulnerabilitiesService: VulnerabilitiesService, private router: Router,private toastr: ToastrService,private cdr: ChangeDetectorRef){
       this.assetFormGroup = this._formBuilder.group({
         project: [''],
         vendor: ['',  [Validators.required]],
@@ -43,14 +43,15 @@ export class CreateAssetsComponent {
     const assetData = this.assetFormGroup.value;
     assetData.status == 'active' ? 'A' : 'I';
     this.vulnerabilitiesService.saveAsset(assetData).subscribe(data=>{
-      console.log("data",data)
-      if(data)
-      {
-        this.router.navigate(['/cve/assets']);
+      if (data) {
+        this.toastr.success('Asset created successfully');
+        setTimeout(() => {
+          this.router.navigate(['/cve/assets']);
+          this.cdr.detectChanges();
+        }, 2000); 
       }
 
     })
-console.log("this.assetFormGroup",this.assetFormGroup.value)
   }
   cancel(){
     window.history.back();
