@@ -53,7 +53,7 @@ export class ByContractIdComponent {
 
   private initializeCharts() {
     const hoveredSeverities = new Set<string>();
-    this.apiCache = new Map<string, any>(); // Cache for API responses
+    this.apiCache = new Map<string, any>();
   
     const baseChartOptions = {
       chart: {
@@ -112,8 +112,10 @@ export class ByContractIdComponent {
           const { series, seriesIndex, w } = options;
           const label = w.config.labels[seriesIndex];
       
+          // Fetch the criticality data from the cache
           const criticalityData = this.apiCache.get(label);
-          
+      
+          // Handle cases where data is missing
           if (!criticalityData) {
             return `
               <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
@@ -123,9 +125,13 @@ export class ByContractIdComponent {
             `;
           }
       
+          // Destructure severity counts and total count from the criticality data
           const { criticalCount = 0, highCount = 0, mediumCount = 0, lowCount = 0, totalCount = 0 } = criticalityData;
+      
+          // Get the specific count for the current series
           const criticalityCount = series[seriesIndex];
       
+          // Return a styled tooltip with criticality details
           return `
             <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
               <strong>${label}: ${criticalityCount}</strong><br>
@@ -140,8 +146,7 @@ export class ByContractIdComponent {
           `;
         },
       },
-      
-    };
+    }      
   
     if (this.byContractId && this.byContractId.length > 0) {
       const labels = this.byContractId.map((item: { project: any; }) => item.project);
@@ -187,7 +192,7 @@ export class ByContractIdComponent {
       return;
     }
   
-    this.loading = true; 
+    this.loading = true;
   
     const seviarityPayload = {
       allData: false,
@@ -197,11 +202,12 @@ export class ByContractIdComponent {
       toDate: localStorage.getItem('endDate'),
     };
   
-    this.vulerabilityService.getCveDataByProject(seviarityPayload).subscribe(
+    this.vulerabilityService.getCveDataCountByProject(seviarityPayload).subscribe(
       (data) => {
-        this.loading = false; 
-        if (Array.isArray(data)) {
-          const severityCounts = this.countSeverities(data);
+        this.loading = false;
+  
+        if (data && typeof data === 'object') {
+          const severityCounts = this.formatSeverities(data);
           this.apiCache.set(severity, severityCounts);
         }
       },
@@ -211,35 +217,15 @@ export class ByContractIdComponent {
       }
     );
   }
-
-  private countSeverities(data: any[]): { criticalCount: number, highCount: number, mediumCount: number, lowCount: number, totalCount: number } {
-    const counts = {
-      criticalCount: 0,
-      highCount: 0,
-      mediumCount: 0,
-      lowCount: 0,
-      totalCount: 0,
+  
+  private formatSeverities(data: Record<string, number>): { criticalCount: number, highCount: number, mediumCount: number, lowCount: number, totalCount: number } {
+    return {
+      criticalCount: data['CRITICAL'] || 0,
+      highCount: data['HIGH'] || 0,
+      mediumCount: data['MEDIUM'] || 0,
+      lowCount: data['LOW'] || 0,
+      totalCount: (data['CRITICAL'] || 0) + (data['HIGH'] || 0) + (data['MEDIUM'] || 0) + (data['LOW'] || 0),
     };
-  
-    data.forEach((item) => {
-      switch (item.seviarity.toUpperCase()) {
-        case 'CRITICAL':
-          counts.criticalCount++;
-          break;
-        case 'HIGH':
-          counts.highCount++;
-          break;
-        case 'MEDIUM':
-          counts.mediumCount++;
-          break;
-        case 'LOW':
-          counts.lowCount++;
-          break;
-      }
-      counts.totalCount++;
-    });
-  
-    return counts;
   }
 
   _openVulnerability(seviarity: string): void {
