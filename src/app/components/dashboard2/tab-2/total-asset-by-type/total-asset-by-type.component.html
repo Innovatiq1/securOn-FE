@@ -9,12 +9,12 @@
                 [colors]="typeChart.colors" [tooltip]="typeChart.tooltip" [labels]="typeChart.labels"
                 [stroke]="typeChart.stroke">
             </apx-chart>
-            <div class="chart-labels">
+            <!-- <div class="chart-labels">
                 <span class="label" *ngFor="let item of assetByType; let i = index"
                     [ngStyle]="getLabelStyle(i, totalCount)">
                     {{ item.type }}: {{ item.count }}
                 </span>
-            </div>
+            </div> -->
         </div>
         <h4 style="float: right; margin-top: 10px;">Total: {{totalCount}} </h4>
     </mat-card-content>

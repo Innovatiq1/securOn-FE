@@ -78,7 +78,15 @@ export class TotalAssetByBrandComponent implements OnInit{
         },
         height: 270,
       },
-      colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
+      colors: [
+      '#0070BA',
+      '#F98D2B',
+      '#43A047',
+      '#0288D1',
+      '#fb977d',
+      '#FFCA28',
+      '#217544',
+      '#f8c076',],
       plotOptions: {
         pie: {
           donut: {

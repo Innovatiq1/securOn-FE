@@ -10,11 +10,11 @@
             [tooltip]="brandChart.tooltip" [labels]="brandChart.labels"
             [stroke]="brandChart.stroke">
         </apx-chart>
-        <div class="chart-labels">
+        <!-- <div class="chart-labels">
             <span class="label" *ngFor="let item of assetByBrand; let i = index" [ngStyle]="getLabelStyle(i, totalCount)">
               {{ item.vendor }}: {{ item.count }}
             </span>
-          </div>
+          </div> -->
         </div>
         <h4 style="float: right; margin-top: 10px;">Total: {{totalCount}}</h4>
     </mat-card-content>
