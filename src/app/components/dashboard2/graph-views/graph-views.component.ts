@@ -51,7 +51,7 @@ export class GraphViewsComponent {
       this._filteredVulnerabilities = this._allVulnerabilities.filter((cve) => {
         return cve.cveId.toLowerCase().includes(searchText.toLowerCase());
       });
-      console.log('Filtered Vulnerabilities:', this._filteredVulnerabilities);
+      // console.log('Filtered Vulnerabilities:', this._filteredVulnerabilities);
     });
   }
 
@@ -148,6 +148,15 @@ export class GraphViewsComponent {
         'Project ID': x.project || '-',
         'Firmware Version': x.version || '-',
         'Serial No': x.serialNo || '-',
+        'Fixed Release': x.fixedRelease|| '-',
+        'Security Advisory URL':x.advisoryUrl || '-',
+        'Security Advisory Title':x.advisoryTitle || '-',
+        'Security Impact Rating':x.seviarity || '-',
+          'CVSS Base Score':x.cvssScore || '-',
+          'Vulnerable Component or Feature':'-',
+          'Determine Whether Vulnerable Feature is Enabled':'-',
+          'Workaround/Mitigation':x.workarounds || '-',
+
     }));
 
     const workbook = new ExcelJS.Workbook();
@@ -155,22 +164,52 @@ export class GraphViewsComponent {
 
     const headers = Object.keys(allDataToExport[0]);
     const headerRow = worksheet.addRow(headers);
-    headerRow.eachCell((cell) => {
-        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '0070c0' } };
-        cell.font = { color: { argb: 'FFFFFF' }, bold: true };
-        cell.alignment = { vertical: 'top' };
-        cell.border = {
-            top: { style: 'thin', color: { argb: '000000' } },
-            left: { style: 'thin', color: { argb: '000000' } },
-            bottom: { style: 'thin', color: { argb: '000000' } },
-            right: { style: 'thin', color: { argb: '000000' } },
+    headerRow.eachCell((cell: any, colNumber: number) => {
+      if (colNumber <= 9) { 
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '0070c0' }, 
         };
+        cell.font = {
+          color: { argb: 'FFFFFF' },
+          bold: true,
+        };
+      } else { 
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '00b050' }, 
+        };
+        cell.font = {
+          color: { argb: 'FFFFFF' },
+          bold: true,
+        };
+      }
+    
+      cell.alignment = {
+        vertical: 'top',
+        horizontal: 'center', 
+        wrapText: true,       
+      };
+    
+      cell.border = {
+        top: { style: 'thin', color: { argb: '000000' } },
+        left: { style: 'thin', color: { argb: '000000' } },
+        bottom: { style: 'thin', color: { argb: '000000' } },
+        right: { style: 'thin', color: { argb: '000000' } },
+      };
     });
 
     worksheet.addRow([]); 
-
-    allDataToExport.forEach((x: any) => {
-        worksheet.addRow(Object.values(x));
+    allDataToExport.forEach((item: any) => {
+      const dataRow = worksheet.addRow(Object.values(item));
+      dataRow.eachCell((cell: any) => {
+        cell.alignment = {
+          wrapText: true,       
+          vertical: 'top',
+        };
+      });
     });
     worksheet.mergeCells('A1:A2');
     worksheet.mergeCells('B1:B2');
@@ -181,8 +220,16 @@ export class GraphViewsComponent {
     worksheet.mergeCells('G1:G2');
     worksheet.mergeCells('H1:H2');
     worksheet.mergeCells('I1:I2');
-    worksheet.mergeCells('J1:K2');
-    const columnWidths = [20, 15, 25, 15, 15, 20, 15, 20, 15];
+    worksheet.mergeCells('J1:J2');//dfhds
+    worksheet.mergeCells('K1:K2');
+    worksheet.mergeCells('L1:L2');
+    worksheet.mergeCells('M1:M2');
+    worksheet.mergeCells('N1:N2');
+    worksheet.mergeCells('O1:O2');
+    worksheet.mergeCells('P1:P2');
+    worksheet.mergeCells('Q1:Q2');
+
+    const columnWidths = [20, 15, 25, 15, 15, 20, 15, 20, 15,15,15,15,15,20,25,30,25];
     columnWidths.forEach((width, index) => {
         worksheet.getColumn(index + 1).width = width;
     });

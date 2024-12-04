@@ -14,8 +14,8 @@ import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.ser
 import * as ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
 import { LogCveService } from 'src/app/services/api/log-cve.service';
-
-
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -118,13 +118,16 @@ export class SearchComponent implements OnInit, AfterViewInit {
   private storageInterval: any;
   previousStartDate: string | null;
   previousEndDate: string | null;
+
+  private subscriptions: Subscription = new Subscription();
   constructor(
     private cdr: ChangeDetectorRef,
     public searchService: SearchService,
     private toastr: ToastrService,
     private vulnerabilitiesService: VulnerabilitiesService,
     private router: Router,
-    private logCveService: LogCveService
+    private logCveService: LogCveService,
+    private localStorageService: VulnerabilityDataService
   ) {}
 
   ngOnInit() {
@@ -138,6 +141,17 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.searchService.getDropdownData().subscribe((data) => {
       this.dropdownData = data;
     });
+
+    this.subscriptions.add(
+      this.localStorageService.startDate$.subscribe(() => {
+        const startDate = localStorage.getItem('startDate') || '';
+    const endDate = localStorage.getItem('endDate') || '';
+
+       this.formattedStartDate = startDate.toString();
+       this.formattedEndDate = endDate.toString();
+
+      })
+    );
 
     this.vulnerabilitiesService.setDataLoading(true);
     // this.loadedAssets$ = this.vulnerabilitiesService.getAllAssets();
@@ -499,7 +513,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
       startDate: this.formattedStartDate || '',
       endDate: this.formattedEndDate || '',
     };
-
     this.searchService.postSearch(payload).subscribe(
       (data: any) => {
         const allDataToExport = data.docs.map((item: any) => ({
@@ -513,25 +526,103 @@ export class SearchComponent implements OnInit, AfterViewInit {
           'Fix Available': item.fix === 'Y' ? 'Yes' : 'No',
           'Affected by CVE': item.affectedCve ? 'No' : 'Yes',
           'CVE ID': item.cveId || '-',
+          'Fixed Release':item.fixedRelease|| '-',
+          'Security Advisory URL':item.advisoryUrl || '-',
+          'Security Advisory Title':item.advisoryTitle || '-',
+          'Security Impact Rating':item.seviarity || '-',
+          'CVSS Base Score':item.cvssScore || '-',
+          'Vulnerable Component or Feature':'-',
+          'Determine Whether Vulnerable Feature is Enabled':'-',
+          'Workaround/Mitigation':item.workarounds || '-',
+
         }));
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('SearchResults');
         const headers = Object.keys(allDataToExport[0]);
         const headerRow = worksheet.addRow(headers);
 
-        headerRow.eachCell((cell: any) => {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: '0070c0' },
-          };
-          cell.font = {
-            color: { argb: 'FFFFFF' },
-            bold: true,
-          };
+        // headerRow.eachCell((cell: any) => {
+        //   cell.fill = {
+        //     type: 'pattern',
+        //     pattern: 'solid',
+        //     fgColor: { argb: '0070c0' },
+        //   };
+        //   cell.font = {
+        //     color: { argb: 'FFFFFF' },
+        //     bold: true,
+        //   };
+        //   cell.alignment = {
+        //     vertical: 'top',
+        //   };
+        //   cell.border = {
+        //     top: { style: 'thin', color: { argb: '000000' } },
+        //     left: { style: 'thin', color: { argb: '000000' } },
+        //     bottom: { style: 'thin', color: { argb: '000000' } },
+        //     right: { style: 'thin', color: { argb: '000000' } },
+        //   };
+        // });
+        // headerRow.eachCell((cell: any, colNumber: number) => {
+        //   if (colNumber <= 10) { 
+        //     cell.fill = {
+        //       type: 'pattern',
+        //       pattern: 'solid',
+        //       fgColor: { argb: '0070c0' }, 
+        //     };
+        //     cell.font = {
+        //       color: { argb: 'FFFFFF' },
+        //       bold: true,
+        //     };
+        //   } else { 
+        //     cell.fill = {
+        //       type: 'pattern',
+        //       pattern: 'solid',
+        //       fgColor: { argb: '00b050' }, 
+        //     };
+        //     cell.font = {
+        //       color: { argb: 'FFFFFF' },
+        //       bold: true,
+        //     };
+        //   }
+        
+        //   cell.alignment = {
+        //     vertical: 'top',
+        //   };
+        //   cell.border = {
+        //     top: { style: 'thin', color: { argb: '000000' } },
+        //     left: { style: 'thin', color: { argb: '000000' } },
+        //     bottom: { style: 'thin', color: { argb: '000000' } },
+        //     right: { style: 'thin', color: { argb: '000000' } },
+        //   };
+        // });
+        headerRow.eachCell((cell: any, colNumber: number) => {
+          if (colNumber <= 10) { 
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: '0070c0' }, 
+            };
+            cell.font = {
+              color: { argb: 'FFFFFF' },
+              bold: true,
+            };
+          } else { 
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: '00b050' }, 
+            };
+            cell.font = {
+              color: { argb: 'FFFFFF' },
+              bold: true,
+            };
+          }
+        
           cell.alignment = {
             vertical: 'top',
+            horizontal: 'center', 
+            wrapText: true,       
           };
+        
           cell.border = {
             top: { style: 'thin', color: { argb: '000000' } },
             left: { style: 'thin', color: { argb: '000000' } },
@@ -539,12 +630,18 @@ export class SearchComponent implements OnInit, AfterViewInit {
             right: { style: 'thin', color: { argb: '000000' } },
           };
         });
-
-        worksheet.addRow([]);
-
+         worksheet.addRow([]);
         allDataToExport.forEach((item: any) => {
-          worksheet.addRow(Object.values(item));
+          const dataRow = worksheet.addRow(Object.values(item));
+          dataRow.eachCell((cell: any) => {
+            cell.alignment = {
+              wrapText: true,       
+              vertical: 'top',
+            };
+          });
         });
+        
+
         worksheet.mergeCells('A1:A2');
         worksheet.mergeCells('B1:B2');
         worksheet.mergeCells('C1:C2');
@@ -554,23 +651,20 @@ export class SearchComponent implements OnInit, AfterViewInit {
         worksheet.mergeCells('G1:G2');
         worksheet.mergeCells('H1:H2');
         worksheet.mergeCells('I1:I2');
-        worksheet.mergeCells('J1:K2');
-        //worksheet.mergeCells('H1:J2');
+        worksheet.mergeCells('J1:J2');
+        worksheet.mergeCells('K1:K2');
+        worksheet.mergeCells('L1:L2');
+        worksheet.mergeCells('M1:M2');
+        worksheet.mergeCells('N1:N2');
+        worksheet.mergeCells('O1:O2');
+        worksheet.mergeCells('P1:P2');
+        worksheet.mergeCells('Q1:Q2');
 
-        const headerLengths = [
-          { width: 20 }, // Brand
-          { width: 10 }, // PartNo
-          { width: 20 }, // Firmware
-          { width: 20 }, // SerialNo
-          { width: 20 }, // Product
-          { width: 20 }, // Severity
-          { width: 5 }, // Fix
-          { width: 5 }, // AffectedCve
-          { width: 10 }, // CVE_ID
-        ];
+        const headerLengths = [20, 15, 25, 15, 15, 20, 15, 20, 15,15,15,15,15,20,25,30,25];
+        
 
-        headerLengths.forEach((length, index) => {
-          worksheet.getColumn(index + 1).width = length.width;
+        headerLengths.forEach((width, index) => {
+          worksheet.getColumn(index + 1).width = width;
         });
 
         workbook.xlsx.writeBuffer().then((buffer: any) => {
