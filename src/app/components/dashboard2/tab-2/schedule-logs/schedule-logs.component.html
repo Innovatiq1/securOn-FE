@@ -5,6 +5,9 @@
                 <mat-card-title>Scheduler logs</mat-card-title>
             </mat-card-header>
             <mat-card-content class="b-t-1 mt-2">
+                <div *ngIf="!schedulerLogsData?.length" class="m-l-12 f-s-16 mt-2 text-danger">
+                    <h4 class="f-w-700 text-center">No data found</h4>
+                </div>
             <!-- <h4 class="m-l-20">Scheduler logs</h4> -->
             <div *ngFor="let log of schedulerLogsData" class=" m-l-12 f-s-16 m-t-2 text-primary">
                 <span class="text-warning">{{ log?.meta?.priority}} {{log?.meta?.version}}</span>
@@ -22,6 +25,9 @@
                 <mat-card-title>Audit logs</mat-card-title>
             </mat-card-header>
             <mat-card-content class="b-t-1 mt-2">
+                <div *ngIf="!UserActivityLogsData?.length" class="m-l-12 f-s-16 mt-2 text-danger">
+                    <h4 class="f-w-700 text-center">No data found</h4>
+                </div>
             <!-- <h4 class="m-l-20">Audit logs</h4> -->
             <div *ngFor="let log of UserActivityLogsData" class="m-l-12 f-s-16 m-t-2 text-primary">
                 <span class="text-warning">{{ log?.meta?.priority}} {{log?.meta?.version}}</span>
