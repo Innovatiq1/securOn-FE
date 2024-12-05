@@ -4,7 +4,7 @@
     </mat-card-header>
     
     <mat-card-content class="b-t-1">
-        <div class="chart-container" style=" position: relative;">
+        <div class="chart-container">
             <apx-chart 
               [series]="criticalChartOptions1.series" 
               [plotOptions]="criticalChartOptions1.plotOptions"
@@ -18,26 +18,17 @@
             </apx-chart>
           
             <!-- Custom labels -->
-            <div class="chart-labels" style=" position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;">
-              <span 
-                class="label" style="  position: absolute;
-                font-size: 12px;
-                font-weight: bold;
-                text-align: center;
-                white-space: nowrap;"
-                *ngFor="let series of criticalChartOptions1.series; let i = index" 
-                [ngStyle]="series > 0 ? getLabelStyle(i, byCriticality?.totalCount) : {}"
-                >
-                <div *ngIf="series > 0">
-                {{ series }}
-            </div>
-              </span>
-            </div>
+            <div
+            class="chart-labels">
+            <span
+              class="label"
+              *ngFor="let series of criticalChartOptions1.series; let i = index"
+              [ngStyle]="series > 0 ? getLabelStyle(i, byCriticality?.totalCount) : {}">
+              <div *ngIf="series > 0">
+                {{ criticalChartOptions1.labels[i] }}: {{ series }}
+              </div>
+            </span>
+          </div>
           </div>
           
       <h4 style="float: right; margin-top: 10px;">

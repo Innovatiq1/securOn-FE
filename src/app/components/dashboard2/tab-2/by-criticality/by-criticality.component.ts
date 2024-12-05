@@ -43,6 +43,7 @@ export type ChartOptions = {
   standalone: true,
   imports: [MatCardModule,NgApexchartsModule,CommonModule],
   templateUrl: './by-criticality.component.html',
+  styleUrls: ['../by-brand/by-brand.component.scss']
 })
 export class ByCriticalityComponent {
   @ViewChild('chart1') chart1: ChartComponent = Object.create(null);
@@ -86,7 +87,7 @@ private initializeCharts() {
       fontFamily: 'inherit',
       foreColor: '#a1aab2',
       toolbar: { show: false },
-      height: 290,
+      height: 270,
       events: {
         dataPointMouseEnter: (event: any, chartContext: any, config: any) => {
           const label = config.w.config.labels[config.dataPointIndex];
@@ -101,6 +102,7 @@ private initializeCharts() {
         },
       },
     },
+    labels: ['Low', 'Medium', 'High', 'Critical'], // Add severity labels here
     colors: ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'],
     plotOptions: {
       pie: {
@@ -122,7 +124,7 @@ private initializeCharts() {
     dataLabels: { enabled: false },
     stroke: { show: false },
     legend: {
-      show: true,
+      show: false,
       labels: { colors: '#ffffff' },
       position: 'bottom',
     },
@@ -325,7 +327,7 @@ getLabelStyle(index: number, total: number) {
   const segmentAngle = (this.criticalChartOptions1.series[index] / total) * 360;
   const angle = startAngle + segmentAngle / 2 - 90;
 
-  const radius = 27;
+  const radius = 60;
   const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
   const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
 
@@ -334,10 +336,10 @@ getLabelStyle(index: number, total: number) {
     left: `${x}%`,
     transform: 'translate(-50%, -50%)',
     fontWeight: 'bold',
-    color: '#000',
-    background: '#f4f4f4',
-    padding: '4px 6px',
-    borderRadius: '4px',
+    color: '#fff',
+    // background: '#f4f4f4',
+    // padding: '4px 6px',
+    // borderRadius: '4px',
   };
 }
 
