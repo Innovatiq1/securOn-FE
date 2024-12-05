@@ -531,8 +531,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
           'Security Advisory Title':item.advisoryTitle || '-',
           'Security Impact Rating':item.seviarity || '-',
           'CVSS Base Score':item.cvssScore || '-',
-          'Vulnerable Component or Feature':'-',
-          'Determine Whether Vulnerable Feature is Enabled':'-',
+          'Vulnerable Component or Feature':item.vulnerableComponent || '-',
+          'Determine Whether Vulnerable Feature is Enabled':item.vulnerableFeature || '-',
           'Workaround/Mitigation':item.workarounds || '-',
 
         }));
@@ -659,8 +659,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
         worksheet.mergeCells('O1:O2');
         worksheet.mergeCells('P1:P2');
         worksheet.mergeCells('Q1:Q2');
+        worksheet.mergeCells('R1:R2');
 
-        const headerLengths = [20, 15, 25, 15, 15, 20, 15, 20, 15,15,15,15,15,20,25,30,25];
+        const headerLengths = [20, 15, 25, 15, 15, 20, 15, 20, 15,15,15,25,25,20,25,30,30,30];
         
 
         headerLengths.forEach((width, index) => {
