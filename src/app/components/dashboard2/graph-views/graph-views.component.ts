@@ -153,8 +153,8 @@ export class GraphViewsComponent {
         'Security Advisory Title':x.advisoryTitle || '-',
         'Security Impact Rating':x.seviarity || '-',
           'CVSS Base Score':x.cvssScore || '-',
-          'Vulnerable Component or Feature':'-',
-          'Determine Whether Vulnerable Feature is Enabled':'-',
+          'Vulnerable Component or Feature':x.vulnerableComponent || '-',
+          'Determine Whether Vulnerable Feature is Enabled':x.vulnerableFeature || '-',
           'Workaround/Mitigation':x.workarounds || '-',
 
     }));
