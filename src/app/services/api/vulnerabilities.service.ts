@@ -255,6 +255,18 @@ public selectedVersion$: Observable<string[]> =
     const url = `${environment.baseUrl}/fetchcves`;
     return this.httpClient.post(url, body);
   }
+  public getCveCountByWeakness(body: any): Observable<any> {
+    const url = `${environment.baseUrl}/getCveCountByWeakness`;
+    return this.httpClient.post(url, body);
+  }
+
+  public getCveRecordsByWeaknessAndDate(body: any): Observable<any> {
+    const url = `${environment.baseUrl}/getCveRecordsByWeaknessAndDate`;
+    return this.httpClient.post(url, body);
+  }
+
+
+
  
   deleteAsset(requestData: any): Observable<any> {
     const url = environment.baseUrl + '/deleteAssets';

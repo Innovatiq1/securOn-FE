@@ -116,6 +116,11 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
     this.loadData(payload);
     this.loadVulnerabilityTrendData(Trendpayload);
     this.getFilteredCve(Cvsspayload);
+let CwePayload ={
+  fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+      endDate: toDate ? moment(toDate).format('YYYY-MM-DD') : ''
+}
+    this.getCveCountByWeakness(CwePayload);
   }
 
   async loadVulnerabilityTrendData(requestData: any): Promise<void> {
@@ -173,5 +178,28 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
           resolve();
         });
     });
+  }
+
+  getCveCountByWeakness(req: any) {
+    this.vulnerabilityDataService.show();
+    try {
+      this.vulnerabilitiesService.getCveCountByWeakness(req).subscribe(
+        async (response) => {
+          console.log("cwe count",response)
+          if (response) {
+            this.vulnerabilityDataService.setVulnerabilitiesCweData(response);
+          }
+          this.vulnerabilityDataService.hide();
+          this.cdr.detectChanges();
+        },
+        (error) => {
+          this.vulnerabilityDataService.setDataLoading(false);
+          console.error('Call failed', error);
+        }
+      );
+    } catch (error) {
+      this.vulnerabilitiesService.setDataLoading(false);
+      console.error('Call failed', error);
+    }
   }
 }
