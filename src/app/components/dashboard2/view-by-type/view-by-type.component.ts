@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, debounceTime } from 'rxjs';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CvssAttribute } from "../../../pipe/cvss-attribute.pipe";
 import { ScoreChipComponent } from "../../score-chip/score-chip.component";
 import { ActivatedRoute } from '@angular/router';
@@ -22,6 +22,7 @@ export class ViewByTypeComponent {
   startDate: string = '';
   endDate: string = '';
   label: string | null = null;
+  searchControl: FormControl = new FormControl("");
   private subscriptions: Subscription = new Subscription();
   response: any;
   readonly cweLabelMapping: { [key: string]: string } = {
@@ -73,6 +74,14 @@ export class ViewByTypeComponent {
       })
     );
     this.getCveRecordsByWeaknessAndDate();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(200) 
+    ).subscribe((searchText: string) => {
+      this.response = this.response.filter((cve: { cveId: string; }) => {
+        return cve?.cveId.toLowerCase().includes(searchText.toLowerCase());
+      });
+    });
   }
 
   ngOnDestroy(): void {
