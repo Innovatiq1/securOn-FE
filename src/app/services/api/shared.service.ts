@@ -10,6 +10,10 @@ export class VulnerabilityDataService {
 
   private vulnerabilitiesTrendDataSubject = new BehaviorSubject<any>(null);
   vulnerabilitiesTrendsData$ = this.vulnerabilitiesTrendDataSubject.asObservable();
+
+  private vulnerabilitiesCweDataSubject = new BehaviorSubject<any>(null);
+  vulnerabilitiesCwesData$ = this.vulnerabilitiesCweDataSubject.asObservable();
+
   private vulnerabilitiesCvssDataSubject = new BehaviorSubject<any>(null);
   vulnerabilitiesCvssData$ = this.vulnerabilitiesCvssDataSubject.asObservable();
   private _isDataLoading = new BehaviorSubject<boolean>(false);
@@ -55,5 +59,8 @@ export class VulnerabilityDataService {
   }
   setVulnerabilitiesCvssData(data: any) {
     this.vulnerabilitiesCvssDataSubject.next(data);
+  }
+  setVulnerabilitiesCweData(data: any) {
+    this.vulnerabilitiesCweDataSubject.next(data);
   }
 }

@@ -9,6 +9,7 @@ import { AdministrationComponent } from './administration/administration.compone
 import { ListComponent } from './dashboard2/top-cards/list/list.component';
 import { GraphViewsComponent } from './dashboard2/graph-views/graph-views.component';
 import { CveViewComponent } from './dashboard2/cve-view/cve-view.component';
+import { ViewByTypeComponent } from './dashboard2/view-by-type/view-by-type.component';
 
 export const ComponentRoutes: Routes = [
     {
@@ -67,6 +68,13 @@ export const ComponentRoutes: Routes = [
       {
         path:'vulnerabilty',
         component: CveViewComponent,
+        data: {
+          title: '',
+        },
+      },
+      {
+        path:'vulnerabilty-viwe-by-type',
+        component: ViewByTypeComponent,
         data: {
           title: '',
         },
