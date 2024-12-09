@@ -2,7 +2,7 @@
     <mat-card-content>
         <div class="d-flex justify-content-between">
             <mat-form-field appearance="outline" class="w-50 hide-hint">
-                <input matInput placeholder="Search By CVE ID..."  />
+                <input matInput placeholder="Search By CVE ID..."  [formControl]="searchControl" />
                 <mat-icon matSuffix>
                     <i-tabler name="search" class="icon-20"></i-tabler>
                 </mat-icon>
