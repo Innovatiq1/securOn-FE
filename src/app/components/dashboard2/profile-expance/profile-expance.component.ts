@@ -171,8 +171,8 @@ export class AppProfileExpanceCpmponent {
           },
         },
         min: 0,
-        max: 10000,
-        tickAmount: 4,
+        max: 20000,
+        tickAmount: 5,
       },
       tooltip: {
         theme: 'dark',

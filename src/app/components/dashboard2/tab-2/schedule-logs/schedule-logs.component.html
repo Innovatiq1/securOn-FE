@@ -1,10 +1,14 @@
 <div class="row">
     <div class="col-lg-6">
         <mat-card class="cardWithShadow" style="overflow: auto; height: 190px;">
-            <mat-card-header>
+            <mat-card-header style="padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                 <mat-card-title>Scheduler logs</mat-card-title>
+                <div style="display: flex; gap: 10px;">
+                    <img src="/assets/images/svgs/icons8-excel-48.png" (click)="schedulerExcel()" alt="img" class="image-excel" style="height: 45px;"/>
+                    <img src="/assets/images/svgs/csv.png" alt="img" (click)="schedulerCSV()" class="image-csv" style="height: 40px; margin-top: 3px;"/>
+                </div>
             </mat-card-header>
-            <mat-card-content class="b-t-1 mt-2">
+            <mat-card-content class="b-t-1 mt-2" style="overflow: auto;">
                 <div *ngIf="!schedulerLogsData?.length" class="m-l-12 f-s-16 mt-2 text-danger">
                     <h4 class="f-w-700 text-center">No data found</h4>
                 </div>
@@ -21,10 +25,14 @@
     </div>
     <div class="col-lg-6">
         <mat-card class="cardWithShadow" style="overflow: auto; height: 190px;">
-            <mat-card-header>
+            <mat-card-header style="padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                 <mat-card-title>Audit logs</mat-card-title>
+                <div style="display: flex; gap: 10px;">
+                    <img src="/assets/images/svgs/icons8-excel-48.png" (click)="auditExcel()" alt="img" class="image-excel" style="height: 45px;"/>
+                    <img src="/assets/images/svgs/csv.png" alt="img" (click)="auditCSV()" class="image-csv" style="height: 40px; margin-top: 3px;"/>
+                </div>
             </mat-card-header>
-            <mat-card-content class="b-t-1 mt-2">
+            <mat-card-content class="b-t-1 mt-2" style="overflow: auto;">
                 <div *ngIf="!UserActivityLogsData?.length" class="m-l-12 f-s-16 mt-2 text-danger">
                     <h4 class="f-w-700 text-center">No data found</h4>
                 </div>
