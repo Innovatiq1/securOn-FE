@@ -426,7 +426,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       });
   }
   public loadAssets() {
-    this.logCveService.loadAllAssets().subscribe((data: any[]) => {
+    this.logCveService.loadOnlyAssets().subscribe((data: any[]) => {
       this._assets = data;
       if (this._assets.length > 0) {
         this.vulnerabilitiesService.setSelectedAssetId(this._assets[0]._id);
