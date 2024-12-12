@@ -11,6 +11,7 @@ import { debounceTime } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import * as ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 @Component({
   selector: 'app-list',
@@ -24,35 +25,51 @@ export class ListComponent {
   vulerabilities: any[] = [];
   _filteredVulnerabilities: any[] = [];
   _allVulnerabilities: any[] = [];
-  constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public toastr: ToastrService){}
+  constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public toastr: ToastrService,public vulnerabilityDataService: VulnerabilityDataService){}
 
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
-      
+      this.vulnerabilityDataService.show(); // Show loader before processing begins
+  
       if (params['data']) {
-        const severity = JSON.parse(params['data']); 
-        this.vulerabilityService.getCveDataByCriticality(severity).subscribe((data) => {
-          if (Array.isArray(data)) {
-            this.vulerabilities = data.map((v: { cveDetails: any; }) => v.cveDetails);
-            this._allVulnerabilities = this.vulerabilities;
-            this._filteredVulnerabilities = [...this.vulerabilities]; 
-          } else {
-            console.error('Unexpected data structure:', data);
+        const severity = JSON.parse(params['data']);
+        this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
+          (data) => {
+            if (Array.isArray(data)) {
+              this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              this._allVulnerabilities = this.vulerabilities;
+              this._filteredVulnerabilities = [...this.vulerabilities];
+            } else {
+              console.error('Unexpected data structure:', data);
+            }
+            this.vulnerabilityDataService.hide(); // Hide loader after processing ends
+          },
+          (error) => {
+            console.error('Error fetching data by criticality:', error);
+            this.vulnerabilityDataService.hide(); // Hide loader in case of error
           }
-        });
-      }else{
-        this.vulerabilityService.getCveDataFromAssets(params).subscribe((data) => {
-          if (Array.isArray(data)) {
-            this.vulerabilities = data.map((v: { cveDetails: any; }) => v.cveDetails);
-            this._allVulnerabilities = this.vulerabilities;
-            this._filteredVulnerabilities = [...this.vulerabilities]; 
-          } else {
-            console.error('Unexpected data structure:', data);
+        );
+      } else {
+        this.vulerabilityService.getCveDataFromAssets(params).subscribe(
+          (data) => {
+            if (Array.isArray(data)) {
+              this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              this._allVulnerabilities = this.vulerabilities;
+              this._filteredVulnerabilities = [...this.vulerabilities];
+            } else {
+              console.error('Unexpected data structure:', data);
+            }
+            this.vulnerabilityDataService.hide(); // Hide loader after processing ends
+          },
+          (error) => {
+            console.error('Error fetching data from assets:', error);
+            this.vulnerabilityDataService.hide(); // Hide loader in case of error
           }
-        })
-
+        );
       }
     });
+  
+  
     this.searchControl.valueChanges.pipe(
       debounceTime(200) 
     ).subscribe((searchText: string) => {
