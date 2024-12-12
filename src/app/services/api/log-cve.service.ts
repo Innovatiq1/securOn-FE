@@ -56,7 +56,24 @@ export class LogCveService {
   
     return this.http.get<any>(`${this.BASE_URL}/getAssets`, options);
   }
-
+  loadOnlyAssets(startDate?: string, endDate?: string): Observable<any> {
+    let params = new HttpParams();
+  
+    if (startDate) {
+      params = params.set('startDate', startDate);
+    }
+  
+    if (endDate) {
+      params = params.set('endDate', endDate);
+    }
+  
+    const options = {
+      ...this.userService.getRequestHeaders(),
+      params: params,
+    };
+  
+    return this.http.get<any>(`${this.BASE_URL}/getOnlyAssets`, options);
+  }
   uploadAssets(formData: FormData): Observable<any> {
     return this.http.post(
       `${this.BASE_URL + '/uploadAssets'}`,
