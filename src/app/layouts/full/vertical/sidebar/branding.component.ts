@@ -31,7 +31,7 @@ import { CoreService } from 'src/app/services/core.service';
           class="align-middle" style="height: 30px; margin-left: 10px;"
           alt="logo"
         /> <span
-        style="color: #c6c0c0; font-weight: bolder; font-size: 25px; margin-left: 5px;"
+        style="color: #c6c0c0; font-weight: bold; font-size: 20px; margin-left: 5px;"
       >
         ST Engineering
       </span>
