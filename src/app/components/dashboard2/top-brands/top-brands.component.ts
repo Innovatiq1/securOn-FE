@@ -268,17 +268,23 @@ getAffectedProduct(Vendor:any) {
 
   this.vulnerabilitiesService.getAffectedProducts(payload).subscribe((res) => {
    
-
+console.log("result", res);
     // Correct sorting based on vulnerabilitesCount
     const sortedData = res.sort((a: any, b: any) => b.vulnerabilitesCount - a.vulnerabilitesCount).slice(0, 5);
+
+
     if (Vendor === "Cisco") {
       this.dataSource2 = sortedData;
+      console.log("dataSource2",this.dataSource2)
     } else if (Vendor === "F5") {
       this.dataSource3 = sortedData;
+      console.log("dataSource3",this.dataSource3)
     } else if (Vendor === "Fortinet") {
       this.dataSource4 = sortedData;
+      console.log("dataSource4",this.dataSource4)
     } else if (Vendor === "Solarwinds") {
       this.dataSource5 = sortedData;
+      console.log("dataSource5",this.dataSource5)
     }
    
   });
