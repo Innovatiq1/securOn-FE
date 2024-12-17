@@ -347,8 +347,8 @@ public getAffectedProducts(req: any): Observable<any> {
     fromDate: req.fromDate,
     toDate: req.toDate,
   };
-
-  const url = `${environment.baseUrl}/getAffectedProducts`;
+  // getAssetsByBrand
+  const url = `${environment.baseUrl}/getAssetsByBrand`;
   return this.httpClient.post(url, body);
 }
 public getNistSynchronizationLogs(req: any): Observable<any> {
