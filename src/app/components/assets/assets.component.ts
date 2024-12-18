@@ -20,6 +20,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { Subscription } from 'rxjs';
 export interface assetData {
   project: string;
   brand: string;
@@ -117,6 +118,7 @@ export class AssetsComponent {
   previousStartDate: string = '';
   previousEndDate: string = '';
   storageInterval: any;
+  private subscriptions: Subscription = new Subscription();
   constructor(
     public dialog: MatDialog,
     private logCveService: LogCveService,
@@ -125,7 +127,7 @@ export class AssetsComponent {
     private store$: Store,
     private router: Router,
     private toastr: ToastrService,
-    public vulnerabilityDataService: VulnerabilityDataService
+    public vulnerabilityDataService: VulnerabilityDataService,
   ) {}
 
   // ngOnInit() {
@@ -145,35 +147,35 @@ export class AssetsComponent {
     this.formattedEndDate = endDate.toString();
     this.vulnerabilitiesService.setDataLoading(true);
     this.vulnerabilityDataService.show();
-    this.logCveService
-      .loadAllAssets(this.formattedStartDate, this.formattedEndDate)
-      .subscribe((data: any[]) => {
-        this._assets = data;
-        this.dataSource = data;
-        this.vulnerabilityDataService.hide();
-        if (data.length == 0) {
-          this.vulnerabilitiesService.loadAllAssets();
-          this.cdr.detectChanges();
+    // this.logCveService
+    //   .loadAllAssets(this.formattedStartDate, this.formattedEndDate)
+    //   .subscribe((data: any[]) => {
+    //     this._assets = data;
+    //     this.dataSource = data;
+    //     this.vulnerabilityDataService.hide();
+    //     if (data.length == 0) {
+    //       this.vulnerabilitiesService.loadAllAssets();
+    //       this.cdr.detectChanges();
           
-        } else {
-          this.vulnerabilitiesService.setDataLoading(false);
-          // this.vulnerabilityDataService.show();
-        }
-        this._assets?.length > 0 &&
-          this.vulnerabilitiesService.setSelectedAssetId(this._assets[0]._id);
+    //     } else {
+    //       this.vulnerabilitiesService.setDataLoading(false);
+    //       // this.vulnerabilityDataService.show();
+    //     }
+    //     this._assets?.length > 0 &&
+    //       this.vulnerabilitiesService.setSelectedAssetId(this._assets[0]._id);
 
-        this.prepareFilters();
-        this.filteredProjects = [...this._projects];
-        this.filteredFwVersion = [...this._firmwareVersions];
+    //     this.prepareFilters();
+    //     this.filteredProjects = [...this._projects];
+    //     this.filteredFwVersion = [...this._firmwareVersions];
 
-        this.vulnerabilitiesService
-          .getAssetUploadMessage()
-          .pipe()
-          .subscribe((message) => {
-            // this.asertMessage = message;
-          });
-        this.cdr.detectChanges();
-      });
+    //     this.vulnerabilitiesService
+    //       .getAssetUploadMessage()
+    //       .pipe()
+    //       .subscribe((message) => {
+    //         // this.asertMessage = message;
+    //       });
+    //     this.cdr.detectChanges();
+    //   });
     if (this._selectedVendor.length === 0) {
       this.vulnerabilitiesService
         .getSelectedVendor()
@@ -207,33 +209,21 @@ export class AssetsComponent {
     }
     this.resetPagination();
     this.paginate();
-    this.startStorageWatcher();
-  }
-  startStorageWatcher(): void {
-    this.previousStartDate = localStorage.getItem('startDate') || '';
-    this.previousEndDate = localStorage.getItem('endDate') || '';
 
-    if (!this.storageInterval) {
-      this.storageInterval = setInterval(() => {
-        const currentStartDate = localStorage.getItem('startDate');
-        const currentEndDate = localStorage.getItem('endDate');
-
-        if (
-          currentStartDate !== this.previousStartDate ||
-          currentEndDate !== this.previousEndDate
-        ) {
-          // console.log('cwww',currentStartDate,currentEndDate)
-          this.previousStartDate = currentStartDate || this.formattedStartDate;
-          this.previousEndDate = currentEndDate || this.formattedEndDate;
-          this.loadAssets();
-        }
-      }, 1000);
-    }
+    this.subscriptions.add(
+      this.vulnerabilityDataService.startDate$.subscribe(() => {
+       this.loadAssets();
+      })
+    );
+    // this.startStorageWatcher();
   }
+ 
   public loadAssets() {
     this.vulnerabilityDataService.show();
+    const currentStartDate = localStorage.getItem('startDate')||'';
+        const currentEndDate = localStorage.getItem('endDate') || '';
     this.logCveService
-      .loadAllAssets(this.previousStartDate, this.previousEndDate)
+      .loadAllAssets(currentStartDate, currentEndDate)
       .subscribe((data: any[]) => {
         this._assets = data;
         this.dataSource = data;
@@ -284,7 +274,7 @@ export class AssetsComponent {
       this.logCveService.uploadAssets(formData).subscribe({
         next: (response: any) => {
           this.showAlert = true;
-          console.log('Upload successful:', response);
+          // console.log('Upload successful:', response);
           this.loadAssets();
         },
         error: (error: any) => {

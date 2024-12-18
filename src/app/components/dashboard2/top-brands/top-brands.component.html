@@ -1,3 +1,5 @@
+
+
 <div class="row">
     <div class="col-lg-6" >
         <mat-card class="cardWithShadow hv">
@@ -69,9 +71,12 @@
     </div>
 </div>
 <h2 class="m-l-10">Top affected product list by brands</h2>
+<div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">
+    <mat-spinner></mat-spinner>
+  </div>
 <div class="row ">
     <div class="col-lg-6" >
-        <mat-card class="cardWithShadow">
+        <mat-card class="cardWithShadow card-height">
             <mat-card-header>
                 <mat-card-title>Cisco</mat-card-title>
             </mat-card-header>
@@ -86,7 +91,7 @@
                                 <img [src]="element.imagePath" alt="users" width="40" class="rounded-circle" />
                                 <div class="m-l-16">
                                     <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                                        {{ element.product }}
+                                        {{ element.partNo }}
                                     </h6>
                                     <span class="mat-body-1 f-s-12">
                                         {{ element.vulnerabilitiesCount||0 }}  
@@ -100,7 +105,7 @@
                             Product Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                            {{ element.product }}
+                            {{ element.partNo }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="vulnerabilities">
@@ -120,7 +125,7 @@
         </mat-card>
     </div>
     <div class="col-lg-6" >
-        <mat-card class="cardWithShadow">
+        <mat-card class="cardWithShadow card-height">
             <mat-card-header>
                 <mat-card-title>F5</mat-card-title>
             </mat-card-header>
@@ -135,7 +140,7 @@
                                 <img [src]="element.imagePath" alt="users" width="40" class="rounded-circle" />
                                 <div class="m-l-16">
                                     <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                                        {{ element.vendor }}
+                                        {{ element.osType }}
                                     </h6>
                                     <span class="mat-body-1 f-s-12">
                                         {{ element.vulnerabilitiesCount }}
@@ -149,7 +154,7 @@
                             Product Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                            {{ element.product }}
+                            {{ element.osType }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="vulnerabilities">
@@ -171,7 +176,7 @@
 </div>
 <div class="row">
     <div class="col-lg-6" >
-        <mat-card class="cardWithShadow">
+        <mat-card class="cardWithShadow card-height">
             <mat-card-header>
                 <mat-card-title>Fortinet</mat-card-title>
             </mat-card-header>
@@ -186,7 +191,7 @@
                                 <img [src]="element.imagePath" alt="users" width="40" class="rounded-circle" />
                                 <div class="m-l-16">
                                     <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                                        {{ element.product }}
+                                        {{ element.osType }}
                                     </h6>
                                     <span class="mat-body-1 f-s-12">
                                         {{ element.vulnerabilitiesCount }}
@@ -200,7 +205,7 @@
                             Product Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                            {{ element.product }}
+                            {{ element.osType }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="vulnerabilities">
@@ -220,7 +225,7 @@
         </mat-card>
     </div>
     <div class="col-lg-6" >
-        <mat-card class="cardWithShadow">
+        <mat-card class="cardWithShadow card-height">
             <mat-card-header>
                 <mat-card-title>Solarwinds</mat-card-title>
             </mat-card-header>
@@ -235,7 +240,7 @@
                                 <img [src]="element.imagePath" alt="users" width="40" class="rounded-circle" />
                                 <div class="m-l-16">
                                     <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                                        {{ element.product }}
+                                        {{ element.partNo }}
                                     </h6>
                                     <span class="mat-body-1 f-s-12">
                                         {{ element.vulnerabilitiesCount }}
@@ -249,7 +254,7 @@
                             Product Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                            {{ element.product }}
+                            {{ element.partNo }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="vulnerabilities">
