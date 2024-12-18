@@ -20,7 +20,7 @@ import { ChartOptions } from 'src/app/pages/charts/area/area.component';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import moment from 'moment';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-import { Subscription } from 'rxjs';
+import { Subscription, finalize } from 'rxjs';
 export interface productsData {
   id: number;
   vendor: string;
@@ -281,35 +281,37 @@ export class TopBrandsComponent implements OnInit {
     this.vulnerabilityDataService.show();
     const fromDate = localStorage.getItem('startDate');
     const toDate = localStorage.getItem('endDate');
+  
     const payload = {
       vendor: Vendor,
       fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
       toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
     };
-
+  
     this.vulnerabilitiesService
       .getAffectedProducts(payload)
-      .subscribe((res) => {
-        // Correct sorting based on vulnerabilitesCount
-        const sortedData = res
-          .sort(
-            (a: any, b: any) => b.vulnerabilitiesCount - a.vulnerabilitiesCount
-          )
-          .slice(0, 10);
-
-        if (Vendor === 'Cisco') {
-          this.dataSource2 = sortedData;
-        } else if (Vendor === 'F5') {
-          this.dataSource3 = sortedData;
-        } else if (Vendor === 'Fortinet') {
-          this.dataSource4 = sortedData;
-        } else if (Vendor === 'Solarwinds') {
-          this.dataSource5 = sortedData;
+      .pipe(finalize(() => this.vulnerabilityDataService.hide())) 
+      .subscribe(
+        (res) => {
+          const sortedData = res
+            .sort((a: any, b: any) => b.vulnerabilitiesCount - a.vulnerabilitiesCount)
+            .slice(0, 5);
+  
+          if (Vendor === 'Cisco') {
+            this.dataSource2 = sortedData;
+          } else if (Vendor === 'F5') {
+            this.dataSource3 = sortedData;
+          } else if (Vendor === 'Fortinet') {
+            this.dataSource4 = sortedData;
+          } else if (Vendor === 'Solarwinds') {
+            this.dataSource5 = sortedData;
+          }
+        },
+        (error) => {
+          console.error('Error fetching products:', error);
         }
-        this.vulnerabilityDataService.hide();
-      });
+      );
   }
-
   private affectedBrands(asset: any) {
     const vendors = asset.map((item: any) => item.vendor);
     const counts = asset.map((item: any) => item.totalCount);
