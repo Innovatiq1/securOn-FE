@@ -254,27 +254,34 @@ export class TopBrandsComponent implements OnInit {
     };
 
     this.vulnerabilitiesService
-      .getTopAffectedProducts(payload)
-      .subscribe((res) => {
-        const vendorCounts = res.reduce((acc: any, item: any) => {
-          const vendor = item.vendor;
-          if (!acc[vendor]) {
-            acc[vendor] = 0;
-          }
-          acc[vendor] += item.vulnerabilitesCount;
-          return acc;
-        }, {});
+  .getTopAffectedProducts(payload)
+  .subscribe((res) => {
+    // Sort the response in descending order of vulnerabilitiesCount
+    res.sort((a: any, b: any) => b.vulnerabilitesCount
+    - a.vulnerabilitesCount
+    );
 
-        const result = Object.entries(vendorCounts).map(
-          ([vendor, totalCount]) => ({
-            vendor,
-            totalCount,
-          })
-        );
+    const vendorCounts = res.reduce((acc: any, item: any) => {
+      const vendor = item.vendor;
+      if (!acc[vendor]) {
+        acc[vendor] = 0;
+      }
+      acc[vendor] += item.vulnerabilitesCount
+      ;
+      return acc;
+    }, {});
 
-        this.affectedBrands(result);
-        this.dataSource1 = result;
-      });
+    const result = Object.entries(vendorCounts).map(
+      ([vendor, totalCount]) => ({
+        vendor,
+        totalCount,
+      })
+    );
+
+    this.affectedBrands(result);
+    this.dataSource1 = result;
+  });
+
   }
 
   getAffectedProduct(Vendor: any) {
