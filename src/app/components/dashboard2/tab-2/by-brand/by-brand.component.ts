@@ -22,6 +22,7 @@ export class ByBrandComponent {
   @Input() isActive = false;
   byBrands: any;
   totalCount: any;
+  count: number =0;
   constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
   }
@@ -29,6 +30,7 @@ export class ByBrandComponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byBrands = data?.byBrands;
+      this.count = this.byBrands.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
       if(this.byBrands){
         this.initializeCharts();
       }

@@ -9,30 +9,35 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-by-asset-type',
   standalone: true,
-  imports: [MatCardModule,NgApexchartsModule,CommonModule],
+  imports: [MatCardModule, NgApexchartsModule, CommonModule],
   templateUrl: './by-asset-type.component.html',
-  styleUrl: './by-asset-type.component.scss'
+  styleUrl: './by-asset-type.component.scss',
 })
 export class ByAssetTypeComponent {
-  public assetChartOptions1: Partial<ChartOptions> |  any = {series: [] };
+  public assetChartOptions1: Partial<ChartOptions> | any = { series: [] };
   @Input() isActive = false;
   byAssets: any;
   totalCount: any;
-  constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
-  
-  }
-  
+  count: number = 0;
+  constructor(
+    private vulnerabilityDataService: VulnerabilityDataService,
+    public router: Router
+  ) {}
+
   ngOnInit() {
-    this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
-      this.byAssets = data?.byAssetTypes;
-      if(this.byAssets){
+    this.vulnerabilityDataService.vulnerabilitiesData$.subscribe((data) => {
+      this.byAssets = data?.byAssetTypes?.filter((item: { type: any }) => item.type !== null) || [];
+      this.count = this.byAssets.reduce(
+        (sum: any, item: { count: any }) => sum + item.count,
+        0
+      );
+      if (this.byAssets) {
         this.initializeCharts();
       }
     });
   }
 
   private initializeCharts() {
-
     const baseChartOptions = {
       chart: {
         type: 'donut',
@@ -46,10 +51,14 @@ export class ByAssetTypeComponent {
           dataPointSelection: (
             event: any,
             chartContext: any,
-            config: { w: { config: { labels: string[] } }; seriesIndex: number; dataPointIndex: number }
+            config: {
+              w: { config: { labels: string[] } };
+              seriesIndex: number;
+              dataPointIndex: number;
+            }
           ) => {
-            const label = config.w.config.labels[config.dataPointIndex]; 
-            this._openVulnerability(label); 
+            const label = config.w.config.labels[config.dataPointIndex];
+            this._openVulnerability(label);
           },
         },
       },
@@ -89,26 +98,30 @@ export class ByAssetTypeComponent {
         fillSeriesColor: false,
       },
     };
-  
+
     if (this.byAssets && this.byAssets.length > 0) {
-      const labels = this.byAssets.map((item: { type: any; }) => item.type || 'Unknown');
-      const series = this.byAssets.map((item: { count: any; }) => item.count || 0);
+      const filteredAssets = this.byAssets.filter((item: { type: any; count: any }) => item.type !== null);
+      const labels = filteredAssets.map((item: { type: any }) => item.type || 'Unknown');
+      const series = filteredAssets.map((item: { count: any }) => item.count || 0);
       if (!series.length || !labels.length) {
         console.error('Error: Series or Labels data is empty.');
         return;
       }
-      this.totalCount = this.byAssets.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
+      this.totalCount = this.byAssets.reduce(
+        (sum: any, item: { count: any }) => sum + item.count,
+        0
+      );
       this.assetChartOptions1 = {
         ...baseChartOptions,
-        series: series, 
-        labels: labels, 
+        series: series,
+        labels: labels,
       };
     } else {
       this.assetChartOptions1 = {
         ...baseChartOptions,
-        series: [1],  
+        series: [1],
         labels: ['No Data'],
-        colors: ['#d3d3d3'],  
+        colors: ['#d3d3d3'],
         plotOptions: {
           pie: {
             donut: {
@@ -139,28 +152,34 @@ export class ByAssetTypeComponent {
       type: seviarity,
       toDate: localStorage.getItem('endDate'),
     };
-  
-    this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
+
+    this.router.navigate(['cve/vulnerabilties-view'], {
+      queryParams: { data: JSON.stringify(seviarityPayload) },
+    });
   }
   getLabelStyle(index: number, total: number) {
     const startAngle = this.byAssets
       .slice(0, index)
-      .reduce((sum: number, item: { count: number; }) => sum + (item.count / total) * 360, 0);
+      .reduce(
+        (sum: number, item: { count: number }) =>
+          sum + (item.count / total) * 360,
+        0
+      );
     const segmentAngle = (this.byAssets[index].count / total) * 360;
     const angle = startAngle + segmentAngle / 2 - 90;
-  
+
     const radius = 55;
     const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
     let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
     if (index > 0) {
       const previousY = this.getLabelStyle(index - 1, total).top;
       const diff = Math.abs(parseFloat(previousY) - y);
-  
+
       if (diff < 5) {
         y += 5 * (index % 2 === 0 ? 1 : -1);
       }
     }
-  
+
     return {
       top: `${y}%`,
       left: `${x}%`,

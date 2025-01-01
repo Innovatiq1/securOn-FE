@@ -37,6 +37,7 @@ export class ByContractIdComponent {
   byCriticality: any;
   loading: boolean;
   apiCache: any;
+  count: number = 0;
   constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router,private vulerabilityService: VulnerabilitiesService){
   
   }
@@ -45,10 +46,12 @@ export class ByContractIdComponent {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byContractId = data?.byContractId;
       this.byCriticality = data?.byCriticality;
+     this.count = this.byContractId.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
       if(this.byContractId){
         this.initializeCharts();
       }
     });
+    
   }
 
   private initializeCharts() {
