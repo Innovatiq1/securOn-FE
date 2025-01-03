@@ -35,7 +35,6 @@ export class ListComponent {
         const severity = JSON.parse(params['data']);
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
           (data) => {
-            console.log("data=",data)
             if (Array.isArray(data)) {
               // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this.vulerabilities = data;
@@ -55,6 +54,7 @@ export class ListComponent {
         this.vulerabilityService.getCveDataFromAssets(params).subscribe(
           (data) => {
             if (Array.isArray(data)) {
+
               this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this._allVulnerabilities = this.vulerabilities;
               this._filteredVulnerabilities = [...this.vulerabilities];

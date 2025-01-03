@@ -30,37 +30,37 @@
       </div>
       
       <div class="col-4">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between" *ngIf="vulerabilities?.vendorName">
           <h4 class="mt-1 f-w-700">Brand</h4>
               <span class="f-s-15 f-w-700" >
                 {{ vulerabilities?.vendorName ||'-'}}
               </span>
       </div>
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between" *ngIf="vulerabilities?.type">
         <h4 class="mt-1 f-w-700">Asset Type</h4>
             <span class="f-s-15 f-w-700" >
               {{ vulerabilities?.type||'-' }}
             </span>
     </div>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between" *ngIf="vulerabilities?.partNo">
       <h4 class="mt-1 f-w-700">Part No</h4>
           <span class="f-s-15 f-w-700" >
             {{ vulerabilities?.partNo||'-' }}
           </span>
   </div>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between" *ngIf="vulerabilities?.project">
     <h4 class="mt-1 f-w-700">Project Id</h4>
         <span class="f-s-15 f-w-700" >
           {{ vulerabilities?.project||'-' }}
         </span>
 </div>
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between" *ngIf="vulerabilities?.version">
   <h4 class="mt-1 f-w-700">Firmware Version</h4>
       <span class="f-s-15 f-w-700" >
         {{ vulerabilities?.version||'-' }}
       </span>
 </div>
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between" *ngIf="vulerabilities?.serialNo">
   <h4 class="mt-1 f-w-700">Serial No</h4>
       <span class="f-s-15 f-w-700" >
         {{ vulerabilities?.serialNo||'-' }}
