@@ -36,7 +36,8 @@ export class ListComponent {
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
           (data) => {
             if (Array.isArray(data)) {
-              this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
               this._filteredVulnerabilities = [...this.vulerabilities];
             } else {
@@ -53,6 +54,7 @@ export class ListComponent {
         this.vulerabilityService.getCveDataFromAssets(params).subscribe(
           (data) => {
             if (Array.isArray(data)) {
+
               this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this._allVulnerabilities = this.vulerabilities;
               this._filteredVulnerabilities = [...this.vulerabilities];
