@@ -22,6 +22,11 @@ export class TopAssetCardsComponent {
       this.byCriticality = data?.byCriticality;
     });
     this.getCircularDashboardData()
+    this.getAllVendors();
+  }
+
+  viewAllVendors(){
+    this.router.navigate(['cve/cve-vendorsList'], { });
   }
   seviarityList(seviarity: string) {
     const seviarityPayload = {
@@ -47,6 +52,12 @@ export class TopAssetCardsComponent {
       // console.log("req",res.byVendors);
       this.totalVender=res.byVendors.length;
 
+    })
+  }
+
+  getAllVendors(){
+    this.vulnerabilitiesService.getAllVendors().subscribe((res)=>{
+      console.log("getAll",res)
     })
   }
 

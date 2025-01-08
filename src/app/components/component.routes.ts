@@ -10,7 +10,8 @@ import { ListComponent } from './dashboard2/top-cards/list/list.component';
 import { GraphViewsComponent } from './dashboard2/graph-views/graph-views.component';
 import { CveViewComponent } from './dashboard2/cve-view/cve-view.component';
 import { ViewByTypeComponent } from './dashboard2/view-by-type/view-by-type.component';
-
+import { CveVendorsListComponent } from './dashboard2/cve-vendors-list/cve-vendors-list.component';
+import { ViewAssetsByTypeComponent } from './dashboard2/view-assets-by-type/view-assets-by-type.component';
 export const ComponentRoutes: Routes = [
     {
         path:'assets',
@@ -61,6 +62,20 @@ export const ComponentRoutes: Routes = [
       {
         path:'vulnerabilties-view',
         component: GraphViewsComponent,
+        data: {
+          title: '',
+        },
+      },
+      {
+        path:'cve-vendorsList',
+        component: CveVendorsListComponent,
+        data: {
+          title: '',
+        },
+      },
+      {
+        path:'view-AssesstByType',
+        component: ViewAssetsByTypeComponent,
         data: {
           title: '',
         },
