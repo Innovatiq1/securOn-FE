@@ -21,6 +21,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { Subscription } from 'rxjs';
+import moment from 'moment';
 export interface assetData {
   project: string;
   brand: string;
@@ -219,12 +220,18 @@ export class AssetsComponent {
   }
  
   public loadAssets() {
-    this.vulnerabilityDataService.show();
-    const currentStartDate = localStorage.getItem('startDate')||'';
-        const currentEndDate = localStorage.getItem('endDate') || '';
+    // this.vulnerabilityDataService.show();
+    // const currentStartDate = localStorage.getItem('startDate')||'';
+        // const currentEndDate = localStorage.getItem('endDate') || '';
+
+        const currentStartDate = localStorage.getItem('startDate');
+         const currentEndDate = localStorage.getItem('endDate');
+        const fromDate=currentStartDate ? moment(currentStartDate).format('YYYY-MM-DD') : '';
+        const toDate=currentEndDate ? moment(currentEndDate).format('YYYY-MM-DD') : '';
     this.logCveService
-      .loadAllAssets(currentStartDate, currentEndDate)
+      .loadAllAssets(fromDate, toDate)
       .subscribe((data: any[]) => {
+
         this._assets = data;
         this.dataSource = data;
         this.vulnerabilityDataService.hide();
@@ -854,6 +861,7 @@ export class AssetsComponent {
   }
 
   _showVulnerabilities(asset: any): void {
+    // console.log("asset",asset)
     let payload = {
       partNo: asset.partNo,
       brand: asset.vendor,

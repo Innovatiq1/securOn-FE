@@ -54,8 +54,10 @@ export class ListComponent {
         this.vulerabilityService.getCveDataFromAssets(params).subscribe(
           (data) => {
             if (Array.isArray(data)) {
+              // console.log("data",data)
 
-              this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
               this._filteredVulnerabilities = [...this.vulerabilities];
             } else {
