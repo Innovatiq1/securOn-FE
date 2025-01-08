@@ -351,6 +351,17 @@ public getAffectedProducts(req: any): Observable<any> {
   const url = `${environment.baseUrl}/getAssetsByBrand`;
   return this.httpClient.post(url, body);
 }
+
+public getAssetsByType(req: any): Observable<any> {
+  const body = {
+    type:req.type,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  // getAssetsByBrand
+  const url = `${environment.baseUrl}/getAssetsByTypeAndDate`;
+  return this.httpClient.post(url, body);
+}
 public getNistSynchronizationLogs(req: any): Observable<any> {
   const body = {
     fromDate: req.fromDate,
@@ -400,6 +411,12 @@ public getUserActivityLogs(req: any): Observable<any> {
     const url = `${environment.baseUrl}/getCircularDashboardData`;
     return this.httpClient.post(url, body);
   }
+  getAllVendors(): Observable<{ success: boolean; data: string[] }> {
+    return this.httpClient.get<{ success: boolean; data: string[] }>(`${environment.baseUrl}/getAllVendors`);
+  }
+  // getAllVendors(): Observable<any[]> {
+  //   return this.httpClient.get<any[]>(`${environment.baseUrl}/getAllVendors`);
+  // }
 
   loadVulnerabilityTrendData(requestData: any): Observable<any> {
     const url = environment.baseUrl + '/getVulnarabilityTrendData';

@@ -20,7 +20,7 @@ import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-
+import { Router } from '@angular/router';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -52,7 +52,7 @@ export class TotalAssetByTypeComponent implements OnInit {
   assetByType:any;
   totalCount=0;
   private subscriptions: Subscription = new Subscription();
-  constructor(private vulnerabilitiesService:VulnerabilitiesService,private localStorageService: VulnerabilityDataService,){
+  constructor(private vulnerabilitiesService:VulnerabilitiesService,private localStorageService: VulnerabilityDataService,public router: Router){
     // this.initializeCharts();
   }
 ngOnInit(): void {
@@ -61,6 +61,7 @@ ngOnInit(): void {
   //     this.getCircularDashboardData();
   //   })
   // );
+  this.getAssetByType();
   this.localStorageService.vulnerabilitiesData$.subscribe(data => {
     this.assetByType = data?.assetsByType;
     if( this.assetByType){
@@ -103,6 +104,20 @@ ngOnInit(): void {
 //   );
 // }
 
+getAssetByType(){
+  const fromDate = localStorage.getItem('startDate');
+  const toDate = localStorage.getItem('endDate');
+
+  const payload = {
+    type: "Switch",
+    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+  };
+  this.vulnerabilitiesService.getAssetsByType(payload).subscribe((res)=>{
+    console.log("hello",res)
+  })
+}
+
 ngOnDestroy(): void {
   this.subscriptions.unsubscribe();
 }
@@ -119,6 +134,15 @@ ngOnDestroy(): void {
           show: false,
         },
         height: 270,
+        events: {
+          dataPointSelection: (event: any, chartContext: any, config: any) => {
+            // Get the clicked label
+            const clickedLabel = type[config.dataPointIndex];
+            if (clickedLabel) {
+              this._openVulnerability(clickedLabel);
+            }
+          },
+        },
       },
       colors: [ 
         '#0070BA',
@@ -179,6 +203,8 @@ ngOnDestroy(): void {
       labels: type,
     };
   }
+
+
   getLabelStyle(index: number, total: number) {
     const startAngle = this.assetByType
       .slice(0, index)
@@ -210,5 +236,17 @@ ngOnDestroy(): void {
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
     };
+  }
+
+  _openVulnerability(type: string): void {
+    const seviarityPayload = {
+      allData: false,
+      duration: '',
+      fromDate: localStorage.getItem('startDate'),
+      type: type,
+      toDate: localStorage.getItem('endDate'),
+    };
+  
+    this.router.navigate(['cve/view-AssesstByType'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
 }
