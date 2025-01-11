@@ -19,7 +19,7 @@ import {
 import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-
+import { Router } from '@angular/router';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -50,7 +50,7 @@ export class TotalAssetByBrandComponent implements OnInit{
   public toggleSwitchState: boolean = true;
   assetByBrand:any;
   totalCount=0;
-  constructor(private vulnerabilitiesService:VulnerabilitiesService,private localStorageService: VulnerabilityDataService){
+  constructor(private vulnerabilitiesService:VulnerabilitiesService,private localStorageService: VulnerabilityDataService,public router: Router){
     // this.initializeCharts();
   }
   ngOnInit(): void {
@@ -63,6 +63,7 @@ export class TotalAssetByBrandComponent implements OnInit{
     });
 
   }
+
  
   private initializeCharts(asset:any) {
     const vendors = asset.map((item: any) => item.vendor);
@@ -77,6 +78,11 @@ export class TotalAssetByBrandComponent implements OnInit{
           show: false,
         },
         height: 270,
+        events: {
+          dataPointSelection: (event: any, chartContext: any, config: any) => {
+            this.onChartClick(config.dataPointIndex);
+          },
+        },
       },
       colors: [
       '#0070BA',
@@ -164,5 +170,24 @@ export class TotalAssetByBrandComponent implements OnInit{
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
     };
+  }
+
+  onChartClick(dataPointIndex: number) {
+    if (this.assetByBrand && this.assetByBrand[dataPointIndex]) {
+      const label = this.assetByBrand[dataPointIndex].vendor;
+      this._openVulnerability(label);
+    }
+  }
+  
+  _openVulnerability(label: string): void {
+    const seviarityPayload = {
+      allData: false,
+      name: 'assetByBrandName',
+      fromDate: localStorage.getItem('startDate'),
+      type: label,
+      toDate: localStorage.getItem('endDate'),
+    };
+  
+    this.router.navigate(['cve/view-AssesstByType'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
 }

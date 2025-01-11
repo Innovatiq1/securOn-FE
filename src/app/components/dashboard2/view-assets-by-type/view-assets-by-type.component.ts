@@ -45,8 +45,9 @@ export class ViewAssetsByTypeComponent {
          fromDate: severity.fromDate ? moment(severity.fromDate).format('YYYY-MM-DD') : '',
          toDate: severity.toDate ? moment(severity.toDate).format('YYYY-MM-DD') : '',
         }
-
-        this.vulerabilityService.getAssetsByType(playload).subscribe((data:any)=>{
+        if(severity.name=='assetByBrandName')
+        {
+          this.vulerabilityService.getAssetsByBrandName(playload).subscribe((data:any)=>{
         console.log("rrrr",data)
         if (Array.isArray(data)) {
           this.vulerabilities = data;
@@ -64,6 +65,30 @@ export class ViewAssetsByTypeComponent {
 
 
         )
+      }
+      else{
+          this.vulerabilityService.getAssetsByType(playload).subscribe((data:any)=>{
+        console.log("rrrr",data)
+        if (Array.isArray(data)) {
+          this.vulerabilities = data;
+          this._filteredVulnerabilities = [...this.vulerabilities];
+          console.log("this._filteredVulnerabilities",this._filteredVulnerabilities)
+        } else {
+          console.error('Unexpected data structure:', data);
+        }
+        this.vulnerabilityDataService.hide(); 
+      },
+      (error) => {
+        console.error('Error fetching data by criticality:', error);
+        this.vulnerabilityDataService.hide();
+      }
+
+
+        )
+
+      }
+
+      
       } 
     });
 

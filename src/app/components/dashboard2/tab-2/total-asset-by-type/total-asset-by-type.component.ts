@@ -61,7 +61,7 @@ ngOnInit(): void {
   //     this.getCircularDashboardData();
   //   })
   // );
-  this.getAssetByType();
+ 
   this.localStorageService.vulnerabilitiesData$.subscribe(data => {
     this.assetByType = data?.assetsByType;
     if( this.assetByType){
@@ -104,19 +104,7 @@ ngOnInit(): void {
 //   );
 // }
 
-getAssetByType(){
-  const fromDate = localStorage.getItem('startDate');
-  const toDate = localStorage.getItem('endDate');
 
-  const payload = {
-    type: "Switch",
-    fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-    toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
-  };
-  this.vulnerabilitiesService.getAssetsByType(payload).subscribe((res)=>{
-    console.log("hello",res)
-  })
-}
 
 ngOnDestroy(): void {
   this.subscriptions.unsubscribe();
