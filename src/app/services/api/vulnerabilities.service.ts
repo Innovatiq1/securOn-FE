@@ -362,6 +362,17 @@ public getAssetsByType(req: any): Observable<any> {
   const url = `${environment.baseUrl}/getAssetsByTypeAndDate`;
   return this.httpClient.post(url, body);
 }
+
+public getAssetsByBrandName(req: any): Observable<any> {
+  const body = {
+    vendor:req.type,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  // getAssetsByBrand
+  const url = `${environment.baseUrl}/getAssetsByBrandName`;
+  return this.httpClient.post(url, body);
+}
 public getNistSynchronizationLogs(req: any): Observable<any> {
   const body = {
     fromDate: req.fromDate,

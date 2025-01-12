@@ -18,7 +18,7 @@ import {
 } from 'ng-apexcharts';
 import { MaterialModule } from 'src/app/material.module';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-
+import { Router } from '@angular/router';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -48,7 +48,7 @@ export class AssetByVendorComponent implements OnInit{
   public vendorChart: Partial<ChartOptions> |  any = {series: [] };
   assetByBrand:any;
   byVendor: any;
-constructor(private vulnerabilitiesService:VulnerabilitiesService,private vulnerabilityDataService: VulnerabilityDataService){
+constructor(private vulnerabilitiesService:VulnerabilitiesService,private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   // this.affectedBrands();
   // this.getCircularDashboardData();
 }
@@ -154,6 +154,11 @@ ngOnInit(): void {
           show: false,
         },
         height: 290,
+        events: {
+          dataPointSelection: (event: any, chartContext: any, config: any) => {
+            this.onChartClick(config.dataPointIndex);
+          },
+        },
       },
       colors: ['#5D87FF'],
       plotOptions: {
@@ -221,5 +226,24 @@ ngOnInit(): void {
       
       },
     };
+  }
+  onChartClick(dataPointIndex: number) {
+    if (this.byVendor && this.byVendor[dataPointIndex]) {
+      const label = this.byVendor[dataPointIndex].vendor;
+      this._openVulnerability(label);
+    }
+  }
+  
+  
+  _openVulnerability(label: string): void {
+    const seviarityPayload = {
+      allData: false,
+      name: 'assetByBrandName',
+      fromDate: localStorage.getItem('startDate'),
+      type: label,
+      toDate: localStorage.getItem('endDate'),
+    };
+  
+    this.router.navigate(['cve/view-AssesstByType'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
 }
