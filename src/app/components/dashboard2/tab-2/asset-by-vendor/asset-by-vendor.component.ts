@@ -199,8 +199,8 @@ ngOnInit(): void {
           },
         },
         min: 0,
-        max: 10,
-        tickAmount: 6,
+        max: 400,
+        tickAmount: 10,
       },
       tooltip: {
         theme: 'dark',

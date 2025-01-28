@@ -231,6 +231,7 @@ export class AssetsComponent {
     this.logCveService
       .loadAllAssets(fromDate, toDate)
       .subscribe((data: any[]) => {
+        // console.log("loadAsset",data)
 
         this._assets = data;
         this.dataSource = data;
@@ -281,7 +282,7 @@ export class AssetsComponent {
       this.logCveService.uploadAssets(formData).subscribe({
         next: (response: any) => {
           this.showAlert = true;
-          // console.log('Upload successful:', response);
+          //  console.log('Upload successful:', response);
           this.loadAssets();
         },
         error: (error: any) => {
@@ -345,7 +346,7 @@ export class AssetsComponent {
       this._partNo = partNo;
       this._osTypes = osTypes;
       this._firmwareVersions = firmwareVersions;
-      // console.log(this._assets);
+      //  console.log("this._ass",this._assets);
       this._assets.forEach((item) => {
         if (item.vendor) {
           this._vendors.add(item.vendor);
@@ -354,7 +355,10 @@ export class AssetsComponent {
           this._projects.add(item.project);
         }
         if (item.osType) {
-          this._osTypes.add(item.vendor);
+          this._osTypes.add(item.osType);
+        }
+        if(item.partNo){
+          this._partNo.add(item.partNo)
         }
         if (item.firmwareVersion) {
           this._firmwareVersions.add(item.firmwareVersion);
@@ -445,10 +449,11 @@ export class AssetsComponent {
     dialogRef.afterClosed().subscribe((result) => {
       let assetsList = [];
       assetsList = [this._assetToDelete];
+      this.loadAssets();
       // this.store$.dispatch(deleteAssets({ assets: assetsList }));
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
     });
   }
   // deleteAsset(multiple?: boolean): void {
