@@ -54,7 +54,7 @@ export class CreateAssetsComponent {
     })
   }
   cancel(){
-    window.history.back();
-    // this.router.navigate(['/cve/assets']);
+    // window.history.back();
+     this.router.navigate(['/cve/assets']);
   }
 }
