@@ -56,6 +56,7 @@ ngOnInit(): void {
 
   this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
     this.byVendor = data?.assetsByBrand;
+    // console.log("data",this.byVendor)
     if ( this.byVendor) {
       this.affectedBrands(this.byVendor);
     } else {
@@ -126,7 +127,8 @@ ngOnInit(): void {
   private affectedBrands(asset:any) {
     const vendors = asset.map((item: any) => item.vendor);
     const counts = asset.map((item: any) => item.count);
-  
+    const maxValue = Math.max(...counts);
+    const tickAmount = maxValue < 10 ? maxValue : 10;
     this.vendorChart = {
       series: [
         {
@@ -199,8 +201,8 @@ ngOnInit(): void {
           },
         },
         min: 0,
-        max: 400,
-        tickAmount: 10,
+        max: Math.ceil(maxValue), 
+        tickAmount: tickAmount,
       },
       tooltip: {
         theme: 'dark',

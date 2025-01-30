@@ -326,7 +326,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
     const page = title ? 1 : this.currentPageIndex + 1;
-
+// console.log("this.previousStartDate",this.previousStartDate,"===",this.previousEndDate)
+// console.log("this.formattedStartDate",this.formattedStartDate,"===",this.formattedEndDate)
     let payload: any = {
       vendorName: this._selectedVendor,
       productName: this.searchService.product,
@@ -387,6 +388,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (data: any) => {
+          // console.log("searchdata:",data)
           if (!data.docs || data.docs.length === 0) {
             this.dataSource = [];
             this.totalItemCount = 0;

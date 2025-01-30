@@ -76,10 +76,10 @@
                 <div class="col-lg-3 m-t-2" style="margin-right: 10px;">
                     <button mat-raised-button color="primary" (click)="onSearch('search')">Search</button>
                 </div>
-                <div class="col-lg-3 m-t-2" style="margin-right: 10px;">
+                <div class="col-lg-3 m-t-2" style="margin-right: -1px;">
                     <button mat-raised-button color="primary mx-3" (click)="resetSearch()">Reset</button>
                 </div>
-                <span class="import-label" style="margin-right: 5px;margin-top: 8px;">Import</span>
+                <span class="import-label" style="margin-right: 1px;margin-top: 8px;">Import as</span>
                 <div class="col-lg-3 mx-4">
                     <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" (click)="exportToExcel()"/>
                 </div>
@@ -215,7 +215,7 @@
         </div>
         <ng-template #noDataFound>
             <div class="no-data-message">
-              <h1>All Data</h1>
+              <h1>No Data Found</h1>
             </div>
           </ng-template>
     </mat-card-content>
