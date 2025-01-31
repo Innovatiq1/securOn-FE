@@ -303,9 +303,10 @@ public getVenderProductCves(req: any): Observable<any> {
 }
 
 public getNewUpdatedCves(req: any): Observable<any> {
+  console.log("res",req)
   const body = {
-    // fromDate: req.fromDate,
-    // toDate: req.toDate,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
   };
 
   const url = `${environment.baseUrl}/getNewUpdatedCves`;

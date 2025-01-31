@@ -24,7 +24,7 @@
               class="label"
               *ngFor="let series of criticalChartOptions1.series; let i = index"
               [ngStyle]="series > 0 ? getLabelStyle(i, byCriticality?.totalCount) : {}">
-              <div *ngIf="series > 0">
+              <div *ngIf="series > 1">
                 {{ criticalChartOptions1.labels[i] }}: {{ series }}
               </div>
             </span>

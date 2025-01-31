@@ -203,15 +203,36 @@ ngOnInit(): void {
     };
   }
   
+  // private updateChartData(data: any) {
+  //   this.scoreChartOptions1.series = [
+  //     data.criticalCount || 0,
+  //     data.highCount || 0,
+  //     data.mediumCount || 0,
+  //     data.lowCount || 0,
+  //   ];
+  
+  // }
   private updateChartData(data: any) {
-    this.scoreChartOptions1.series = [
+    const seriesData = [
       data.criticalCount || 0,
       data.highCount || 0,
       data.mediumCount || 0,
       data.lowCount || 0,
     ];
   
+    this.total = seriesData.reduce((a, b) => a + b, 0);
+  
+    if (this.total === 0) {
+      this.scoreChartOptions1.series = [1]; 
+       this.scoreChartOptions1.labels = ["No Data"];
+       this.scoreChartOptions1.colors = ["#D3D3D3"]; 
+    } else {
+      this.scoreChartOptions1.series = seriesData;
+      this.scoreChartOptions1.labels = ["Critical", "High", "Medium", "Low"];
+      this.scoreChartOptions1.colors = ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'];
+    }
   }
+  
   _openVulnerability(seviarity: string): void {
     const seviarityPayload = {
       allData: false,

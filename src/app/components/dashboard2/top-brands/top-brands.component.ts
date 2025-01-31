@@ -314,6 +314,13 @@ export class TopBrandsComponent implements OnInit {
   private affectedBrands(asset: any) {
     const vendors = asset.map((item: any) => item.vendor);
     const counts = asset.map((item: any) => item.totalCount);
+    // console.log("counts",counts)
+    const roundUpToNearestHundred = (num: number) => Math.ceil(num / 100) * 100;
+
+    // Get the max count value and round it up
+    const maxValue = Math.max(...counts);
+    const yAxisMax = roundUpToNearestHundred(maxValue);
+    const tickAmount = Math.ceil(yAxisMax / 1000);
     this.yearlysaleChart = {
       series: [
         {
@@ -372,8 +379,8 @@ export class TopBrandsComponent implements OnInit {
           },
         },
         min: 0,
-        max: 15000,
-        tickAmount: 3,
+        max: yAxisMax||15000,
+        tickAmount: tickAmount||3,
       },
       tooltip: {
         theme: 'dark',

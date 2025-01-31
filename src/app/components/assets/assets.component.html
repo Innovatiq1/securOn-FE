@@ -77,6 +77,14 @@
               <input class="browse__file" value="Upload Assets" type="file" (change)="uploadFile($event)"/>
             </div>
           </div>
+          <!-- <div class="content-view__toolbar"> -->
+            <div  style="margin-top:10px;">
+            <div class="content-view__toolbar-delete">
+              <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
+                (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
+            </div>
+          </div>
+          <!-- </div> -->
         </div>
       </form>
     </div>
@@ -213,13 +221,13 @@
     </div>
   </mat-card>
 
-  <div class="content-view__toolbar">
+  <!-- <div class="content-view__toolbar">
     <div class="content-view__toolbar-delete">
       <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
         (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
     </div>
 
-  </div>
+  </div> -->
 
 
   <ng-template #deleteConfirm>

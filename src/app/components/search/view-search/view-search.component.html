@@ -32,7 +32,7 @@
                 </div>
 
                 <div>
-                    <h5 class="f-s-20 f-w-700">Vulnerability Details: <span class="text-primary" style="font-style: italic;" >{{details[0]?.cve?.id }}</span></h5>
+                    <h5 class="f-s-20 f-w-700">Vulnerability Details: <span class="highlight-text" style="font-style: italic;" >{{details[0]?.cve?.id }}</span></h5>
                     <h6 class="f-s-16 f-w-700">Published: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.published}}</span></h6>
                     <h6 class="f-s-16 f-w-700">Updated: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.lastModified}}</span></h6>
                     <h6 class="f-s-16 f-w-700">Source: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.sourceIdentifier}}</span></h6>
@@ -84,7 +84,7 @@
                     <tbody>
                       <tr *ngFor="let reference of details[0]?.cve?.references">
                         <td>
-                          <a href="{{reference?.url }}" target="_blank">{{reference?.url || 'N/A'}}</a>
+                          <a class="highlight-text"  href="{{reference?.url }}" target="_blank">{{reference?.url || 'N/A'}}</a>
                         </td>
                       </tr>
                     </tbody>
