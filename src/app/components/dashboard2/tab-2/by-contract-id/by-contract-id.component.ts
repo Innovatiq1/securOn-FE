@@ -53,7 +53,7 @@ export class ByContractIdComponent {
     });
     
   }
-
+//clean chat 
   private initializeCharts() {
     const hoveredSeverities = new Set<string>();
     this.apiCache = new Map<string, any>();
@@ -155,11 +155,50 @@ export class ByContractIdComponent {
       const labels = this.byContractId.map((item: { project: any; }) => item.project);
       const series = this.byContractId.map((item: { count: any; }) => item.count);
       this.totalCount = this.byContractId.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
+      // this.contractChartOptions1 = {
+      //   ...baseChartOptions,
+      //   series: series, 
+      //   labels: labels, 
+      // };
       this.contractChartOptions1 = {
         ...baseChartOptions,
         series: series, 
-        labels: labels, 
+        labels: labels,
+        dataLabels: {
+          enabled: true,
+          style: {
+            fontSize: '8px',
+            fontWeight: 'bold',
+            colors: ['#fff'],
+          },
+          dropShadow: {
+            enabled: false,
+          },
+          formatter: function (val: number, opts: any) {
+            return val.toFixed(1) + '%'; 
+          },
+          background: {
+            enabled: true,
+            foreColor: '#000',
+            padding: 5,
+            borderRadius: 4,
+          },
+        },
+        plotOptions: {
+          pie: {
+            expandOnClick: false,
+            dataLabels: {
+              minAngleToShowLabel: 5,
+              offsetY: 3, 
+              distance: 10, 
+            },
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
       };
+      
     } else {
       this.contractChartOptions1 = {
         ...baseChartOptions,
@@ -169,6 +208,7 @@ export class ByContractIdComponent {
         plotOptions: {
           pie: {
             pie: {
+              
               labels: {
                 show: true,
                 name: {
@@ -189,6 +229,83 @@ export class ByContractIdComponent {
     }
   }
 
+  //changed code 
+  // private initializeCharts() {
+  //   const hoveredSeverities = new Set<string>();
+  //   this.apiCache = new Map<string, any>();
+  
+  //   const baseChartOptions = {
+  //     chart: {
+  //       type: 'pie',
+  //       fontFamily: 'inherit',
+  //       foreColor: '#a1aab2',
+  //       toolbar: { show: false },
+  //       height: 290,
+  //       events: {
+  //         dataPointMouseEnter: (event: any, chartContext: any, config: any) => {
+  //           const label = config.w.config.labels[config.dataPointIndex];
+  //           if (!hoveredSeverities.has(label)) {
+  //             hoveredSeverities.add(label);
+  //             this.fetchData(label);
+  //           }
+  //         },
+  //         dataPointSelection: (event: any, chartContext: any, config: any) => {
+  //           const label = config.w.config.labels[config.dataPointIndex]; 
+  //           this._openVulnerability(label);
+  //         },
+  //       },
+  //     },
+  //     colors: [
+  //       '#0070BA', '#F98D2B', '#43A047', '#0288D1', '#118e8683',
+  //       '#FFCA28', '#217544', '#F39C12', '#00ACC1', '#F06292',
+  //       '#054c8f83', '#cb0c6f', '#cb0c0c9d', '#6fcb0ce8', '#57701ee8',
+  //       '#704f1ee8', '#601e70e8', '#10d2e0e8', '#563f8aef', '#8a3f53a2'
+  //     ],
+  //     tooltip: {
+  //       theme: 'dark',
+  //       fillSeriesColor: false,
+  //     },
+  //     dataLabels: {
+  //       enabled: true, 
+  //       formatter: (val: number) => `${val.toFixed(1)}%`, 
+  //       dropShadow: { enabled: false },
+  //       style: {
+  //         fontSize: '12px',
+  //         fontWeight: 'bold',
+  //         colors: ['#fff'],
+  //       },
+  //     },
+  //     plotOptions: {
+  //       pie: {
+  //         expandOnClick: false,
+  //         customScale: 1,
+  //         dataLabels: {
+  //           offset: 10, 
+  //           minAngleToShowLabel: 1, 
+  //         },
+  //       },
+  //     },
+  //   };
+  
+  //   if (this.byContractId && this.byContractId.length > 0) {
+  //     const labels = this.byContractId.map((item: { project: any }) => item.project);
+  //     const series = this.byContractId.map((item: { count: any }) => item.count);
+  //     this.totalCount = this.byContractId.reduce((sum: any, item: { count: any }) => sum + item.count, 0);
+  //     this.contractChartOptions1 = {
+  //       ...baseChartOptions,
+  //       series: series,
+  //       labels: labels,
+  //     };
+  //   } else {
+  //     this.contractChartOptions1 = {
+  //       ...baseChartOptions,
+  //       series: [1],
+  //       labels: ['No Data'],
+  //       colors: ['#d3d3d3'],
+  //     };
+  //   }
+  // }
+  
   fetchData(severity: string) {
     if (this.apiCache.has(severity)) {
       console.log(`Using cached data for ${severity}`);

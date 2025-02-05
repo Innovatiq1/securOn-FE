@@ -66,6 +66,61 @@ export class TotalAssetByBrandComponent implements OnInit{
 
  
   private initializeCharts(asset:any) {
+
+    if (!asset || asset.length === 0) {
+      this.totalCount = 0;
+      this.brandChart = {
+        chart: {
+          type: 'donut',
+          fontFamily: 'inherit',
+          foreColor: '#a1aab2',
+          toolbar: {
+            show: false,
+          },
+          height: 270,
+        },
+        series: [1], 
+        labels: ['No Data'],
+        colors: ['#d3d3d3'], 
+        plotOptions: {
+          pie: {
+            donut: {
+              size: '65%',
+              background: 'none',
+              labels: {
+                show: true,
+                name: {
+                  show: true,
+                  fontSize: '18px',
+                  color: '#a1aab2',
+                  offsetY: 5,
+                },
+                value: {
+                  show: false,
+                },
+              },
+            },
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          show: false,
+        },
+        legend: {
+          show: false, 
+        },
+        tooltip: {
+          enabled: false, 
+        },
+      };
+      return;
+    }
+   
+    // If data exists, proceed with normal chart rendering
+
+
     const vendors = asset.map((item: any) => item.vendor);
     const counts = asset.map((item: any) => item.count);
     this.totalCount = counts.reduce((sum: number, current: number) => sum + current, 0);

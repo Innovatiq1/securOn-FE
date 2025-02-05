@@ -56,6 +56,7 @@ ngOnInit(): void {
 
   this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
     this.byVendor = data?.assetsByBrand;
+    // console.log("data",this.byVendor)
     if ( this.byVendor) {
       this.affectedBrands(this.byVendor);
     } else {
@@ -124,9 +125,61 @@ ngOnInit(): void {
 // }
 
   private affectedBrands(asset:any) {
+
+    if (!asset || asset.length === 0) {
+      this.vendorChart = {
+          series: [{ data: [] }], // Empty data series
+          chart: {
+              type: 'bar',
+              fontFamily: 'inherit',
+              foreColor: '#a1aab2',
+              toolbar: { show: false },
+              height: 290
+          },
+          colors: ['#5D87FF'],
+          plotOptions: {
+              bar: {
+                  borderRadius: 2,
+                  columnWidth: '45%',
+                  distributed: true,
+                  horizontal: false
+              }
+          },
+          dataLabels: { enabled: false },
+          legend: { show: false },
+          grid: {
+              yaxis: { lines: { show: true } }
+          },
+          xaxis: {
+              categories: ["No Data"],
+              axisBorder: { show: true },
+              axisTicks: { show: false }
+          },
+          yaxis: {
+              labels: {
+                  show: true,
+                  formatter: (value: number) => value.toFixed(0)
+              },
+              min: 0,
+              max: 10, // Set default max value to 10
+              tickAmount: 10 // Always show till 10
+          },
+          tooltip: {
+              theme: 'dark',
+              // custom: ({ series, seriesIndex, dataPointIndex, w }) => {
+              //     return `<div style="padding: 8px; background-color: #333; color: #fff; border-radius: 4px;">
+              //     No Data Available</div>`;
+              // }
+          }
+      };
+      return;
+  }
+
+
     const vendors = asset.map((item: any) => item.vendor);
     const counts = asset.map((item: any) => item.count);
-  
+    const maxValue = Math.max(...counts);
+    const tickAmount = maxValue < 10 ? maxValue : 10;
     this.vendorChart = {
       series: [
         {
@@ -199,8 +252,8 @@ ngOnInit(): void {
           },
         },
         min: 0,
-        max: 400,
-        tickAmount: 10,
+        max: Math.ceil(maxValue), 
+        tickAmount: tickAmount,
       },
       tooltip: {
         theme: 'dark',

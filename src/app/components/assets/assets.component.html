@@ -64,19 +64,27 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-4" style="margin-top: 10px;">
+          <div class="col-4" style="margin-top: 10px;margin-left: 1px;">
             <button mat-raised-button color="primary" (click)="resetFilters()">Reset Filters</button>
-            <button mat-raised-button color="primary" style="margin-left: 10px;" [routerLink]="['/cve/create-asset']">Create</button>
+            <button mat-raised-button color="primary" style="margin-left: 5px;" [routerLink]="['/cve/create-asset']">Create</button>
           </div>
           <div class="col-3" style="margin-left: 40px;">
             <div class="browse">
-              <span class="import-label" style="margin-right: 6px;">Import</span>
+              <span class="import-label" style="margin-right:-3px" >Import as</span>
               <a href="/assets/Inventory List-Oceanshield.xlsx" target="_blank">
-                <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" title="Sample format" />
+                <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" style="margin-right:-8px" class="image-excel" title="Sample format" />
               </a>
               <input class="browse__file" value="Upload Assets" type="file" (change)="uploadFile($event)"/>
             </div>
           </div>
+          <!-- <div class="content-view__toolbar"> -->
+            <div  style="margin-top:10px;">
+            <div class="content-view__toolbar-delete">
+              <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
+                (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
+            </div>
+          </div>
+          <!-- </div> -->
         </div>
       </form>
     </div>
@@ -180,7 +188,7 @@
             <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
               Total No of Vulnerabilities
             </th>
-            <td mat-cell *matCellDef="let element" class="f-s-14">
+            <td mat-cell *matCellDef="let element" class="f-s-14  handCursor">
               <a (click)="_showVulnerabilities(element)">
                 {{element.vulnerabilitiesCount}} </a>
             </td>
@@ -213,13 +221,13 @@
     </div>
   </mat-card>
 
-  <div class="content-view__toolbar">
+  <!-- <div class="content-view__toolbar">
     <div class="content-view__toolbar-delete">
       <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
         (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
     </div>
 
-  </div>
+  </div> -->
 
 
   <ng-template #deleteConfirm>

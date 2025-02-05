@@ -79,7 +79,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   public _partNo: Set<string> = new Set();
   public _osType: Set<string> = new Set();
   public _firmwareVersion: Set<string> = new Set();
-  public _project: Set<string> = new Set();
+  // public _project: Set<string> = new Set();
 
   public _projects: Set<string> = new Set();
   public _filteredAssets: any[] = [];
@@ -326,7 +326,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
     const page = title ? 1 : this.currentPageIndex + 1;
-
+// console.log("this.previousStartDate",this.previousStartDate,"===",this.previousEndDate)
+// console.log("this.formattedStartDate",this.formattedStartDate,"===",this.formattedEndDate)
     let payload: any = {
       vendorName: this._selectedVendor,
       productName: this.searchService.product,
@@ -387,6 +388,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (data: any) => {
+          // console.log("searchdata:",data)
           if (!data.docs || data.docs.length === 0) {
             this.dataSource = [];
             this.totalItemCount = 0;
@@ -706,8 +708,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this._partNo = new Set();
     this._firmwareVersion = new Set();
     this._osType = new Set();
-    this._project = new Set();
-    this._project.add(this.defaultOptionProjectAll);
+    // this._project = new Set();
+    // this._project.add(this.defaultOptionProjectAll);
+    this._projects = new Set();
+    this._projects.add(this.defaultOptionProjectAll);
     this._osType.add(this.defaultOptionOstypeAll);
     this._partNo.add(this.defaultOptionPortNoAll);
     this._firmwareVersion.add(this.defaultOptionFwAll);
@@ -723,12 +727,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
           this._partNo.add(item.partNo);
           this._firmwareVersion.add(item.firmwareVersion);
           this._osType.add(item.osType);
-          this._project.add(item.project);
+          this._projects.add(item.project)
+          // this._project.add(item.project);
         } else if (this._selectedVendor.includes(item.vendor)) {
           this._partNo.add(item.partNo);
           this._firmwareVersion.add(item.firmwareVersion);
           this._osType.add(item.osType);
-          this._project.add(item.project);
+          this._projects.add(item.project)
+          // this._project.add(item.project);
         }
       });
       this._selectedProduct = this.defaultOptionAll;
@@ -738,7 +744,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this._partNo.add(item.partNo);
         this._firmwareVersion.add(item.firmwareVersion);
         this._osType.add(item.osType);
-        this._project.add(item.project);
+        // this._project.add(item.project);
         this._projects.add(item.project);
       });
     }
@@ -772,18 +778,18 @@ export class SearchComponent implements OnInit, AfterViewInit {
       return a.localeCompare(b);
     });
 
-    const sortedProject = [...this._project].sort((a, b) => {
-      if (a === this.defaultOptionProjectAll) return -1;
-      if (b === this.defaultOptionProjectAll) return 1;
-      return a.localeCompare(b);
-    });
+    // const sortedProject = [...this._project].sort((a, b) => {
+    //   if (a === this.defaultOptionProjectAll) return -1;
+    //   if (b === this.defaultOptionProjectAll) return 1;
+    //   return a.localeCompare(b);
+    // });
 
     this._vendors = new Set(sortedVendors);
     this._projects = new Set(sortedProjects);
     this._partNo = new Set(sortedPartNo);
     this._firmwareVersion = new Set(sortedFirmwareVersion);
     this._osType = new Set(sortedOsType);
-    this._project = new Set(sortedProject);
+    // this._project = new Set(sortedProject);
     this.filteredVendors = [...this._vendors];
     this.filteredProjects = [...this._projects];
     this.filteredPartNo = [...this._partNo];
@@ -859,8 +865,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
     if (filterValue) {
       this.filteredProjects = [...this._projects].filter(
         (project) =>
-          project.toLowerCase().includes(filterValue) ||
-          this._selectedProject.includes(project)
+          project.toLowerCase().includes(filterValue)
+        //  ||
+        //    this._selectedProject.includes(project)
       );
     } else {
       this.filteredProjects = [...this._projects];

@@ -189,7 +189,7 @@ private initializeCharts() {
   } else {
     this.criticalChartOptions1 = {
       ...baseChartOptions,
-      series: [0], 
+      series: [1], 
       labels: ['No Data'],
       colors: ['#d3d3d3'],
       plotOptions: {
