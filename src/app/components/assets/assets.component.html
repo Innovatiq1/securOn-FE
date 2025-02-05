@@ -5,7 +5,7 @@
           <div class="col-3">
             <mat-form-field appearance="outline"  class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Project</mat-label>
-              <mat-select [(value)]="_selectedPoject" (selectionChange)="_projectChange()" multiple>
+              <mat-select [(value)]="_selectedPoject" #select="matSelect"  (selectionChange)="_projectChange()" multiple>
                 <mat-form-field ppearance="outline">
                   <input matInput placeholder="Search Project" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}"/>
                 </mat-form-field>
@@ -17,7 +17,7 @@
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Brand</mat-label>
-              <mat-select [(value)]="_selectedVendor" (selectionChange)="_vendorChange()" multiple>
+              <mat-select [(value)]="_selectedVendor" #select1="matSelect" (selectionChange)="_vendorChange()" multiple>
                 <mat-form-field>
                   <input matInput placeholder="Search Brand" [(ngModel)]="vendorFilter" (ngModelChange)="filterVendor()" [ngModelOptions]="{standalone: true}"/>
                 </mat-form-field>
@@ -29,7 +29,7 @@
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Part No</mat-label>
-              <mat-select [(value)]="_selectedProduct" (selectionChange)="_productChange()" multiple>
+              <mat-select [(value)]="_selectedProduct" #select2="matSelect" (selectionChange)="_productChange()" multiple>
                 <mat-form-field>
                   <input type="text" matInput placeholder="Search Part No" [(ngModel)]="partNoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}" />
                 </mat-form-field>
@@ -41,7 +41,7 @@
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select OS Type</mat-label>
-              <mat-select [(value)]="_selectedOsType" (selectionChange)="_osTypeChange()" multiple>
+              <mat-select [(value)]="_selectedOsType" #select3="matSelect" (selectionChange)="_osTypeChange()" multiple>
                 <mat-form-field>
                   <input matInput placeholder="Search OS Type" [(ngModel)]="osTypeFilter" (ngModelChange)="filterOsType()" [ngModelOptions]="{standalone: true}"/>
                 </mat-form-field>
@@ -55,7 +55,7 @@
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Firmware Version </mat-label>
-              <mat-select [(value)]="_selectedFirmwareVersion" (selectionChange)="_firmwareVersionChange()" multiple>
+              <mat-select [(value)]="_selectedFirmwareVersion" #select4="matSelect" (selectionChange)="_firmwareVersionChange()" multiple>
                 <mat-form-field>
                   <input matInput placeholder="Search Firmware Version" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFwVersion()" [ngModelOptions]="{standalone: true}"/>
                 </mat-form-field>

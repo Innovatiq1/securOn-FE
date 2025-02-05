@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
@@ -12,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 import * as ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list',
@@ -21,9 +23,11 @@ import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   searchControl: FormControl = new FormControl("");
   vulerabilities: any[] = [];
-  _filteredVulnerabilities: any[] = [];
+  // _filteredVulnerabilities: any[] = [];
+  _filteredVulnerabilities = new MatTableDataSource<any>([]);
   _allVulnerabilities: any[] = [];
   constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public toastr: ToastrService,public vulnerabilityDataService: VulnerabilityDataService){}
 
@@ -39,7 +43,9 @@ export class ListComponent {
               // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
-              this._filteredVulnerabilities = [...this.vulerabilities];
+              // this._filteredVulnerabilities = [...this.vulerabilities];
+              this._filteredVulnerabilities.data = this.vulerabilities;
+              this._filteredVulnerabilities.paginator = this.paginator;
             } else {
               console.error('Unexpected data structure:', data);
             }
@@ -59,7 +65,8 @@ export class ListComponent {
               // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
-              this._filteredVulnerabilities = [...this.vulerabilities];
+              this._filteredVulnerabilities.data = this.vulerabilities;
+        this._filteredVulnerabilities.paginator = this.paginator;
             } else {
               console.error('Unexpected data structure:', data);
             }
@@ -77,12 +84,15 @@ export class ListComponent {
     this.searchControl.valueChanges.pipe(
       debounceTime(200) 
     ).subscribe((searchText: string) => {
-      this._filteredVulnerabilities = this._allVulnerabilities.filter((cve) => {
-        return cve.cve?.id.toLowerCase().includes(searchText.toLowerCase());
+      this._filteredVulnerabilities.data = this._allVulnerabilities.filter((cve) => {
+        return cve.cveId.toLowerCase().includes(searchText.toLowerCase());
       });
+      // console.log('Filtered Vulnerabilities:', this._filteredVulnerabilities);
     });
   }
-
+  ngAfterViewInit() {
+    this._filteredVulnerabilities.paginator = this.paginator;
+  }
   
   exportToExcel(): void {
     this.toastr.info('Downloading...', 'Info', {
@@ -91,7 +101,7 @@ export class ListComponent {
         positionClass: 'toast-bottom-right',
     });
 
-    const allDataToExport = this._filteredVulnerabilities.map((x: any) => {
+    const allDataToExport = this._filteredVulnerabilities.data.map((x: any) => {
       const cvssV31 = x.cve.metrics.cvssMetricV31?.[0];
       const cvssV30 = x.cve.metrics.cvssMetricV30?.[0];
       return {

@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  QueryList,
   TemplateRef,
   ViewChild,
   viewChild,
+  ViewChildren,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -22,6 +24,8 @@ import { ToastrService } from 'ngx-toastr';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { Subscription } from 'rxjs';
 import moment from 'moment';
+import { SPACE } from '@angular/cdk/keycodes';
+import { MatSelect } from '@angular/material/select';
 export interface assetData {
   project: string;
   brand: string;
@@ -119,6 +123,12 @@ export class AssetsComponent {
   previousStartDate: string = '';
   previousEndDate: string = '';
   storageInterval: any;
+  @ViewChild('select', { static: true }) select: any;
+  @ViewChild('select1', { static: true }) select1: any;
+  @ViewChild('select2', { static: true }) select2: any;
+  @ViewChild('select3', { static: true }) select3: any;
+  @ViewChild('select4', { static: true }) select4: any;
+  @ViewChild('select5', { static: true }) select5: any;
   private subscriptions: Subscription = new Subscription();
   constructor(
     public dialog: MatDialog,
@@ -141,6 +151,52 @@ export class AssetsComponent {
 
   // }
   ngOnInit(): void {
+      this.select._handleKeydown = (event: KeyboardEvent) => {
+        if (event.keyCode==SPACE)
+          return
+        if (!this.select.disabled) {
+          this.select.panelOpen
+            ? this.select._handleOpenKeydown(event)
+            : this.select._handleClosedKeydown(event);
+        }
+      };
+      this.select1._handleKeydown = (event: KeyboardEvent) => {
+        if (event.keyCode==SPACE)
+          return
+        if (!this.select1.disabled) {
+          this.select1.panelOpen
+            ? this.select1._handleOpenKeydown(event)
+            : this.select1._handleClosedKeydown(event);
+        }
+      };
+      this.select2._handleKeydown = (event: KeyboardEvent) => {
+        if (event.keyCode==SPACE)
+          return
+        if (!this.select2.disabled) {
+          this.select2.panelOpen
+            ? this.select2._handleOpenKeydown(event)
+            : this.select2._handleClosedKeydown(event);
+        }
+      };
+      this.select._handleKeydown = (event: KeyboardEvent) => {
+        if (event.keyCode==SPACE)
+          return
+        if (!this.select3.disabled) {
+          this.select3.panelOpen
+            ? this.select3._handleOpenKeydown(event)
+            : this.select3._handleClosedKeydown(event);
+        }
+      };
+      this.select4._handleKeydown = (event: KeyboardEvent) => {
+        if (event.keyCode==SPACE)
+          return
+        if (!this.select4.disabled) {
+          this.select4.panelOpen
+            ? this.select4._handleOpenKeydown(event)
+            : this.select4._handleClosedKeydown(event);
+        }
+      };
+  
     const startDate = localStorage.getItem('startDate') || '';
     const endDate = localStorage.getItem('endDate') || '';
 
@@ -218,9 +274,22 @@ export class AssetsComponent {
     );
     // this.startStorageWatcher();
   }
+
+  // ngAfterViewInit(): void {
+  //   this.selects.forEach((select) => {
+  //     select._handleKeydown = (event: KeyboardEvent) => {
+  //       if (event.keyCode === SPACE) return;
+  //       if (!select.disabled) {
+  //         select.panelOpen
+  //           ? select._handleOpenKeydown(event)
+  //           : select._handleClosedKeydown(event);
+  //       }
+  //     };
+  //   });
+  // }
  
   public loadAssets() {
-    // this.vulnerabilityDataService.show();
+    this.vulnerabilityDataService.show();
     // const currentStartDate = localStorage.getItem('startDate')||'';
         // const currentEndDate = localStorage.getItem('endDate') || '';
 
@@ -736,6 +805,23 @@ export class AssetsComponent {
     this.filterPartNo();
   }
 
+  // private updateFilteredOsTypes(): void {
+  //   const filteredAssets = this._assets.filter(
+  //     (item) =>
+  //       (!this._selectedPoject.length ||
+  //         this._selectedPoject.includes(item.project)) &&
+  //       (!this._selectedVendor.length ||
+  //         this._selectedVendor.includes(item.vendor)) &&
+  //       (!this._selectedProduct.length ||
+  //         this._selectedProduct.includes(item.partNo))
+  //   );
+  //   this.filteredOsType = [
+  //     ...new Set(filteredAssets.map((item) => item.osType)),
+  //   ];
+  //   if (!this.filteredOsType.includes(this.defaultOsTypeOptionAll)) {
+  //     this.filteredOsType.unshift(this.defaultOsTypeOptionAll);
+  //   }
+  // }
   private updateFilteredOsTypes(): void {
     const filteredAssets = this._assets.filter(
       (item) =>
@@ -746,11 +832,13 @@ export class AssetsComponent {
         (!this._selectedProduct.length ||
           this._selectedProduct.includes(item.partNo))
     );
+  
     this.filteredOsType = [
       ...new Set(filteredAssets.map((item) => item.osType)),
-    ];
+    ].sort();
+  
     if (!this.filteredOsType.includes(this.defaultOsTypeOptionAll)) {
-      this.filteredOsType.unshift(this.defaultOsTypeOptionAll);
+      this.filteredOsType.unshift(this.defaultOsTypeOptionAll); 
     }
   }
 
@@ -820,7 +908,7 @@ export class AssetsComponent {
     );
     this.filteredFwVersion = [
       ...new Set(filteredAssets.map((item) => item.firmwareVersion)),
-    ];
+    ].sort();
 
     if (!this.filteredFwVersion.includes(this.defaultFwOptionAll)) {
       this.filteredFwVersion.unshift(this.defaultFwOptionAll);
@@ -985,18 +1073,33 @@ export class AssetsComponent {
     }
   }
 
+  // filterOsType(): void {
+  //   const filterValue = this.osTypeFilter.toLowerCase() || '';
+
+  //   if (filterValue) {
+  //     this.filteredOsType = this.filteredOsType.filter(
+  //       (project) =>
+  //         project.toLowerCase().includes(filterValue) ||
+  //         this._selectedOsType.includes(project)
+  //     );
+  //   } else if (!filterValue) {
+  //     this.updateFilteredOsTypes();
+  //   } else {
+  //   }
+  // }
   filterOsType(): void {
     const filterValue = this.osTypeFilter.toLowerCase() || '';
-
+  
     if (filterValue) {
-      this.filteredOsType = this.filteredOsType.filter(
-        (project) =>
-          project.toLowerCase().includes(filterValue) ||
-          this._selectedOsType.includes(project)
-      );
-    } else if (!filterValue) {
-      this.updateFilteredOsTypes();
+      this.filteredOsType = this.filteredOsType
+        .filter(
+          (project) =>
+            project.toLowerCase().includes(filterValue) ||
+            this._selectedOsType.includes(project)
+        )
+        .sort();
     } else {
+      this.updateFilteredOsTypes();
     }
   }
   filterFwVersion(): void {
@@ -1007,7 +1110,7 @@ export class AssetsComponent {
         (fw) =>
           fw.toLowerCase().includes(filterValue) ||
           this._selectedFirmwareVersion.includes(fw)
-      );
+      ).sort();
     } else if (!filterValue) {
       this.updateFilteredFirmwareVersions();
     }
@@ -1017,4 +1120,6 @@ export class AssetsComponent {
     this.currentPageIndex = 0;
     this.pageSize = this.DEFAULT_PAGE_SIZE;
   }
+
+
 }
