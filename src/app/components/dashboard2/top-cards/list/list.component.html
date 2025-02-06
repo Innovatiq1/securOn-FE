@@ -17,7 +17,8 @@
                 <button class="mx-3" mat-raised-button color="warn" (click)="back()">Back</button>
             </div>
         </div>
-    <mat-card class="cardWithShadow m-t-5" *ngFor="let vulerabilities of _filteredVulnerabilities">
+        <ng-container *ngFor="let vulerabilities of _filteredVulnerabilities.connect() | async">
+    <mat-card class="cardWithShadow m-t-5" >
   <mat-card-content class="mt-5">
     <div class="row">
       <div class="col-8">
@@ -103,5 +104,11 @@
   </mat-card-content>
  
 </mat-card>
+</ng-container>
+<mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
     </mat-card-content>
+
+    <div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
 </mat-card>

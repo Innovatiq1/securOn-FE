@@ -12,7 +12,9 @@
                 <button class="mx-3" mat-raised-button color="warn" (click)="back()">Back</button>
             </div>
         </div>
-    <mat-card class="cardWithShadow m-t-5" *ngFor="let vulerabilities of response">
+
+        <ng-container *ngFor="let vulerabilities of response.connect() | async">
+    <mat-card class="cardWithShadow m-t-5" >
   <mat-card-content class="mt-5">
     <div class="row">
       <div class="col-8">
@@ -51,6 +53,8 @@
     </div>
   </mat-card-content>
 </mat-card>
+</ng-container>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
     </mat-card-content>
 </mat-card>
 

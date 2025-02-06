@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
@@ -13,6 +13,8 @@ import { ToastrService } from 'ngx-toastr';
 import * as ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-view-assets-by-type',
@@ -23,10 +25,10 @@ import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 })
 export class ViewAssetsByTypeComponent {
   
-
+ @ViewChild(MatPaginator) paginator!: MatPaginator;
   searchControl: FormControl = new FormControl("");
   vulerabilities: any[] = [];
-  _filteredVulnerabilities: any[] = [];
+  _filteredVulnerabilities = new MatTableDataSource<any>([]);
   constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public toastr: ToastrService,public vulnerabilityDataService: VulnerabilityDataService){
     // this.getAssetByType();
   }
@@ -38,8 +40,6 @@ export class ViewAssetsByTypeComponent {
       if (params['data']) {
         const severity = JSON.parse(params['data']);
 
-        console.log("datass",severity)
-
         const playload={
           type: severity.type,
          fromDate: severity.fromDate ? moment(severity.fromDate).format('YYYY-MM-DD') : '',
@@ -48,11 +48,10 @@ export class ViewAssetsByTypeComponent {
         if(severity.name=='assetByBrandName')
         {
           this.vulerabilityService.getAssetsByBrandName(playload).subscribe((data:any)=>{
-        console.log("rrrr",data)
         if (Array.isArray(data)) {
           this.vulerabilities = data;
-          this._filteredVulnerabilities = [...this.vulerabilities];
-          console.log("this._filteredVulnerabilities",this._filteredVulnerabilities)
+          this._filteredVulnerabilities.data = this.vulerabilities;
+          this._filteredVulnerabilities.paginator = this.paginator;
         } else {
           console.error('Unexpected data structure:', data);
         }
@@ -68,11 +67,10 @@ export class ViewAssetsByTypeComponent {
       }
       else{
           this.vulerabilityService.getAssetsByType(playload).subscribe((data:any)=>{
-        console.log("rrrr",data)
         if (Array.isArray(data)) {
           this.vulerabilities = data;
-          this._filteredVulnerabilities = [...this.vulerabilities];
-          console.log("this._filteredVulnerabilities",this._filteredVulnerabilities)
+          this._filteredVulnerabilities.data = this.vulerabilities;
+          this._filteredVulnerabilities.paginator = this.paginator;
         } else {
           console.error('Unexpected data structure:', data);
         }
@@ -92,6 +90,10 @@ export class ViewAssetsByTypeComponent {
       } 
     });
 
+  }
+
+  ngAfterViewInit() {
+    this._filteredVulnerabilities.paginator = this.paginator;
   }
 back(){
   window.history.back();

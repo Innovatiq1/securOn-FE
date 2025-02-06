@@ -14,7 +14,7 @@
                 <div class="col-4">
                     <mat-label class=" f-w-600 m-b-8 ">Vendor</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-select placeholder="Select Vendor" [(value)]="_selectedVendor" (selectionChange)="_vendorChange()" multiple>
+                        <mat-select placeholder="Select Vendor" [(value)]="_selectedVendor" #select="matSelect" (selectionChange)="_vendorChange()" multiple>
                             <mat-form-field style="width: 100%;">
                                 <input matInput placeholder="Search Vendor" [(ngModel)]="vendorFilter" (ngModelChange)="filterVendors()" [ngModelOptions]="{standalone: true}" />
                             </mat-form-field>
@@ -25,7 +25,7 @@
                 <div class="col-4">
                     <mat-label class="f-w-600 m-b-8">Project ID</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-select placeholder="Select Project ID" [(value)]="_selectedProject"  (selectionChange)="onProjectChange($event.value)" multiple>
+                        <mat-select placeholder="Select Project ID" [(value)]="_selectedProject" #select1="matSelect" (selectionChange)="onProjectChange($event.value)" multiple>
                             <mat-form-field style="width: 100%;">
                                 <input matInput placeholder="Search Project ID" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}" />
                             </mat-form-field>
@@ -39,7 +39,7 @@
                 <div class="col-4">
                     <mat-label class=" f-w-600 m-b-8">OS Type</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-select placeholder="Search OS Type" [(value)]="_selectedOsType" (selectionChange)="onOsChange($event.value)" multiple>
+                        <mat-select placeholder="Search OS Type" [(value)]="_selectedOsType" #select2="matSelect" (selectionChange)="onOsChange($event.value)" multiple>
                             <mat-form-field style="width: 100%;">
                                 <input matInput  placeholder="Search OsType" [(ngModel)]="osTypeFilter" (ngModelChange)="filterOsType()" [ngModelOptions]="{standalone: true}" />
                             </mat-form-field>
@@ -50,10 +50,10 @@
                 <div class="col-4">
                     <mat-label class=" f-w-600 m-b-8">Part No</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-select placeholder="Select Part No" [(value)]="_selectedPartNo"
+                        <mat-select placeholder="Select Part No" #select3="matSelect" [(value)]="_selectedPartNo"
                         (selectionChange)="onPartNoChange($event.value)" multiple>
                         <mat-form-field style="width: 100%;">
-                            <input matInput placeholder="Search Part No" [(ngModel)]="partnoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}"/>
+                            <input matInput placeholder="Search Part No" [(ngModel)]="partnoFilter"  (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}"/>
                         </mat-form-field>
                             <mat-option *ngFor="let partNo of filteredPartNo" [value]="partNo">{{ partNo }}</mat-option>
                         </mat-select>
@@ -63,7 +63,7 @@
                 <div class="col-4">
                     <mat-label class="f-w-600 m-b-8">FW Version</mat-label>
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-select placeholder="Select FW Version" [(value)]="_selectedVersion" (selectionChange)="onVersionChange($event.value)" multiple>
+                        <mat-select placeholder="Select FW Version" [(value)]="_selectedVersion" #select4="matSelect" (selectionChange)="onVersionChange($event.value)" multiple>
                             <mat-form-field style="width: 100%;">
                                 <input matInput placeholder="Search FW Version" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFw()" [ngModelOptions]="{standalone: true}"/>
                             </mat-form-field>
@@ -92,7 +92,7 @@
     <mat-card-content class="p-24">
         <div class="table-responsive" *ngIf="currentPageItems.length > 0; else noDataFound">
             <table mat-table [dataSource]="currentPageItems" class="w-100">
-                <ng-container matColumnDef="#">
+                <!-- <ng-container matColumnDef="#">
                     <th mat-header-cell *matHeaderCellDef>
                         <mat-checkbox color="primary">
                         </mat-checkbox>
@@ -101,7 +101,7 @@
                         <mat-checkbox color="primary">
                         </mat-checkbox>
                     </td>
-                </ng-container>
+                </ng-container> -->
                 <ng-container matColumnDef="cve">
                     <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">CVE ID</th>
                     <td mat-cell *matCellDef="let element" class="f-s-14">

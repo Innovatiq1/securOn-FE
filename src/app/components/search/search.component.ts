@@ -16,6 +16,7 @@ import FileSaver from 'file-saver';
 import { LogCveService } from 'src/app/services/api/log-cve.service';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { Subscription } from 'rxjs';
+import { SPACE } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -53,7 +54,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   public disablePaginator = false;
   public totalItemCount = 0;
   displayedColumns: string[] = [
-    '#',
+    // '#',
     'cve',
     'project',
     'osType',
@@ -118,6 +119,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
   private storageInterval: any;
   previousStartDate: string | null;
   previousEndDate: string | null;
+  @ViewChild('select', { static: true }) select: any;
+  @ViewChild('select1', { static: true }) select1: any;
+  @ViewChild('select2', { static: true }) select2: any;
+  @ViewChild('select3', { static: true }) select3: any;
+  @ViewChild('select4', { static: true }) select4: any;
+  @ViewChild('select5', { static: true }) select5: any;
 
   private subscriptions: Subscription = new Subscription();
   constructor(
@@ -223,6 +230,53 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.isAssetsRoute = this.router.url.includes('/assets');
     this.loadData();
     this.startStorageWatcher();
+
+
+     this.select._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select.disabled) {
+              this.select.panelOpen
+                ? this.select._handleOpenKeydown(event)
+                : this.select._handleClosedKeydown(event);
+            }
+          };
+          this.select1._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select1.disabled) {
+              this.select1.panelOpen
+                ? this.select1._handleOpenKeydown(event)
+                : this.select1._handleClosedKeydown(event);
+            }
+          };
+          this.select2._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select2.disabled) {
+              this.select2.panelOpen
+                ? this.select2._handleOpenKeydown(event)
+                : this.select2._handleClosedKeydown(event);
+            }
+          };
+          this.select3._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select3.disabled) {
+              this.select3.panelOpen
+                ? this.select3._handleOpenKeydown(event)
+                : this.select3._handleClosedKeydown(event);
+            }
+          };
+          this.select4._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select4.disabled) {
+              this.select4.panelOpen
+                ? this.select4._handleOpenKeydown(event)
+                : this.select4._handleClosedKeydown(event);
+            }
+          };
   }
 
   ngAfterViewInit() {

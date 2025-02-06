@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Subscription, debounceTime } from 'rxjs';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
@@ -9,6 +9,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CvssAttribute } from "../../../pipe/cvss-attribute.pipe";
 import { ScoreChipComponent } from "../../score-chip/score-chip.component";
 import { ActivatedRoute } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-view-by-type',
@@ -24,7 +26,9 @@ export class ViewByTypeComponent {
   label: string | null = null;
   searchControl: FormControl = new FormControl("");
   private subscriptions: Subscription = new Subscription();
-  response: any;
+  // response: any;
+  response = new MatTableDataSource<any>([]);
+   @ViewChild(MatPaginator) paginator!: MatPaginator;
   readonly cweLabelMapping: { [key: string]: string } = {
     'CWE-79': 'XSS',
     'CWE-89': 'SQL Injection',
@@ -78,12 +82,14 @@ export class ViewByTypeComponent {
     this.searchControl.valueChanges.pipe(
       debounceTime(200) 
     ).subscribe((searchText: string) => {
-      this.response = this.response.filter((cve: { cveId: string; }) => {
+      this.response.data = this.response.data.filter((cve: { cveId: string; }) => {
         return cve?.cveId.toLowerCase().includes(searchText.toLowerCase());
       });
     });
   }
-
+  ngAfterViewInit() {
+    this.response.paginator = this.paginator;
+  }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
@@ -101,7 +107,10 @@ export class ViewByTypeComponent {
         async (response) => {
           console.log('payloadBy', response);
           if (response) {
-            this.response = response.data;
+            this.response.data = response.data;
+            this.response.data = response.data;
+            this.response.paginator = this.paginator;
+            
           }
           this.vulnerabilityDataService.hide();
           this.cdr.detectChanges();
