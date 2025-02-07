@@ -39,19 +39,35 @@ export class CreateAssetsComponent {
   public hasError = (controlName: string, errorName: string) => {
     return this.assetFormGroup.controls[controlName].hasError(errorName);
   };
-  submit(){
+  // submit(){
+  //   const assetData = this.assetFormGroup.value;
+  //   assetData.status == 'active' ? 'A' : 'I';
+  //   this.vulnerabilitiesService.saveAsset(assetData).subscribe(data=>{
+  //     if (data) {
+  //       this.toastr.success('Asset created successfully');
+  //       setTimeout(() => {
+  //         this.router.navigate(['/cve/assets']);
+  //         this.cdr.detectChanges();
+  //       }, 2000); 
+  //     }
+
+  //   })
+  // }
+
+  submit() {
     const assetData = this.assetFormGroup.value;
-    assetData.status == 'active' ? 'A' : 'I';
-    this.vulnerabilitiesService.saveAsset(assetData).subscribe(data=>{
+    assetData.status = assetData.status === 'active' ? 'A' : 'I';
+  
+    this.vulnerabilitiesService.saveAsset(assetData).subscribe((data) => {
       if (data) {
         this.toastr.success('Asset created successfully');
+  
         setTimeout(() => {
           this.router.navigate(['/cve/assets']);
           this.cdr.detectChanges();
-        }, 2000); 
+        }, 2000);
       }
-
-    })
+    });
   }
   cancel(){
     // window.history.back();

@@ -108,12 +108,14 @@ export class GraphViewsComponent {
     });
   }
   byAsset(severity: string){
+    this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByAsset(severity).subscribe((data) => {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities.data = this.vulerabilities;
         this._filteredVulnerabilities.paginator = this.paginator;
+        this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
       }

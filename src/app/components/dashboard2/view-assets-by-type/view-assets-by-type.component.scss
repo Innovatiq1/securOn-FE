@@ -1,3 +1,16 @@
 h4.f-w-700 {
     margin-top: 0.5rem; /* Adjust this value as needed */
   }
+
+  .fs 
+  {
+    font-size: 18px; 
+    font-weight: 600;
+  }
+
+  .spacing-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px; /* Adjust spacing */
+  }

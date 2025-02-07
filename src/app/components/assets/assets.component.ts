@@ -178,7 +178,7 @@ export class AssetsComponent {
             : this.select2._handleClosedKeydown(event);
         }
       };
-      this.select._handleKeydown = (event: KeyboardEvent) => {
+      this.select3._handleKeydown = (event: KeyboardEvent) => {
         if (event.keyCode==SPACE)
           return
         if (!this.select3.disabled) {
@@ -204,35 +204,7 @@ export class AssetsComponent {
     this.formattedEndDate = endDate.toString();
     this.vulnerabilitiesService.setDataLoading(true);
     this.vulnerabilityDataService.show();
-    // this.logCveService
-    //   .loadAllAssets(this.formattedStartDate, this.formattedEndDate)
-    //   .subscribe((data: any[]) => {
-    //     this._assets = data;
-    //     this.dataSource = data;
-    //     this.vulnerabilityDataService.hide();
-    //     if (data.length == 0) {
-    //       this.vulnerabilitiesService.loadAllAssets();
-    //       this.cdr.detectChanges();
-          
-    //     } else {
-    //       this.vulnerabilitiesService.setDataLoading(false);
-    //       // this.vulnerabilityDataService.show();
-    //     }
-    //     this._assets?.length > 0 &&
-    //       this.vulnerabilitiesService.setSelectedAssetId(this._assets[0]._id);
-
-    //     this.prepareFilters();
-    //     this.filteredProjects = [...this._projects];
-    //     this.filteredFwVersion = [...this._firmwareVersions];
-
-    //     this.vulnerabilitiesService
-    //       .getAssetUploadMessage()
-    //       .pipe()
-    //       .subscribe((message) => {
-    //         // this.asertMessage = message;
-    //       });
-    //     this.cdr.detectChanges();
-    //   });
+ 
     if (this._selectedVendor.length === 0) {
       this.vulnerabilitiesService
         .getSelectedVendor()
@@ -557,6 +529,7 @@ export class AssetsComponent {
       next: () => {
         // console.log('Assets deleted successfully');
         this.toastr.success('Assets deleted successfully');
+        this.loadAssets();
         error: (error: any) => {
           console.error('Error:', error);
         };

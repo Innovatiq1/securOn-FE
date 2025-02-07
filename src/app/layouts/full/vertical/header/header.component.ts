@@ -12,7 +12,7 @@ import { navItems } from '../sidebar/sidebar-data';
 import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -128,7 +128,7 @@ export class HeaderComponent {
 
   constructor(
     private vsidenav: CoreService,
-    public dialog: MatDialog,
+    public dialog: MatDialog,   private router: Router,
     private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,private localStorageService: VulnerabilityDataService
   ) {
     translate.setDefaultLang('en');
@@ -169,7 +169,12 @@ export class HeaderComponent {
     dialogRef.afterClosed().subscribe((result) => {
     });
   }
-
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    this.router.navigate(['/authentication/login']);
+  }
   profiledd: profiledd[] = [
     {
       id: 1,

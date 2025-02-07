@@ -10,15 +10,19 @@
                     <i-tabler name="search" class="icon-20"></i-tabler>
                 </mat-icon>
             </mat-form-field>
-            <div class="d-flex gap-2 align-items-center">
-              <span class="import-label" style="margin-right: 6px;">Import as</span>
-                <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel"  (click)="exportToExcel()"/>
-                <button class="mx-3" mat-raised-button color="warn" (click)="back()">Back</button>
+            <div class="spacing-container">
+              <span class="fs"> Total Vulnerability: {{ _filteredVulnerabilities.data.length }}</span>
+            
+              <div class="inner-spacing">
+                <span class="import-label">Export as</span>
+                <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" (click)="exportToExcel()"/>
+                <button mat-raised-button color="warn" (click)="back()">Back</button>
+              </div>
             </div>
         </div>
-        <div class="d-flex justify-content-end f-w-700 mt-2" style="margin-right: 20px;">
-          Total: {{ _filteredVulnerabilities.data.length }}
-        </div>
+      </mat-card-content>
+    </mat-card>
+
         <ng-container *ngFor="let data of _filteredVulnerabilities.connect() | async">
     <mat-card class="cardWithShadow m-t-5" >
   <mat-card-content class="mt-5">
@@ -118,9 +122,8 @@
 </ng-container>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
 
-    </mat-card-content>
+    
     <div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">
       <mat-spinner></mat-spinner>
     </div>
-</mat-card>
 
