@@ -1,3 +1,4 @@
+
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
@@ -16,7 +17,6 @@ import FileSaver from 'file-saver';
 import { LogCveService } from 'src/app/services/api/log-cve.service';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { Subscription } from 'rxjs';
-import { SPACE } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -119,12 +119,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
   private storageInterval: any;
   previousStartDate: string | null;
   previousEndDate: string | null;
-  @ViewChild('select', { static: true }) select: any;
-  @ViewChild('select1', { static: true }) select1: any;
-  @ViewChild('select2', { static: true }) select2: any;
-  @ViewChild('select3', { static: true }) select3: any;
-  @ViewChild('select4', { static: true }) select4: any;
-  @ViewChild('select5', { static: true }) select5: any;
 
   private subscriptions: Subscription = new Subscription();
   constructor(
@@ -230,53 +224,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.isAssetsRoute = this.router.url.includes('/assets');
     this.loadData();
     this.startStorageWatcher();
-
-
-     this.select._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select.disabled) {
-              this.select.panelOpen
-                ? this.select._handleOpenKeydown(event)
-                : this.select._handleClosedKeydown(event);
-            }
-          };
-          this.select1._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select1.disabled) {
-              this.select1.panelOpen
-                ? this.select1._handleOpenKeydown(event)
-                : this.select1._handleClosedKeydown(event);
-            }
-          };
-          this.select2._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select2.disabled) {
-              this.select2.panelOpen
-                ? this.select2._handleOpenKeydown(event)
-                : this.select2._handleClosedKeydown(event);
-            }
-          };
-          this.select3._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select3.disabled) {
-              this.select3.panelOpen
-                ? this.select3._handleOpenKeydown(event)
-                : this.select3._handleClosedKeydown(event);
-            }
-          };
-          this.select4._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select4.disabled) {
-              this.select4.panelOpen
-                ? this.select4._handleOpenKeydown(event)
-                : this.select4._handleClosedKeydown(event);
-            }
-          };
   }
 
   ngAfterViewInit() {
@@ -380,8 +327,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
     const page = title ? 1 : this.currentPageIndex + 1;
-// console.log("this.previousStartDate",this.previousStartDate,"===",this.previousEndDate)
-// console.log("this.formattedStartDate",this.formattedStartDate,"===",this.formattedEndDate)
+
     let payload: any = {
       vendorName: this._selectedVendor,
       productName: this.searchService.product,
@@ -442,7 +388,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (data: any) => {
-          // console.log("searchdata:",data)
           if (!data.docs || data.docs.length === 0) {
             this.dataSource = [];
             this.totalItemCount = 0;
@@ -762,8 +707,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this._partNo = new Set();
     this._firmwareVersion = new Set();
     this._osType = new Set();
-    // this._project = new Set();
-    // this._project.add(this.defaultOptionProjectAll);
     this._projects = new Set();
     this._projects.add(this.defaultOptionProjectAll);
     this._osType.add(this.defaultOptionOstypeAll);
@@ -781,14 +724,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
           this._partNo.add(item.partNo);
           this._firmwareVersion.add(item.firmwareVersion);
           this._osType.add(item.osType);
-          this._projects.add(item.project)
-          // this._project.add(item.project);
+          this._projects.add(item.project);
         } else if (this._selectedVendor.includes(item.vendor)) {
           this._partNo.add(item.partNo);
           this._firmwareVersion.add(item.firmwareVersion);
           this._osType.add(item.osType);
-          this._projects.add(item.project)
-          // this._project.add(item.project);
+          this._projects.add(item.project);
         }
       });
       this._selectedProduct = this.defaultOptionAll;
@@ -798,7 +739,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this._partNo.add(item.partNo);
         this._firmwareVersion.add(item.firmwareVersion);
         this._osType.add(item.osType);
-        // this._project.add(item.project);
         this._projects.add(item.project);
       });
     }
@@ -832,7 +772,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       return a.localeCompare(b);
     });
 
-    // const sortedProject = [...this._project].sort((a, b) => {
+    // const sortedProject = [...this._projects].sort((a, b) => {
     //   if (a === this.defaultOptionProjectAll) return -1;
     //   if (b === this.defaultOptionProjectAll) return 1;
     //   return a.localeCompare(b);
@@ -843,7 +783,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this._partNo = new Set(sortedPartNo);
     this._firmwareVersion = new Set(sortedFirmwareVersion);
     this._osType = new Set(sortedOsType);
-    // this._project = new Set(sortedProject);
     this.filteredVendors = [...this._vendors];
     this.filteredProjects = [...this._projects];
     this.filteredPartNo = [...this._partNo];
@@ -919,9 +858,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     if (filterValue) {
       this.filteredProjects = [...this._projects].filter(
         (project) =>
-          project.toLowerCase().includes(filterValue)
-        //  ||
-        //    this._selectedProject.includes(project)
+          project.toLowerCase().includes(filterValue) ||
+          this._selectedProject.includes(project)
       );
     } else {
       this.filteredProjects = [...this._projects];

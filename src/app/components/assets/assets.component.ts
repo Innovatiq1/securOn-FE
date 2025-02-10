@@ -238,7 +238,6 @@ export class AssetsComponent {
     }
     this.resetPagination();
     this.paginate();
-
     this.subscriptions.add(
       this.vulnerabilityDataService.startDate$.subscribe(() => {
        this.loadAssets();
@@ -262,11 +261,11 @@ export class AssetsComponent {
  
   public loadAssets() {
     this.vulnerabilityDataService.show();
-    // const currentStartDate = localStorage.getItem('startDate')||'';
-        // const currentEndDate = localStorage.getItem('endDate') || '';
+    const currentStartDate = localStorage.getItem('startDate')||'';
+        const currentEndDate = localStorage.getItem('endDate') || '';
 
-        const currentStartDate = localStorage.getItem('startDate');
-         const currentEndDate = localStorage.getItem('endDate');
+        // const currentStartDate = localStorage.getItem('startDate');
+        //  const currentEndDate = localStorage.getItem('endDate');
         const fromDate=currentStartDate ? moment(currentStartDate).format('YYYY-MM-DD') : '';
         const toDate=currentEndDate ? moment(currentEndDate).format('YYYY-MM-DD') : '';
     this.logCveService
