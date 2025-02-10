@@ -880,7 +880,7 @@ export class AssetsComponent {
     );
     this.filteredFwVersion = [
       ...new Set(filteredAssets.map((item) => item.firmwareVersion)),
-    ].sort();
+    ].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));;
 
     if (!this.filteredFwVersion.includes(this.defaultFwOptionAll)) {
       this.filteredFwVersion.unshift(this.defaultFwOptionAll);
@@ -1074,20 +1074,34 @@ export class AssetsComponent {
       this.updateFilteredOsTypes();
     }
   }
+  // filterFwVersion(): void {
+  //   const filterValue = this.fwVersionFilter.toLowerCase() || '';
+
+  //   if (filterValue) {
+  //     this.filteredFwVersion = this.filteredFwVersion.filter(
+  //       (fw) =>
+  //         fw.toLowerCase().includes(filterValue) ||
+  //         this._selectedFirmwareVersion.includes(fw)
+  //     ).sort();
+  //   } else if (!filterValue) {
+  //     this.updateFilteredFirmwareVersions();
+  //   }
+  // }
   filterFwVersion(): void {
     const filterValue = this.fwVersionFilter.toLowerCase() || '';
-
+  
     if (filterValue) {
-      this.filteredFwVersion = this.filteredFwVersion.filter(
-        (fw) =>
-          fw.toLowerCase().includes(filterValue) ||
-          this._selectedFirmwareVersion.includes(fw)
-      ).sort();
-    } else if (!filterValue) {
+      this.filteredFwVersion = this.filteredFwVersion
+        .filter(
+          (fw) =>
+            fw.toLowerCase().includes(filterValue) ||
+            this._selectedFirmwareVersion.includes(fw)
+        )
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    } else {
       this.updateFilteredFirmwareVersions();
     }
   }
-
   resetPagination(): void {
     this.currentPageIndex = 0;
     this.pageSize = this.DEFAULT_PAGE_SIZE;

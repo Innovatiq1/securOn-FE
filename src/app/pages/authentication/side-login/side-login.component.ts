@@ -61,13 +61,9 @@ export class AppSideLoginComponent {
 
 ngOnInit() {
   if (this.authService.isLoggedIn()) {
-    this.router.navigate(['/dashboards']);  
-  }
-  if (!this.authService.isLoggedIn()) {
-    this.router.navigate(['/authentication/login']);
+    this.router.navigate(['/dashboards']);
   }
 }
-
   
 
   get f() {
@@ -91,6 +87,7 @@ ngOnInit() {
           localStorage.setItem('userId', response?.data?._id);
           localStorage.setItem('userName', response?.data?.username);
           this.router.navigate(['/dashboards']);
+          console.log('Token stored:', localStorage.getItem('token'));
         } else {
           this._showError = true;
           this.cdr.markForCheck();

@@ -9,4 +9,12 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'CVE - Tracker™';
+
+  ngOnInit() {
+    // window.addEventListener('beforeunload', () => {
+    //   localStorage.removeItem('token');
+    //   localStorage.removeItem('userId');
+    //   localStorage.removeItem('userName');
+    // });
+  }
 }
