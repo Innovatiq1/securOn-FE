@@ -129,7 +129,7 @@ export class ByAssetTypeComponent {
                 show: true,
                 name: {
                   show: true,
-                  text: 'No Data Available',
+                  text: 'No Data',
                   fontSize: '16px',
                   color: undefined,
                   offsetY: 0,

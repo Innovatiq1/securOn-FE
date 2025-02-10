@@ -146,7 +146,7 @@ export class AppProductSalesComponent {
                 show: true,
                 name: {
                   show: true,
-                  text: 'No Data Available',
+                  text: 'No Data',
                   fontSize: '16px',
                   color: '#a1aab2',
                   offsetY: 0,

@@ -1,35 +1,16 @@
-<mat-card class="cardWithShadow">
-    <mat-card-content class="p-24">
-        <div style="margin: 15px;">
-            <span class="f-s-20 f-w-700">
-                Search CVE's
-            </span>
-            <span class="search">
-                Dashboard
-            </span>
-            <span class="-copy">
-                /
-            </span>
-            <span class="search">
-                Search
-            </span>
-            <span class="-copy">
-                /
-            </span>
-            <span class="mx-2 f-s-13">
-                CVE - ID View
-            </span>
 
-        </div>
-        <div class="text-center pt-4">
-            <h2>View CVE Details</h2>
-            <hr>
-        </div>
         <mat-card class="cardWithShadow">
-            <mat-card-content class="p-24">
-                <div style="float: right;">
-                    <button mat-raised-button color="warn" [routerLink]="['/cve/search']">Back</button>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-center flex-grow-1">
+                  <h2>View CVE Details</h2>
                 </div>
+                <div class="ms-auto" style="padding-right: 20px;">
+                  <button mat-raised-button color="warn" [routerLink]="['/cve/search']">Back</button>
+                </div>
+              </div>
+             
+            <mat-card-content class="p-24">
+                <hr> 
 
                 <div>
                     <h5 class="f-s-20 f-w-700">Vulnerability Details: <span class="highlight-text" style="font-style: italic;" >{{details[0]?.cve?.id }}</span></h5>
@@ -92,5 +73,3 @@
                 <!-- <a class="text-primary" href="{{reference?.url }}" target="_blank">{{reference?.url || 'N/A'}}</a> -->
                 </mat-card-content>
                 </mat-card>
-    </mat-card-content>
-</mat-card>

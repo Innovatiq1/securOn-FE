@@ -207,24 +207,32 @@ export class ByContractIdComponent {
         colors: ['#d3d3d3'],  
         plotOptions: {
           pie: {
-            pie: {
-              
+            donut: {
               labels: {
                 show: true,
                 name: {
-                  show: true,
-                  text: 'No Data Available',
-                  fontSize: '16px',
-                  color: '#a1aab2',
-                  offsetY: 0,
+                  show: false, // Hide default label
                 },
                 value: {
-                  show: false,
+                  show: false, // Hide percentage value
+                },
+                total: {
+                  show: true,
+                  label: 'No Data', // Show "No Data" in center
+                  fontSize: '14px',
+                  color: '#a1aab2',
                 },
               },
             },
           },
         },
+        dataLabels: {
+          enabled: false, // Hide percentage text
+        },
+        tooltip: {
+          enabled: false, // No tooltip for "No Data"
+        },
+      
       };
     }
   }

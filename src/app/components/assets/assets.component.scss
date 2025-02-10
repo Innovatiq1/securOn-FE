@@ -1,9 +1,9 @@
 .browse {
-    float: right;
-    // left: auto;
-    align-self: center;
-    display: flex;
-    align-items: center;
+    // float: right;
+    // // left: auto;
+    // align-self: center;
+    // display: flex;
+    // align-items: center;
 
 
     input[type="file"]::file-selector-button {
@@ -26,8 +26,16 @@
     }
 }
 .import-label {
-    font-size: 18px;
+    font-size: 16px;
     color: #fffdfd;
-    vertical-align: middle; /* Aligns text with the icon */
+    // vertical-align: middle; 
+  }
+  
+  .mt-5 {
+    margin-top: 10px;
+  }
+
+  .float-right {
+    margin-right: 10px;
   }
   

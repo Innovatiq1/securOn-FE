@@ -13,6 +13,7 @@ import { MaterialModule } from '../../../material.module';
 import { UserService } from 'src/app/services/user.service';
 import { CommonModule } from '@angular/common';
 import { MiscellaneousConstant } from 'src/app/services/auth/miscalleneous-constants';
+import { AuthService } from '../auth.service'; 
 
 @Component({
   selector: 'app-side-login',
@@ -35,6 +36,7 @@ export class AppSideLoginComponent {
     public userService: UserService,
     private cdr: ChangeDetectorRef,
     private formBuilder: FormBuilder, 
+    private authService: AuthService,
   ) {
     this.form = this.formBuilder.group({
       email: [
@@ -55,6 +57,15 @@ export class AppSideLoginComponent {
       ]),
     ],
   });
+}
+
+ngOnInit() {
+  if (this.authService.isLoggedIn()) {
+    this.router.navigate(['/dashboards']);  
+  }
+  if (!this.authService.isLoggedIn()) {
+    this.router.navigate(['/authentication/login']);
+  }
 }
 
   

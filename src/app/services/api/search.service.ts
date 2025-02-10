@@ -35,7 +35,8 @@ export class SearchService {
     return this.http.post<string[]>(`${environment.baseUrl}/getProductsByVendor`, data);
   }
   postSearch(data: any): Observable<string[]> {
-    return this.http.post<string[]>(`${environment.baseUrl}/searchCriteria`, data);
+    return this.http.post<string[]>(
+     ' http://203.118.55.29:8000/searchCriteria', data);
   }
   getDataLoadingStatus(): Observable<boolean> {
     return this._isDataLoading$.asObservable();
