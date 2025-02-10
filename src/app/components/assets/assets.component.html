@@ -79,12 +79,7 @@
             </div>
           </div>
           <!-- <div class="content-view__toolbar"> -->
-            <div  class="mt-5 ">
-            <div class="content-view__toolbar-delete float-right">
-              <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
-                (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
-            </div>
-          </div>
+          
           <!-- </div> -->
         </div>
       </form>
@@ -92,6 +87,12 @@
   </div>
  
   <mat-card class="cardWithShadow">
+    <div  class="mt-5 d-flex justify-content-end" >
+      <div class="content-view__toolbar-delete float-right">
+        <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
+          (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
+      </div>
+    </div>
     <mat-card-content class="p-24">
       <div class="table-responsive">
         <table mat-table [dataSource]="currentPageItems" class="w-100">

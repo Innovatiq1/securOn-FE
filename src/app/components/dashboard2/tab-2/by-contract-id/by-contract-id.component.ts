@@ -66,7 +66,7 @@ export class ByContractIdComponent {
         toolbar: {
           show: false,
         },
-        height: 290,
+        height: 300,
         events: {
           dataPointMouseEnter: (event: any, chartContext: any, config: any) => {
             const label = config.w.config.labels[config.dataPointIndex];
@@ -155,48 +155,25 @@ export class ByContractIdComponent {
       const labels = this.byContractId.map((item: { project: any; }) => item.project);
       const series = this.byContractId.map((item: { count: any; }) => item.count);
       this.totalCount = this.byContractId.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
-      // this.contractChartOptions1 = {
-      //   ...baseChartOptions,
-      //   series: series, 
-      //   labels: labels, 
-      // };
       this.contractChartOptions1 = {
         ...baseChartOptions,
-        series: series, 
+        series: series,
         labels: labels,
         dataLabels: {
-          enabled: true,
-          style: {
-            fontSize: '8px',
-            fontWeight: 'bold',
-            colors: ['#fff'],
-          },
-          dropShadow: {
-            enabled: false,
-          },
-          formatter: function (val: number, opts: any) {
-            return val.toFixed(1) + '%'; 
-          },
-          background: {
-            enabled: true,
-            foreColor: '#000',
-            padding: 5,
-            borderRadius: 4,
-          },
+          formatter: (val: number) => `${val.toFixed(1)}%`,
+        
         },
         plotOptions: {
           pie: {
             expandOnClick: false,
             dataLabels: {
               minAngleToShowLabel: 5,
-              offsetY: 3, 
-              distance: 10, 
+              offsetY: 3,
+              distance: 10,
             },
           },
         },
-        tooltip: {
-          enabled: true,
-        },
+        
       };
       
     } else {
