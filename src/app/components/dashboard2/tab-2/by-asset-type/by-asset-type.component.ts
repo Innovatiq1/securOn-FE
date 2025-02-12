@@ -121,7 +121,7 @@ export class ByAssetTypeComponent {
         ...baseChartOptions,
         series: [0],
         labels: ['No Data Found'],
-        colors: ['#d3d3d3'],
+        colors: ['#a1aab2'],
         plotOptions: {
           pie: {
             donut: {
@@ -130,8 +130,8 @@ export class ByAssetTypeComponent {
                 name: {
                   show: true,
                   text: 'No Data Found',
-                  fontSize: '16px',
-                  color: undefined,
+                  fontSize: '18px',
+                  color:'#a1aab2',
                   offsetY: 0,
                 },
                 value: {

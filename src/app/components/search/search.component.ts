@@ -1,7 +1,12 @@
-
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelect } from '@angular/material/select';
@@ -150,61 +155,55 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.dropdownData = data;
     });
 
-      this.select._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select.disabled) {
-              this.select.panelOpen
-                ? this.select._handleOpenKeydown(event)
-                : this.select._handleClosedKeydown(event);
-            }
-          };
-          this.select1._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select1.disabled) {
-              this.select.panelOpen
-                ? this.select1._handleOpenKeydown(event)
-                : this.select1._handleClosedKeydown(event);
-            }
-          };
-          this.select2._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select2.disabled) {
-              this.select.panelOpen
-                ? this.select2._handleOpenKeydown(event)
-                : this.select2._handleClosedKeydown(event);
-            }
-          };
+    this.select._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode == SPACE) return;
+      if (!this.select.disabled) {
+        this.select.panelOpen
+          ? this.select._handleOpenKeydown(event)
+          : this.select._handleClosedKeydown(event);
+      }
+    };
+    this.select1._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode == SPACE) return;
+      if (!this.select1.disabled) {
+        this.select.panelOpen
+          ? this.select1._handleOpenKeydown(event)
+          : this.select1._handleClosedKeydown(event);
+      }
+    };
+    this.select2._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode == SPACE) return;
+      if (!this.select2.disabled) {
+        this.select.panelOpen
+          ? this.select2._handleOpenKeydown(event)
+          : this.select2._handleClosedKeydown(event);
+      }
+    };
 
-          this.select3._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select3.disabled) {
-              this.select.panelOpen
-                ? this.select3._handleOpenKeydown(event)
-                : this.select3._handleClosedKeydown(event);
-            }
-          };
-          this.select4._handleKeydown = (event: KeyboardEvent) => {
-            if (event.keyCode==SPACE)
-              return
-            if (!this.select4.disabled) {
-              this.select.panelOpen
-                ? this.select4._handleOpenKeydown(event)
-                : this.select4._handleClosedKeydown(event);
-            }
-          };
+    this.select3._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode == SPACE) return;
+      if (!this.select3.disabled) {
+        this.select.panelOpen
+          ? this.select3._handleOpenKeydown(event)
+          : this.select3._handleClosedKeydown(event);
+      }
+    };
+    this.select4._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode == SPACE) return;
+      if (!this.select4.disabled) {
+        this.select.panelOpen
+          ? this.select4._handleOpenKeydown(event)
+          : this.select4._handleClosedKeydown(event);
+      }
+    };
 
     this.subscriptions.add(
       this.localStorageService.startDate$.subscribe(() => {
         const startDate = localStorage.getItem('startDate') || '';
-    const endDate = localStorage.getItem('endDate') || '';
+        const endDate = localStorage.getItem('endDate') || '';
 
-       this.formattedStartDate = startDate.toString();
-       this.formattedEndDate = endDate.toString();
-
+        this.formattedStartDate = startDate.toString();
+        this.formattedEndDate = endDate.toString();
       })
     );
 
@@ -239,16 +238,19 @@ export class SearchComponent implements OnInit, AfterViewInit {
     //     this._selectedVendor = selectedVendor;
     //   });
 
-      this.vulnerabilitiesService.getSelectedVendor().subscribe((SelectedOs: string[]) => {
+    this.vulnerabilitiesService
+      .getSelectedVendor()
+      .subscribe((SelectedOs: string[]) => {
         this._selectedVendor = [...SelectedOs];
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       });
-      this.vulnerabilitiesService.getSelectedProject().subscribe((SelectedProject: string[]) => {
+    this.vulnerabilitiesService
+      .getSelectedProject()
+      .subscribe((SelectedProject: string[]) => {
         this._selectedProject = [...SelectedProject];
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       });
-     
-     
+
     this.vulnerabilitiesService
       .getSelectedPartNo()
       .subscribe((selectedPartNo: string[]) => {
@@ -256,7 +258,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.cdr.detectChanges();
       });
 
-      this.vulnerabilitiesService.getSelectedOsType().subscribe((SelectedOs: string[]) => {
+    this.vulnerabilitiesService
+      .getSelectedOsType()
+      .subscribe((SelectedOs: string[]) => {
         // console.log("Restoring SelectedOs:", SelectedOs);
         this._selectedOsType = [...SelectedOs];
         this.cdr.detectChanges(); // Force UI update
@@ -300,28 +304,25 @@ export class SearchComponent implements OnInit, AfterViewInit {
         if (
           currentStartDate !== this.previousStartDate ||
           currentEndDate !== this.previousEndDate
-        ) {;
-
+        ) {
           this.previousStartDate = currentStartDate;
           this.previousEndDate = currentEndDate;
-          this.onSearch(); 
+          this.onSearch();
         }
-      }, 1000); 
+      }, 1000);
     }
   }
 
   stopStorageWatcher(): void {
     if (this.storageInterval) {
-      clearInterval(this.storageInterval); 
-      this.storageInterval = null; 
+      clearInterval(this.storageInterval);
+      this.storageInterval = null;
     }
   }
 
- 
   ngOnDestroy(): void {
-    this.stopStorageWatcher(); 
+    this.stopStorageWatcher();
   }
-
 
   onPageChange(event: PageEvent): void {
     this.currentPageIndex = event?.pageIndex;
@@ -345,7 +346,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.defaultOptionOstypeAll,
       Array.from(this._osType)
     );
-    console.log("selectedOsType", this._selectedOsType);
+    console.log('selectedOsType', this._selectedOsType);
     this.vulnerabilitiesService.setSelectedOsType(this._selectedOsType);
 
     this.onSearch();
@@ -388,7 +389,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
     const page = title ? 1 : this.currentPageIndex + 1;
-console.log("title: " , this._selectedOsType);
+    console.log('title: ', this._selectedOsType);
     let payload: any = {
       vendorName: this._selectedVendor,
       productName: this.searchService.product,
@@ -398,8 +399,8 @@ console.log("title: " , this._selectedOsType);
       osType: this._selectedOsType,
       page: page,
       limit: this.pageSize,
-      startDate:  this.previousStartDate || this.formattedStartDate,
-      endDate:  this.previousEndDate ||this.formattedEndDate,
+      startDate: this.previousStartDate || this.formattedStartDate,
+      endDate: this.previousEndDate || this.formattedEndDate,
     };
 
     const cvePartFirmware = this.cvePartFirmware;
@@ -467,11 +468,11 @@ console.log("title: " , this._selectedOsType);
 
           this.prepareFilters(true);
           this.currentPageItems = this.dataSource;
-          this.filterVendors();
-          this.filterProjects();
-          this.filterOsType();
-          this.filterPartNo();
-          this.filterFw();
+          // this.filterVendors();
+          // this.filterProjects();
+          // this.filterOsType();
+          // this.filterPartNo();
+          // this.filterFw();
           if (this.paginator) {
             this.paginator.pageIndex = this.currentPageIndex;
             this.paginator.length = this.totalItemCount;
@@ -589,15 +590,15 @@ console.log("title: " , this._selectedOsType);
           'Fix Available': item.fix === 'Y' ? 'Yes' : 'No',
           'Affected by CVE': item.affectedCve ? 'No' : 'Yes',
           'CVE ID': item.cveId || '-',
-          'Fixed Release':item.fixedRelease|| '-',
-          'Security Advisory URL':item.advisoryUrl || '-',
-          'Security Advisory Title':item.advisoryTitle || '-',
-          'Security Impact Rating':item.seviarity || '-',
-          'CVSS Base Score':item.cvssScore || '-',
-          'Vulnerable Component or Feature':item.vulnerableComponent || '-',
-          'Determine Whether Vulnerable Feature is Enabled':item.vulnerableFeature || '-',
-          'Workaround/Mitigation':item.workarounds || '-',
-
+          'Fixed Release': item.fixedRelease || '-',
+          'Security Advisory URL': item.advisoryUrl || '-',
+          'Security Advisory Title': item.advisoryTitle || '-',
+          'Security Impact Rating': item.seviarity || '-',
+          'CVSS Base Score': item.cvssScore || '-',
+          'Vulnerable Component or Feature': item.vulnerableComponent || '-',
+          'Determine Whether Vulnerable Feature is Enabled':
+            item.vulnerableFeature || '-',
+          'Workaround/Mitigation': item.workarounds || '-',
         }));
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('SearchResults');
@@ -625,28 +626,28 @@ console.log("title: " , this._selectedOsType);
         //   };
         // });
         // headerRow.eachCell((cell: any, colNumber: number) => {
-        //   if (colNumber <= 10) { 
+        //   if (colNumber <= 10) {
         //     cell.fill = {
         //       type: 'pattern',
         //       pattern: 'solid',
-        //       fgColor: { argb: '0070c0' }, 
+        //       fgColor: { argb: '0070c0' },
         //     };
         //     cell.font = {
         //       color: { argb: 'FFFFFF' },
         //       bold: true,
         //     };
-        //   } else { 
+        //   } else {
         //     cell.fill = {
         //       type: 'pattern',
         //       pattern: 'solid',
-        //       fgColor: { argb: '00b050' }, 
+        //       fgColor: { argb: '00b050' },
         //     };
         //     cell.font = {
         //       color: { argb: 'FFFFFF' },
         //       bold: true,
         //     };
         //   }
-        
+
         //   cell.alignment = {
         //     vertical: 'top',
         //   };
@@ -658,34 +659,34 @@ console.log("title: " , this._selectedOsType);
         //   };
         // });
         headerRow.eachCell((cell: any, colNumber: number) => {
-          if (colNumber <= 10) { 
+          if (colNumber <= 10) {
             cell.fill = {
               type: 'pattern',
               pattern: 'solid',
-              fgColor: { argb: '0070c0' }, 
+              fgColor: { argb: '0070c0' },
             };
             cell.font = {
               color: { argb: 'FFFFFF' },
               bold: true,
             };
-          } else { 
+          } else {
             cell.fill = {
               type: 'pattern',
               pattern: 'solid',
-              fgColor: { argb: '00b050' }, 
+              fgColor: { argb: '00b050' },
             };
             cell.font = {
               color: { argb: 'FFFFFF' },
               bold: true,
             };
           }
-        
+
           cell.alignment = {
             vertical: 'top',
-            horizontal: 'center', 
-            wrapText: true,       
+            horizontal: 'center',
+            wrapText: true,
           };
-        
+
           cell.border = {
             top: { style: 'thin', color: { argb: '000000' } },
             left: { style: 'thin', color: { argb: '000000' } },
@@ -693,17 +694,16 @@ console.log("title: " , this._selectedOsType);
             right: { style: 'thin', color: { argb: '000000' } },
           };
         });
-         worksheet.addRow([]);
+        worksheet.addRow([]);
         allDataToExport.forEach((item: any) => {
           const dataRow = worksheet.addRow(Object.values(item));
           dataRow.eachCell((cell: any) => {
             cell.alignment = {
-              wrapText: true,       
+              wrapText: true,
               vertical: 'top',
             };
           });
         });
-        
 
         worksheet.mergeCells('A1:A2');
         worksheet.mergeCells('B1:B2');
@@ -724,8 +724,10 @@ console.log("title: " , this._selectedOsType);
         worksheet.mergeCells('Q1:Q2');
         worksheet.mergeCells('R1:R2');
 
-        const headerLengths = [20, 15, 25, 15, 15, 20, 15, 20, 15,15,15,25,25,20,25,30,30,30];
-        
+        const headerLengths = [
+          20, 15, 25, 15, 15, 20, 15, 20, 15, 15, 15, 25, 25, 20, 25, 30, 30,
+          30,
+        ];
 
         headerLengths.forEach((width, index) => {
           worksheet.getColumn(index + 1).width = width;
@@ -754,47 +756,69 @@ console.log("title: " , this._selectedOsType);
       }
     );
   }
-  private prepareFilters(byProduct: boolean = false, byProject: boolean = false): void {
-
+  private prepareFilters(
+    byProduct: boolean = false,
+    byProject: boolean = false
+  ): void {
     const previousVendorSelection = new Set(this._selectedVendor);
     const previousOsTypeSelection = new Set(this._selectedOsType);
     const previousPartNoSelection = new Set(this._selectedPartNo);
     const previousFwVersionSelection = new Set(this._selectedVersion);
     const previousProjectSelection = new Set(this._selectedVersion);
-
-    this._vendors = new Set([this.defaultOptionAll, ...previousVendorSelection]);
-    this._projects = new Set([this.defaultOptionAll,...previousProjectSelection]);
-    this._partNo = new Set([this.defaultOptionPortNoAll, ...previousPartNoSelection]);
-    this._firmwareVersion = new Set([this.defaultOptionFwAll, ...previousFwVersionSelection]);
-    this._osType = new Set([this.defaultOptionOstypeAll, ...previousOsTypeSelection]);
-
+  
+    // Initialize sets with 'All' as the first option and then add selected values
+    this._vendors = new Set([this.defaultOptionAll, ...previousVendorSelection].filter(Boolean));
+    this._projects = new Set([this.defaultOptionAll, ...previousProjectSelection].filter(Boolean));
+    this._partNo = new Set([this.defaultOptionPortNoAll, ...previousPartNoSelection].filter(Boolean));
+    this._firmwareVersion = new Set([this.defaultOptionFwAll, ...previousFwVersionSelection].filter(Boolean));
+    this._osType = new Set([this.defaultOptionOstypeAll, ...previousOsTypeSelection].filter(Boolean));
+  
+    // Add unique vendors from the assets
     this._assets.forEach((item) => {
-        this._vendors.add(item.vendor);
+      if (item.vendor) this._vendors.add(item.vendor);
     });
 
+    
+  
     if (byProduct || byProject) {
-        this._assets.forEach((item) => {
-            if (this._selectedVendor.includes(this.defaultOptionAll) || this._selectedVendor.includes(item.vendor)) {
-                this._partNo.add(item.partNo);
-                this._firmwareVersion.add(item.firmwareVersion);
-                this._osType.add(item.osType);
-                this._projects.add(item.project);
-            }
-        });
+      this._assets.forEach((item) => {
+        if (
+          this._selectedVendor.includes(this.defaultOptionAll) ||
+          this._selectedVendor.includes(item.vendor)
+        ) {
+          if (item.partNo) this._partNo.add(item.partNo);
+          if (item.firmwareVersion) this._firmwareVersion.add(item.firmwareVersion);
+          if (item.osType) this._osType.add(item.osType);
+          if (item.project) this._projects.add(item.project);
+        }
+      });
     }
-    this._vendors = new Set([this.defaultOptionAll, ...this._vendors]); 
-    this._projects = new Set([this.defaultOptionAll, ...this._projects]);
-    this._partNo = new Set([this.defaultOptionPortNoAll, ...this._partNo]);
-    this._firmwareVersion = new Set([this.defaultOptionFwAll, ...this._firmwareVersion]);
-    this._osType = new Set([this.defaultOptionOstypeAll, ...this._osType]);
-
-    this.filteredVendors = [...this._vendors];
-    this.filteredProjects = [...this._projects];
-    this.filteredPartNo = [...this._partNo];
-    this.filteredOsType = [...this._osType];
-    this.filteredfwVersion = [...this._firmwareVersion];
-}
-
+  
+    const alphanumericSort = (a: string, b: string) => {
+     
+      if (a === this.defaultOptionAll) return -1;
+      if (b === this.defaultOptionAll) return 1;
+    
+      return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+    };
+  
+    this.filteredVendors = [...this._vendors].sort(alphanumericSort);
+    this.filteredProjects = [...this._projects].sort(alphanumericSort);
+    this.filteredOsType = [...this._osType].sort(alphanumericSort);
+    this.filteredfwVersion = [...this._firmwareVersion].sort((a, b) => {
+      if (a === this.defaultOptionPortNoAll) return -1;
+      if (b === this.defaultOptionPortNoAll) return 1;
+      return a.localeCompare(b, undefined, { numeric: true });
+    });
+  
+  
+    this.filteredPartNo = [...this._partNo].sort((a, b) => {
+      if (a === this.defaultOptionPortNoAll) return -1;
+      if (b === this.defaultOptionPortNoAll) return 1;
+      return a.localeCompare(b, undefined, { numeric: true });
+    });
+  }
+  
 
   // private prepareFilters(byProduct: boolean = false, byProject = false): void {
   //   if (!byProduct) {
@@ -947,8 +971,9 @@ console.log("title: " , this._selectedOsType);
     if (filterValue) {
       this.filteredVendors = [...this._vendors].filter(
         (vendor) =>
-          vendor.toLowerCase().includes(filterValue) ||
-          this._selectedVendor.includes(vendor)
+          vendor.toLowerCase().includes(filterValue) 
+      ).sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' })
       );
     } else {
       this.filteredVendors = [...this._vendors];
@@ -961,8 +986,9 @@ console.log("title: " , this._selectedOsType);
     if (filterValue) {
       this.filteredProjects = [...this._projects].filter(
         (project) =>
-          project.toLowerCase().includes(filterValue) ||
-          this._selectedProject.includes(project)
+          project.toLowerCase().includes(filterValue) 
+      ).sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' })
       );
     } else {
       this.filteredProjects = [...this._projects];
@@ -971,9 +997,11 @@ console.log("title: " , this._selectedOsType);
   filterOsType() {
     const filterValue = this.osTypeFilter.toLowerCase();
     if (filterValue) {
-      this.filteredOsType = [...this._osType].filter((osType) =>
-        osType.toLowerCase().includes(filterValue) ||
-      this._selectedOsType.includes(osType)
+      this.filteredOsType = [...this._osType].filter(
+        (osType) =>
+          osType.toLowerCase().includes(filterValue) 
+      ).sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' })
       );
     } else {
       this.filteredOsType = [...this._osType];
@@ -982,21 +1010,21 @@ console.log("title: " , this._selectedOsType);
   filterPartNo() {
     const filterValue = this.partnoFilter.toLowerCase();
     if (filterValue) {
-      this.filteredPartNo = [...this._partNo].filter((partNo) =>
-        partNo.toLowerCase().includes(filterValue) ||
-      this._selectedPartNo.includes(partNo)
-      );
+      this.filteredPartNo = [...this._partNo].filter(
+        (partNo) =>
+          partNo.toLowerCase().includes(filterValue) 
+      ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
     } else {
       this.filteredPartNo = [...this._partNo];
     }
   }
   filterFw() {
-    console.log("ffff",this.fwVersionFilter)
     const filterValue = this.fwVersionFilter.toLowerCase() || '';
     if (filterValue) {
-      this.filteredfwVersion = [...this._firmwareVersion].filter((project) =>
-        project.toLowerCase().includes(filterValue) || this._selectedVersion.includes(project)
-      );
+      this.filteredfwVersion = [...this._firmwareVersion].filter(
+        (project) =>
+          project.toLowerCase().includes(filterValue) 
+      ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
     } else {
       this.filteredfwVersion = [...this._firmwareVersion];
     }

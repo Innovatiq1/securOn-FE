@@ -24,3 +24,12 @@
 .card-height {
     height: 442px; 
 }
+.no-data-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px; 
+    font-size: 18px;
+    font-weight: bold;
+    color: #a1aab2;
+  }
