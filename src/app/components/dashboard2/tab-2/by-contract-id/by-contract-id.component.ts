@@ -57,7 +57,7 @@ export class ByContractIdComponent {
   private initializeCharts() {
     const hoveredSeverities = new Set<string>();
     this.apiCache = new Map<string, any>();
-  
+    const hoveredIndex = { value: -1 };
     const baseChartOptions = {
       chart: {
         type: 'pie',
@@ -66,7 +66,8 @@ export class ByContractIdComponent {
         toolbar: {
           show: false,
         },
-        height: 300,
+        height: 500,  
+  width: 420,
         events: {
           dataPointMouseEnter: (event: any, chartContext: any, config: any) => {
             const label = config.w.config.labels[config.dataPointIndex];
@@ -83,6 +84,42 @@ export class ByContractIdComponent {
             const label = config.w.config.labels[config.dataPointIndex]; 
             this._openVulnerability(label); 
           },
+
+          legendItemHover: (event: any, chartContext: any, config: any) => {
+            hoveredIndex.value = config.seriesIndex;
+    
+            const newSeries = chartContext.opts.series.map((s: any, index: number) =>
+              index === hoveredIndex.value ? s : 0
+            );
+            chartContext.updateOptions({
+              dataLabels: {
+                enabled: true,
+                formatter: (val: number, opts: any) => {
+                  return opts.seriesIndex === hoveredIndex.value
+                    ? `${val.toFixed(1)}%`
+                    : '';
+                },
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  colors: ['#fff'], // Ensure white text visibility
+                },
+              },
+            });
+          },
+          legendItemMouseOut: (event: any, chartContext: any) => {
+            hoveredIndex.value = -1;
+            chartContext.updateOptions({
+              series: chartContext.opts.series,
+              dataLabels: { enabled: false }, // Hide percentage when not hovered
+            });
+            // Restore original chart data when the legend is not hovered
+            chartContext.updateOptions({ series: chartContext.opts.series });
+          },
+
+        },
+        dataLabels: {
+          enabled: false, // Hide default percentage on chart
         },
       },
       colors: [
@@ -114,11 +151,8 @@ export class ByContractIdComponent {
         custom: (options: { series: number[]; seriesIndex: number; dataPointIndex: number; w: any }) => {
           const { series, seriesIndex, w } = options;
           const label = w.config.labels[seriesIndex];
-      
-          // Fetch the criticality data from the cache
           const criticalityData = this.apiCache.get(label);
       
-          // Handle cases where data is missing
           if (!criticalityData) {
             return `
               <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
@@ -127,14 +161,10 @@ export class ByContractIdComponent {
               </div>
             `;
           }
-      
-          // Destructure severity counts and total count from the criticality data
           const { criticalCount = 0, highCount = 0, mediumCount = 0, lowCount = 0, totalCount = 0 } = criticalityData;
       
-          // Get the specific count for the current series
           const criticalityCount = series[seriesIndex];
       
-          // Return a styled tooltip with criticality details
           return `
             <div style="padding: 10px; background: #2a2a2a; color: #fff; border-radius: 4px; max-width: 300px; overflow: auto; word-wrap: break-word; white-space: normal;">
               <strong>${label}: ${criticalityCount}</strong><br>
@@ -160,27 +190,38 @@ export class ByContractIdComponent {
         series: series,
         labels: labels,
         dataLabels: {
-          formatter: (val: number) => `${val.toFixed(1)}%`,
-        
+          enabled: false, // Hide % inside the chart
+        },
+        legend: {
+          show: true,
+          position: 'right',
+          labels: {
+            useSeriesColors: true,
+          },
+          formatter: (seriesName: string, opts: any) => {
+            const percentage = opts.w.config.series[opts.seriesIndex].toFixed(1);
+            return `<span style="display: flex; align-items: center;">
+                      <span style="margin-right: 8px;color: white;font-weight: bold;">${percentage}%</span> 
+                      <span style="color: white;font-weight: bold;">${seriesName}</span 
+                    </span>`;
+          },
         },
         plotOptions: {
           pie: {
             expandOnClick: false,
             dataLabels: {
               minAngleToShowLabel: 5,
-              offsetY: 3,
-              distance: 10,
             },
           },
         },
-        
       };
+      
       
     } else {
       this.contractChartOptions1 = {
         ...baseChartOptions,
-        series: [1],  
-        labels: ['No Data'],
+        series: [0],  
+        labels: ['No Data Found'],
         colors: ['#d3d3d3'],  
         plotOptions: {
           pie: {
@@ -195,7 +236,7 @@ export class ByContractIdComponent {
                 },
                 total: {
                   show: true,
-                  label: 'No Data', // Show "No Data" in center
+                  label: 'No Data Found', // Show "No Data" in center
                   fontSize: '14px',
                   color: '#a1aab2',
                 },

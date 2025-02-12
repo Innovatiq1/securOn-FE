@@ -151,7 +151,7 @@ ngOnInit(): void {
               yaxis: { lines: { show: true } }
           },
           xaxis: {
-              categories: ["No Data"],
+              categories: ["No Data Found"],
               axisBorder: { show: true },
               axisTicks: { show: false }
           },

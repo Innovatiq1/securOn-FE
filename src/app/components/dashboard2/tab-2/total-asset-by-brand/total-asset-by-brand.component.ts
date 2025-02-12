@@ -80,7 +80,7 @@ export class TotalAssetByBrandComponent implements OnInit{
           height: 270,
         },
         series: [1], 
-        labels: ['No Data'],
+        labels: ['No Data Found'],
         colors: ['#d3d3d3'], 
         plotOptions: {
           pie: {

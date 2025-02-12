@@ -119,8 +119,8 @@ export class ByAssetTypeComponent {
     } else {
       this.assetChartOptions1 = {
         ...baseChartOptions,
-        series: [1],
-        labels: ['No Data'],
+        series: [0],
+        labels: ['No Data Found'],
         colors: ['#d3d3d3'],
         plotOptions: {
           pie: {
@@ -129,7 +129,7 @@ export class ByAssetTypeComponent {
                 show: true,
                 name: {
                   show: true,
-                  text: 'No Data',
+                  text: 'No Data Found',
                   fontSize: '16px',
                   color: undefined,
                   offsetY: 0,

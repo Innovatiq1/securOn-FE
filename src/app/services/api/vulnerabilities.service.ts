@@ -246,9 +246,14 @@ public selectedVersion$: Observable<string[]> =
     const url = `${environment.baseUrl}/getCveDataCountByProject`;
     return this.httpClient.post(url, body);
   }
+  // public getCveDataByCriticality(body: any): Observable<any> {
+  //   const url = `${environment.baseUrl}/getCveDataBySeviarity`;
+  //   return this.httpClient.post(url, body);
+  // }
+
   public getCveDataByCriticality(body: any): Observable<any> {
     const url = `${environment.baseUrl}/getCveDataBySeviarity`;
-    return this.httpClient.post(url, body);
+    return this.httpClient.post(url,body);
   }
 
   public getCveDataFromAssets(body: any): Observable<any> {

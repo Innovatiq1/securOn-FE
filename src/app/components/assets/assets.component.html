@@ -65,11 +65,11 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-4 mt-5">
+          <div class="col-4 mt-5 d-flex justify-content-around">
             <button mat-raised-button color="primary" (click)="resetFilters()" >Reset Filters</button>
             <button mat-raised-button color="primary" type="button" [routerLink]="['/cve/create-asset']">Create</button>
           </div>
-          <div class="col-3 browse mt-5" >
+          <div class="col-5 browse mt-5" >
             <div class="d-flex align-items-center justify-content-center">
               <span class="import-label" >Import as</span>
               <a href="/assets/Inventory List-Oceanshield.xlsx" target="_blank">

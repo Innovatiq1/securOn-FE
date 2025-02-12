@@ -170,7 +170,7 @@ export class HeaderComponent {
     });
   }
   logout(): void {
-    // localStorage.clear(); 
+    localStorage.clear(); 
     this.router.navigate(['/authentication/login']);
   
   }

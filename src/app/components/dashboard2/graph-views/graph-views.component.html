@@ -125,5 +125,8 @@
     
     <div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">
       <mat-spinner></mat-spinner>
+      <div *ngIf="vulnerabilityDataService._showLargeRecordsMessage" class="large-records-message">
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;A large number of records is being fetched. Please wait...
+      </div>
     </div>
 

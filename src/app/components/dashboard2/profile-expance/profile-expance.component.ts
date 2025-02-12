@@ -65,7 +65,7 @@ export class AppProfileExpanceCpmponent {
   public getNoDataChartOptions(){
     return {
       title: {
-        text: 'No Data',
+        text: 'No Data Found',
       },
       credits: {
         enabled: false,

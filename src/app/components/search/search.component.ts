@@ -17,6 +17,7 @@ import FileSaver from 'file-saver';
 import { LogCveService } from 'src/app/services/api/log-cve.service';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { Subscription } from 'rxjs';
+import { SPACE } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -34,6 +35,12 @@ import { Subscription } from 'rxjs';
 export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('vendorSelect') vendorSelect: MatSelect;
+  @ViewChild('select', { static: true }) select: any;
+  @ViewChild('select1', { static: true }) select1: any;
+  @ViewChild('select2', { static: true }) select2: any;
+  @ViewChild('select3', { static: true }) select3: any;
+  @ViewChild('select4', { static: true }) select4: any;
+  @ViewChild('select5', { static: true }) select5: any;
   @ViewChild('filter') filter: MatSelect;
   public pageSizeOptions: number[] = [10, 25, 50, 100];
   public _selectedVendor: string[] = [];
@@ -143,6 +150,53 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.dropdownData = data;
     });
 
+      this.select._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select.disabled) {
+              this.select.panelOpen
+                ? this.select._handleOpenKeydown(event)
+                : this.select._handleClosedKeydown(event);
+            }
+          };
+          this.select1._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select1.disabled) {
+              this.select.panelOpen
+                ? this.select1._handleOpenKeydown(event)
+                : this.select1._handleClosedKeydown(event);
+            }
+          };
+          this.select2._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select2.disabled) {
+              this.select.panelOpen
+                ? this.select2._handleOpenKeydown(event)
+                : this.select2._handleClosedKeydown(event);
+            }
+          };
+
+          this.select3._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select3.disabled) {
+              this.select.panelOpen
+                ? this.select3._handleOpenKeydown(event)
+                : this.select3._handleClosedKeydown(event);
+            }
+          };
+          this.select4._handleKeydown = (event: KeyboardEvent) => {
+            if (event.keyCode==SPACE)
+              return
+            if (!this.select4.disabled) {
+              this.select.panelOpen
+                ? this.select4._handleOpenKeydown(event)
+                : this.select4._handleClosedKeydown(event);
+            }
+          };
+
     this.subscriptions.add(
       this.localStorageService.startDate$.subscribe(() => {
         const startDate = localStorage.getItem('startDate') || '';
@@ -172,35 +226,40 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.vulnerabilitiesService.getAssetUploadMessage().subscribe((message) => {
       this.asertMessage = message;
     });
-    this.prepareFilters();
-    this.filteredVendors = Array.from(this._vendors);
-    this.filteredProjects = Array.from(this._projects);
-    this.filteredOsType = Array.from(this._osType);
-    this.filteredPartNo = Array.from(this._partNo);
-    this.filteredfwVersion = Array.from(this._firmwareVersion);
+    // this.prepareFilters();
+    // this.filteredVendors = Array.from(this._vendors);
+    // this.filteredProjects = Array.from(this._projects);
+    // this.filteredOsType = Array.from(this._osType);
+    // this.filteredPartNo = Array.from(this._partNo);
+    // this.filteredfwVersion = Array.from(this._firmwareVersion);
 
-    this.vulnerabilitiesService
-      .getSelectedVendor()
-      .subscribe((selectedVendor: string[]) => {
-        this._selectedVendor = selectedVendor;
+    // this.vulnerabilitiesService
+    //   .getSelectedVendor()
+    //   .subscribe((selectedVendor: string[]) => {
+    //     this._selectedVendor = selectedVendor;
+    //   });
+
+      this.vulnerabilitiesService.getSelectedVendor().subscribe((SelectedOs: string[]) => {
+        this._selectedVendor = [...SelectedOs];
+        this.cdr.detectChanges(); 
       });
-
+      this.vulnerabilitiesService.getSelectedProject().subscribe((SelectedProject: string[]) => {
+        this._selectedProject = [...SelectedProject];
+        this.cdr.detectChanges(); 
+      });
+     
+     
     this.vulnerabilitiesService
       .getSelectedPartNo()
       .subscribe((selectedPartNo: string[]) => {
-        this._selectedProduct = selectedPartNo;
+        this._selectedProduct = [...selectedPartNo];
+        this.cdr.detectChanges();
       });
 
-    this.vulnerabilitiesService
-      .getSelectedProject()
-      .subscribe((selectedProject: string[]) => {
-        this._selectedProject = selectedProject;
-      });
-
-    this.vulnerabilitiesService
-      .getSelectedOsType()
-      .subscribe((SelectedOs: string[]) => {
-        this._selectedOsType = SelectedOs;
+      this.vulnerabilitiesService.getSelectedOsType().subscribe((SelectedOs: string[]) => {
+        // console.log("Restoring SelectedOs:", SelectedOs);
+        this._selectedOsType = [...SelectedOs];
+        this.cdr.detectChanges(); // Force UI update
       });
 
     this.vulnerabilitiesService
@@ -220,9 +279,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
     } else {
       this.resetFilter();
     }
-
+    // this.resetSearch();
     this.isAssetsRoute = this.router.url.includes('/assets');
-    this.loadData();
+    // this.loadData();
     this.startStorageWatcher();
   }
 
@@ -276,6 +335,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.defaultOptionProjectAll,
       Array.from(this._projects)
     );
+    this.vulnerabilitiesService.setSelectedProject(this._selectedProject);
     this.onSearch();
   }
 
@@ -285,6 +345,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.defaultOptionOstypeAll,
       Array.from(this._osType)
     );
+    console.log("selectedOsType", this._selectedOsType);
     this.vulnerabilitiesService.setSelectedOsType(this._selectedOsType);
 
     this.onSearch();
@@ -327,7 +388,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
     const page = title ? 1 : this.currentPageIndex + 1;
-
+console.log("title: " , this._selectedOsType);
     let payload: any = {
       vendorName: this._selectedVendor,
       productName: this.searchService.product,
@@ -449,6 +510,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this._selectedVersion = [];
     this._selectedProject = [];
     this._selectedOsType = [];
+    this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
     if (this._selectedVendor.includes(this.defaultOptionAll)) {
       if (this._selectedVendor.length === 1) {
         this._selectedVendor = [
@@ -692,103 +754,144 @@ export class SearchComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  private prepareFilters(byProduct: boolean = false, byProject: boolean = false): void {
 
-  private prepareFilters(byProduct: boolean = false, byProject = false): void {
-    if (!byProduct) {
-      this._vendors = new Set();
-      this._vendors.add(this.defaultOptionAll);
-    }
+    const previousVendorSelection = new Set(this._selectedVendor);
+    const previousOsTypeSelection = new Set(this._selectedOsType);
+    const previousPartNoSelection = new Set(this._selectedPartNo);
+    const previousFwVersionSelection = new Set(this._selectedVersion);
+    const previousProjectSelection = new Set(this._selectedVersion);
 
-    if (!byProject && !byProduct) {
-      this._projects = new Set();
-      this._projects.add(this.defaultOptionAll);
-    }
+    this._vendors = new Set([this.defaultOptionAll, ...previousVendorSelection]);
+    this._projects = new Set([this.defaultOptionAll,...previousProjectSelection]);
+    this._partNo = new Set([this.defaultOptionPortNoAll, ...previousPartNoSelection]);
+    this._firmwareVersion = new Set([this.defaultOptionFwAll, ...previousFwVersionSelection]);
+    this._osType = new Set([this.defaultOptionOstypeAll, ...previousOsTypeSelection]);
 
-    this._partNo = new Set();
-    this._firmwareVersion = new Set();
-    this._osType = new Set();
-    this._projects = new Set();
-    this._projects.add(this.defaultOptionProjectAll);
-    this._osType.add(this.defaultOptionOstypeAll);
-    this._partNo.add(this.defaultOptionPortNoAll);
-    this._firmwareVersion.add(this.defaultOptionFwAll);
-    if (byProduct || byProject) {
-      if (byProject) {
-        this._assets.forEach((item) => {
-          this._vendors.add(item.vendorName);
-        });
-        this._selectedVendor = [...this._vendors];
-      }
-      this._assets.forEach((item) => {
-        if (this._selectedVendor.includes(this.defaultOptionAll)) {
-          this._partNo.add(item.partNo);
-          this._firmwareVersion.add(item.firmwareVersion);
-          this._osType.add(item.osType);
-          this._projects.add(item.project);
-        } else if (this._selectedVendor.includes(item.vendor)) {
-          this._partNo.add(item.partNo);
-          this._firmwareVersion.add(item.firmwareVersion);
-          this._osType.add(item.osType);
-          this._projects.add(item.project);
-        }
-      });
-      this._selectedProduct = this.defaultOptionAll;
-    } else {
-      this._assets.forEach((item) => {
+    this._assets.forEach((item) => {
         this._vendors.add(item.vendor);
-        this._partNo.add(item.partNo);
-        this._firmwareVersion.add(item.firmwareVersion);
-        this._osType.add(item.osType);
-        this._projects.add(item.project);
-      });
+    });
+
+    if (byProduct || byProject) {
+        this._assets.forEach((item) => {
+            if (this._selectedVendor.includes(this.defaultOptionAll) || this._selectedVendor.includes(item.vendor)) {
+                this._partNo.add(item.partNo);
+                this._firmwareVersion.add(item.firmwareVersion);
+                this._osType.add(item.osType);
+                this._projects.add(item.project);
+            }
+        });
     }
-    const sortedVendors = [...this._vendors].sort((a, b) => {
-      if (a === this.defaultOptionAll) return -1;
-      if (b === this.defaultOptionAll) return 1;
-      return a.localeCompare(b);
-    });
+    this._vendors = new Set([this.defaultOptionAll, ...this._vendors]); 
+    this._projects = new Set([this.defaultOptionAll, ...this._projects]);
+    this._partNo = new Set([this.defaultOptionPortNoAll, ...this._partNo]);
+    this._firmwareVersion = new Set([this.defaultOptionFwAll, ...this._firmwareVersion]);
+    this._osType = new Set([this.defaultOptionOstypeAll, ...this._osType]);
 
-    const sortedProjects = [...this._projects].sort((a, b) => {
-      if (a === this.defaultOptionAll) return -1;
-      if (b === this.defaultOptionAll) return 1;
-      return a.localeCompare(b);
-    });
-
-    const sortedPartNo = [...this._partNo].sort((a, b) => {
-      if (a === this.defaultOptionAll) return -1;
-      if (b === this.defaultOptionAll) return 1;
-      return a.localeCompare(b);
-    });
-
-    const sortedFirmwareVersion = [...this._firmwareVersion].sort((a, b) => {
-      if (a === this.defaultOptionAll) return -1;
-      if (b === this.defaultOptionAll) return 1;
-      return a.localeCompare(b);
-    });
-
-    const sortedOsType = [...this._osType].sort((a, b) => {
-      if (a === this.defaultOptionAll) return -1;
-      if (b === this.defaultOptionAll) return 1;
-      return a.localeCompare(b);
-    });
-
-    // const sortedProject = [...this._projects].sort((a, b) => {
-    //   if (a === this.defaultOptionProjectAll) return -1;
-    //   if (b === this.defaultOptionProjectAll) return 1;
-    //   return a.localeCompare(b);
-    // });
-
-    this._vendors = new Set(sortedVendors);
-    this._projects = new Set(sortedProjects);
-    this._partNo = new Set(sortedPartNo);
-    this._firmwareVersion = new Set(sortedFirmwareVersion);
-    this._osType = new Set(sortedOsType);
     this.filteredVendors = [...this._vendors];
     this.filteredProjects = [...this._projects];
     this.filteredPartNo = [...this._partNo];
     this.filteredOsType = [...this._osType];
     this.filteredfwVersion = [...this._firmwareVersion];
-  }
+}
+
+
+  // private prepareFilters(byProduct: boolean = false, byProject = false): void {
+  //   if (!byProduct) {
+  //     this._vendors = new Set();
+  //     this._vendors.add(this.defaultOptionAll);
+  //   }
+
+  //   if (!byProject && !byProduct) {
+  //     this._projects = new Set();
+  //     this._projects.add(this.defaultOptionAll);
+  //   }
+
+  //   this._partNo = new Set();
+  //   this._firmwareVersion = new Set();
+  //   this._osType = new Set();
+  //   this._projects = new Set();
+  //   this._projects.add(this.defaultOptionProjectAll);
+  //   this._osType.add(this.defaultOptionOstypeAll);
+  //   this._partNo.add(this.defaultOptionPortNoAll);
+  //   this._firmwareVersion.add(this.defaultOptionFwAll);
+  //   if (byProduct || byProject) {
+  //     if (byProject) {
+  //       this._assets.forEach((item) => {
+  //         this._vendors.add(item.vendorName);
+  //       });
+  //       this._selectedVendor = [...this._vendors];
+  //     }
+  //     this._assets.forEach((item) => {
+  //       if (this._selectedVendor.includes(this.defaultOptionAll)) {
+  //         this._partNo.add(item.partNo);
+  //         this._firmwareVersion.add(item.firmwareVersion);
+  //         this._osType.add(item.osType);
+  //         this._projects.add(item.project);
+  //       } else if (this._selectedVendor.includes(item.vendor)) {
+  //         this._partNo.add(item.partNo);
+  //         this._firmwareVersion.add(item.firmwareVersion);
+  //         this._osType.add(item.osType);
+  //         this._projects.add(item.project);
+  //       }
+  //     });
+  //     this._selectedProduct = this.defaultOptionAll;
+  //   } else {
+  //     this._assets.forEach((item) => {
+  //       this._vendors.add(item.vendor);
+  //       this._partNo.add(item.partNo);
+  //       this._firmwareVersion.add(item.firmwareVersion);
+  //       this._osType.add(item.osType);
+  //       this._projects.add(item.project);
+  //     });
+  //   }
+  //   const sortedVendors = [...this._vendors].sort((a, b) => {
+  //     if (a === this.defaultOptionAll) return -1;
+  //     if (b === this.defaultOptionAll) return 1;
+  //     return a.localeCompare(b);
+  //   });
+
+  //   const sortedProjects = [...this._projects].sort((a, b) => {
+  //     if (a === this.defaultOptionAll) return -1;
+  //     if (b === this.defaultOptionAll) return 1;
+  //     return a.localeCompare(b);
+  //   });
+
+  //   const sortedPartNo = [...this._partNo].sort((a, b) => {
+  //     if (a === this.defaultOptionAll) return -1;
+  //     if (b === this.defaultOptionAll) return 1;
+  //     return a.localeCompare(b);
+  //   });
+
+  //   const sortedFirmwareVersion = [...this._firmwareVersion].sort((a, b) => {
+  //     if (a === this.defaultOptionAll) return -1;
+  //     if (b === this.defaultOptionAll) return 1;
+  //     return a.localeCompare(b);
+  //   });
+
+  //   const sortedOsType = [...this._osType].sort((a, b) => {
+  //     if (a === this.defaultOptionAll) return -1;
+  //     if (b === this.defaultOptionAll) return 1;
+  //     return a.localeCompare(b);
+  //   });
+
+  //   // const sortedProject = [...this._projects].sort((a, b) => {
+  //   //   if (a === this.defaultOptionProjectAll) return -1;
+  //   //   if (b === this.defaultOptionProjectAll) return 1;
+  //   //   return a.localeCompare(b);
+  //   // });
+
+  //   this._vendors = new Set(sortedVendors);
+  //   this._projects = new Set(sortedProjects);
+  //   this._partNo = new Set(sortedPartNo);
+  //   this._firmwareVersion = new Set(sortedFirmwareVersion);
+  //   this._osType = new Set(sortedOsType);
+  //   this.filteredVendors = [...this._vendors];
+  //   this.filteredProjects = [...this._projects];
+  //   this.filteredPartNo = [...this._partNo];
+  //   this.filteredOsType = [...this._osType];
+  //   this.filteredfwVersion = [...this._firmwareVersion];
+  // }
   resetSearch(): void {
     this._selectedVendor = [];
     this._selectedPartNo = [];
@@ -813,31 +916,31 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.pageSize = 10;
     this.disablePaginator = false;
   }
-  private loadData(): void {
-    this._isDataLoading$ = of(true);
-    const payload: any = {
-      vendorName: this._selectedVendor,
-      productName: this.searchService.product,
-      partNo: this._selectedPartNo,
-      version: this._selectedVersion,
-      project: this._selectedProject,
-      osType: this._selectedOsType,
-      page: this.currentPageIndex + 1,
-      pageSize: this.pageSize,
-    };
-    if (this.searchService.currentCveId) {
-      payload.cveId = this.searchService.currentCveId;
-    }
-    if (this.searchService.currentPartNo) {
-      payload.partNo = this.searchService.currentPartNo;
-    }
-    if (this.searchService.currentOsType) {
-      payload.osType = this.searchService.currentOsType;
-    }
-    if (this.searchService.currentFirmware) {
-      payload.firmwareVersion = this.searchService.currentFirmware;
-    }
-  }
+  // private loadData(): void {
+  //   this._isDataLoading$ = of(true);
+  //   const payload: any = {
+  //     vendorName: this._selectedVendor,
+  //     productName: this.searchService.product,
+  //     partNo: this._selectedPartNo,
+  //     version: this._selectedVersion,
+  //     project: this._selectedProject,
+  //     osType: this._selectedOsType,
+  //     page: this.currentPageIndex + 1,
+  //     pageSize: this.pageSize,
+  //   };
+  //   if (this.searchService.currentCveId) {
+  //     payload.cveId = this.searchService.currentCveId;
+  //   }
+  //   if (this.searchService.currentPartNo) {
+  //     payload.partNo = this.searchService.currentPartNo;
+  //   }
+  //   if (this.searchService.currentOsType) {
+  //     payload.osType = this.searchService.currentOsType;
+  //   }
+  //   if (this.searchService.currentFirmware) {
+  //     payload.firmwareVersion = this.searchService.currentFirmware;
+  //   }
+  // }
   filterVendors() {
     const filterValue = this.vendorFilter.toLowerCase();
 
@@ -869,7 +972,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     const filterValue = this.osTypeFilter.toLowerCase();
     if (filterValue) {
       this.filteredOsType = [...this._osType].filter((osType) =>
-        osType.toLowerCase().includes(filterValue)
+        osType.toLowerCase().includes(filterValue) ||
+      this._selectedOsType.includes(osType)
       );
     } else {
       this.filteredOsType = [...this._osType];
@@ -879,17 +983,19 @@ export class SearchComponent implements OnInit, AfterViewInit {
     const filterValue = this.partnoFilter.toLowerCase();
     if (filterValue) {
       this.filteredPartNo = [...this._partNo].filter((partNo) =>
-        partNo.toLowerCase().includes(filterValue)
+        partNo.toLowerCase().includes(filterValue) ||
+      this._selectedPartNo.includes(partNo)
       );
     } else {
       this.filteredPartNo = [...this._partNo];
     }
   }
   filterFw() {
-    const filterValue = this.fwVersionFilter.toLowerCase();
+    console.log("ffff",this.fwVersionFilter)
+    const filterValue = this.fwVersionFilter.toLowerCase() || '';
     if (filterValue) {
       this.filteredfwVersion = [...this._firmwareVersion].filter((project) =>
-        project.toLowerCase().includes(filterValue)
+        project.toLowerCase().includes(filterValue) || this._selectedVersion.includes(project)
       );
     } else {
       this.filteredfwVersion = [...this._firmwareVersion];

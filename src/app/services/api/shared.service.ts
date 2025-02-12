@@ -25,14 +25,36 @@ export class VulnerabilityDataService {
   endDate$ = this.endDateSubject.asObservable();
   private _loading = new BehaviorSubject<boolean>(false);
   loading$ = this._loading.asObservable();
+  public _showLargeRecordsMessage = false;
+  private _largeRecordsMessageTimeout: any;
+
+  // show() {
+  //   this._loading.next(true);
+  // }
 
   show() {
     this._loading.next(true);
+    this._showLargeRecordsMessage = false;
+    this._largeRecordsMessageTimeout = setTimeout(() => {
+      if (this._loading.value) {
+        this._showLargeRecordsMessage = true;
+      }
+    }, 5000); // 5 seconds timeout
   }
-
   hide() {
     this._loading.next(false);
+    this._showLargeRecordsMessage = false; // Hide the message when loading finishes
+    if (this._largeRecordsMessageTimeout) {
+      clearTimeout(this._largeRecordsMessageTimeout); // Clear the timeout
+    }
   }
+
+  get showLargeRecordsMessage(): boolean {
+    return this._showLargeRecordsMessage;
+  }
+  // hide() {
+  //   this._loading.next(false);
+  // }
   updateStartDate(date: string) {
     localStorage.setItem('startDate', date);
     this.startDateSubject.next(date);
