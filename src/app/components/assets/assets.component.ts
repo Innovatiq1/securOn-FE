@@ -246,18 +246,7 @@ export class AssetsComponent {
     // this.startStorageWatcher();
   }
 
-  // ngAfterViewInit(): void {
-  //   this.selects.forEach((select) => {
-  //     select._handleKeydown = (event: KeyboardEvent) => {
-  //       if (event.keyCode === SPACE) return;
-  //       if (!select.disabled) {
-  //         select.panelOpen
-  //           ? select._handleOpenKeydown(event)
-  //           : select._handleClosedKeydown(event);
-  //       }
-  //     };
-  //   });
-  // }
+ 
  
   public loadAssets() {
     this.vulnerabilityDataService.show();
@@ -460,6 +449,7 @@ export class AssetsComponent {
     const numRows = this.dataSource.length;
     this._selectedCount = numSelected;
     return numSelected === numRows;
+    
   }
 
   toggleAllRows() {
@@ -472,6 +462,7 @@ export class AssetsComponent {
     this.selection.select(...this.dataSource);
 
     this._selectedCount = this.selection['_selection']?.length;
+    this.cdr.detectChanges();
   }
 
   checkboxLabel(row?: any): string {

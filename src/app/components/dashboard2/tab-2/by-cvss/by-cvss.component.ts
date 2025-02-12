@@ -223,8 +223,8 @@ ngOnInit(): void {
     this.total = seriesData.reduce((a, b) => a + b, 0);
   
     if (this.total === 0) {
-      this.scoreChartOptions1.series = [1]; 
-       this.scoreChartOptions1.labels = ["No Data"];
+      this.scoreChartOptions1.series = [0]; 
+       this.scoreChartOptions1.labels = ["No Data found"];
        this.scoreChartOptions1.colors = ["#D3D3D3"]; 
     } else {
       this.scoreChartOptions1.series = seriesData;

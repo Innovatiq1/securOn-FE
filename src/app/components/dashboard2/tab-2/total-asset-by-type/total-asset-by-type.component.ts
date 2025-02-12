@@ -120,8 +120,8 @@ ngOnDestroy(): void {
           toolbar: { show: false },
           height: 270,
         },
-        series: [1], 
-        labels: ['No Data'],
+        series: [1],  
+        labels: ['No Data Found'],
         colors: ['#E0E0E0'], 
         plotOptions: {
           pie: {

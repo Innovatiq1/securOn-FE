@@ -108,8 +108,8 @@ export class ByBrandComponent {
     } else {
       this.brandChartOptions1 = {
         ...baseChartOptions,
-        series: [1], 
-        labels: ['No Data'], 
+        series: [0], 
+        labels: ['No Data Found'], 
         colors: ['#d3d3d3'], 
         plotOptions: {
           pie: {
@@ -118,7 +118,7 @@ export class ByBrandComponent {
                 show: true,
                 name: {
                   show: true,
-                  text: 'No Data',
+                  text: 'No Data Found',
                   fontSize: '16px',
                   color: '#a1aab2',
                   offsetY: 0,
