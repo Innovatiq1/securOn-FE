@@ -48,6 +48,7 @@ export class ByContractIdComponent {
       this.byCriticality = data?.byCriticality;
      this.count = this.byContractId.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
       if(this.byContractId){
+        console.log(this.byContractId)
         this.initializeCharts();
       }
     });
@@ -220,8 +221,8 @@ export class ByContractIdComponent {
     } else {
       this.contractChartOptions1 = {
         ...baseChartOptions,
-        series: [0],  
-        labels: ['No Data Found'],
+        series: [], 
+        labels: [''],
         colors: ['#d3d3d3'],  
         plotOptions: {
           pie: {
@@ -229,29 +230,33 @@ export class ByContractIdComponent {
               labels: {
                 show: true,
                 name: {
-                  show: false, // Hide default label
+                  show: false, 
                 },
                 value: {
-                  show: false, // Hide percentage value
+                  show: false, 
                 },
                 total: {
                   show: true,
-                  label: 'No Data Found', // Show "No Data" in center
-                  fontSize: '14px',
+                  label: 'No Data Found', 
+                  fontSize: '16px',
+                  fontWeight: 'bold',
                   color: '#a1aab2',
                 },
               },
             },
           },
         },
+        legend: {
+          show: false, 
+        },
         dataLabels: {
-          enabled: false, // Hide percentage text
+          enabled: false, 
         },
         tooltip: {
-          enabled: false, // No tooltip for "No Data"
+          enabled: false, 
         },
-      
       };
+      
     }
   }
 

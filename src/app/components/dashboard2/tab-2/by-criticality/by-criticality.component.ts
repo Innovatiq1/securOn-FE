@@ -200,7 +200,7 @@ private initializeCharts() {
               name: {
                 show: true,
                 text: 'No Data Found',
-                fontSize: '16px',
+                fontSize: '18px',
                 color: '#a1aab2',
                 offsetY: 0,
               },
