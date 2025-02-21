@@ -226,10 +226,12 @@ ngOnInit(): void {
       this.scoreChartOptions1.series = [0]; 
        this.scoreChartOptions1.labels = ["No Data found"];
        this.scoreChartOptions1.colors = ["#D3D3D3"]; 
+       this.scoreChartOptions1.legend = { show: false };
     } else {
       this.scoreChartOptions1.series = seriesData;
       this.scoreChartOptions1.labels = ["Critical", "High", "Medium", "Low"];
       this.scoreChartOptions1.colors = ['#e7ecf0', '#f8c076', '#fb977d', '#0085db'];
+      this.scoreChartOptions1.legend = { show: true };
     }
   }
   
