@@ -456,14 +456,18 @@ export class AssetsComponent {
     if (this.isAllSelected()) {
       this._selectedCount = 0;
       this.selection.clear();
-      return;
+    } else {
+      this.selection.select(...this.dataSource);
+      this._selectedCount = this.selection.selected.length;
     }
-
-    this.selection.select(...this.dataSource);
-
-    this._selectedCount = this.selection['_selection']?.length;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck(); // Manually trigger change detection
   }
+  onRowSelection(row: any) {
+    this.selection.toggle(row);
+    this._selectedCount = this.selection.selected.length;
+    this.cdr.markForCheck(); // Ensure UI updates immediately
+  }
+
 
   checkboxLabel(row?: any): string {
     if (!row) {

@@ -3,6 +3,7 @@
         <mat-card-title class="m-b-0">Vulnerability Distribution by CVSS V3.X</mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
+        
         <apx-chart [series]="scoreChartOptions1.series" [plotOptions]="scoreChartOptions1.plotOptions"
             [dataLabels]="scoreChartOptions1.dataLabels" [chart]="scoreChartOptions1.chart"
             [legend]="scoreChartOptions1.legend" [colors]="scoreChartOptions1.colors"
@@ -11,4 +12,5 @@
         </apx-chart>
         <h4 style="float: right; margin-top: 10px;">Total: {{total}} </h4>
     </mat-card-content>
+    
 </mat-card>
