@@ -22,24 +22,38 @@
                 </div>
                 <h4 class="f-s-20 f-w-700">CVSS scores for <span>{{details[0]?.cve?.id}}</span></h4>
                 <div class="row mt-4">
-                    <div class="col-4">
-                        <h6 class="f-s-14 f-w-700">Base Score:
-                            <span style="background-color: #e92040;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
-                                {{details[0]?.cve?.metrics?.cvssMetricV31[0]?.cvssData?.baseScore || 'N/A'}}
-                            </span>
-                        </h6>
-                    </div>
+                  <div class="col-4">
+                    <h6 class="f-s-14 f-w-700">Base Score:
+                      <span style="background-color: #e92040;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
+                        {{
+                          details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.cvssData?.baseScore ??
+                          details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.cvssData?.baseScore ??
+                          'N/A'
+                        }}
+                      </span>
+                    </h6>
+                  </div>
                     <div class="col-4">
                         <h6 class="f-s-14 f-w-700">Exploitability Score:
                             <span style="background-color: #2773ae;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
-                                {{details[0]?.cve?.metrics?.cvssMetricV31[0]?.exploitabilityScore || 'N/A'}}
+                                
+                                {{
+                                  details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.exploitabilityScore ??
+                                  details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.exploitabilityScore ??
+                                  'N/A'
+                                }}
                             </span>
                         </h6>
                     </div>
                     <div class="col-4">
                         <h6 class="f-s-14 f-w-700">Impact Score:
                             <span style="background-color: #378562;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
-                                {{details[0]?.cve?.metrics?.cvssMetricV31[0]?.impactScore || 'N/A'}}    
+                                 
+                                {{
+                                  details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.impactScore ??
+                                  details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.impactScore ??
+                                  'N/A'
+                                }}  
                             </span>
                         </h6>
                     </div>
@@ -47,17 +61,32 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <h6 class="f-s-14 f-w-700">Base Severity:  {{details[0]?.cve?.metrics?.cvssMetricV31[0]?.baseSeverity || 'N/A'}}
+                        <h6 class="f-s-14 f-w-700">Base Severity: 
+                          {{
+                            details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.baseSeverity ??
+                            details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.baseSeverity ??
+                            'N/A'
+                          }}
                         </h6>
                     </div>
                     <div class="col-4">
-                        <h6 class="f-s-14 f-w-700">Source: {{details[0]?.cve?.metrics?.cvssMetricV31[0]?.source || 'N/A'}}
+                        <h6 class="f-s-14 f-w-700">Source: 
+                          {{
+                            details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.source ??
+                            details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.source ??
+                            'N/A'
+                          }}
                         </h6>
                     </div>
                 </div>
                 
                 <div>
-                    <h6 class="f-s-14 f-w-700">CVSS Vector: {{details[0]?.cve?.metrics?.cvssMetricV31[0]?.cvssData?.vectorString || 'N/A'}}
+                    <h6 class="f-s-14 f-w-700">CVSS Vector: 
+                      {{
+                        details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.cvssData?.vectorString ??
+                        details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.cvssData?.vectorString ??
+                        'N/A'
+                      }}
                     </h6>
                 </div>
                 <h4 class="f-s-20 f-w-700">CVSS References for <span> {{details[0]?.cve?.id}}</span></h4>

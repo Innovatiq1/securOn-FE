@@ -138,139 +138,111 @@ export class AssetsComponent {
     private store$: Store,
     private router: Router,
     private toastr: ToastrService,
-    public vulnerabilityDataService: VulnerabilityDataService,
+    public vulnerabilityDataService: VulnerabilityDataService
   ) {}
 
-  // ngOnInit() {
-  //   const startDate = localStorage.getItem('startDate') || '';
-  //   const endDate = localStorage.getItem('endDate') || '';
-
-  //   this.formattedStartDate = startDate.toString();
-  //   this.formattedEndDate = endDate.toString();
-  //   this.loadAssets();
-
-  // }
-  ngOnInit(): void {
-      this.select._handleKeydown = (event: KeyboardEvent) => {
-        if (event.keyCode==SPACE)
-          return
-        if (!this.select.disabled) {
-          this.select.panelOpen
-            ? this.select._handleOpenKeydown(event)
-            : this.select._handleClosedKeydown(event);
-        }
-      };
-      this.select1._handleKeydown = (event: KeyboardEvent) => {
-        if (event.keyCode==SPACE)
-          return
-        if (!this.select1.disabled) {
-          this.select1.panelOpen
-            ? this.select1._handleOpenKeydown(event)
-            : this.select1._handleClosedKeydown(event);
-        }
-      };
-      this.select2._handleKeydown = (event: KeyboardEvent) => {
-        if (event.keyCode==SPACE)
-          return
-        if (!this.select2.disabled) {
-          this.select2.panelOpen
-            ? this.select2._handleOpenKeydown(event)
-            : this.select2._handleClosedKeydown(event);
-        }
-      };
-      this.select3._handleKeydown = (event: KeyboardEvent) => {
-        if (event.keyCode==SPACE)
-          return
-        if (!this.select3.disabled) {
-          this.select3.panelOpen
-            ? this.select3._handleOpenKeydown(event)
-            : this.select3._handleClosedKeydown(event);
-        }
-      };
-      this.select4._handleKeydown = (event: KeyboardEvent) => {
-        if (event.keyCode==SPACE)
-          return
-        if (!this.select4.disabled) {
-          this.select4.panelOpen
-            ? this.select4._handleOpenKeydown(event)
-            : this.select4._handleClosedKeydown(event);
-        }
-      };
-  
+  ngOnInit() {
+    
     const startDate = localStorage.getItem('startDate') || '';
-    const endDate = localStorage.getItem('endDate') || '';
+      const endDate = localStorage.getItem('endDate') || '';
+  
+      this.formattedStartDate = startDate.toString();
+      this.formattedEndDate = endDate.toString();
+      this.vulnerabilitiesService.setDataLoading(true);
+      this.vulnerabilityDataService.show();
+    this.loadAssets();
 
-    this.formattedStartDate = startDate.toString();
-    this.formattedEndDate = endDate.toString();
-    this.vulnerabilitiesService.setDataLoading(true);
-    this.vulnerabilityDataService.show();
- 
-    if (this._selectedVendor.length === 0) {
-      this.vulnerabilitiesService
-        .getSelectedVendor()
-        .subscribe((selectedVendor: string[]) => {
-          this._selectedVendor = selectedVendor;
-          this.vendorChange();
-        });
-    }
-    if (this._selectedProduct.length === 0) {
-      this.vulnerabilitiesService
-        .getSelectedPartNo()
-        .subscribe((selectedPartNo: string[]) => {
-          this._selectedProduct = selectedPartNo;
-          this.productChange();
-        });
+    this._selectedPoject = this.vulnerabilitiesService.getSelectedAssetProject() || [];
+    if (this._selectedPoject.length > 0) {
+        this._projectChange();
     }
 
-    this.vulnerabilitiesService
-      .getSelectedProject()
-      .subscribe((selectedProject: string[]) => {
-        // this._selectedProduct = selectedPartNo;
-        this._selectedPoject = selectedProject;
-      });
-    // this.isAssetsRoute = this.router.url.includes('/assets');
-    if (
-      this._selectedVendor.length === 0 &&
-      this._selectedProduct.length === 0 &&
-      this._selectedPoject.length === 0
-    ) {
-      // this.resetFilters();
+    this._selectedProduct = this.vulnerabilitiesService.getSelectedAssetPartNo() || [];
+    if (this._selectedProduct.length > 0) {
+        this._projectChange();
     }
-    this.resetPagination();
-    this.paginate();
+    this._selectedOsType = this.vulnerabilitiesService.getSelectedAssetOsType() || [];
+    if (this._selectedOsType.length > 0) {
+        this._projectChange();
+    }
+    this._selectedFirmwareVersion = this.vulnerabilitiesService.getSelectedAssetFwVesrion() || [];
+    if (this._selectedFirmwareVersion.length > 0) {
+        this._projectChange();
+    }
+    this.select._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode==SPACE)
+        return
+      if (!this.select.disabled) {
+        this.select.panelOpen
+          ? this.select._handleOpenKeydown(event)
+          : this.select._handleClosedKeydown(event);
+      }
+    };
+    this.select1._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode==SPACE)
+        return
+      if (!this.select1.disabled) {
+        this.select1.panelOpen
+          ? this.select1._handleOpenKeydown(event)
+          : this.select1._handleClosedKeydown(event);
+      }
+    };
+    this.select2._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode==SPACE)
+        return
+      if (!this.select2.disabled) {
+        this.select2.panelOpen
+          ? this.select2._handleOpenKeydown(event)
+          : this.select2._handleClosedKeydown(event);
+      }
+    };
+    this.select3._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode==SPACE)
+        return
+      if (!this.select3.disabled) {
+        this.select3.panelOpen
+          ? this.select3._handleOpenKeydown(event)
+          : this.select3._handleClosedKeydown(event);
+      }
+    };
+    this.select4._handleKeydown = (event: KeyboardEvent) => {
+      if (event.keyCode==SPACE)
+        return
+      if (!this.select4.disabled) {
+        this.select4.panelOpen
+          ? this.select4._handleOpenKeydown(event)
+          : this.select4._handleClosedKeydown(event);
+      }
+    };
     this.subscriptions.add(
-      this.vulnerabilityDataService.startDate$.subscribe(() => {
-       this.loadAssets();
-      })
-    );
-    // this.startStorageWatcher();
+          this.vulnerabilityDataService.startDate$.subscribe(() => {
+           this.loadAssets();
+          })
+        );
   }
+ 
 
- 
- 
   public loadAssets() {
     this.vulnerabilityDataService.show();
-    const currentStartDate = localStorage.getItem('startDate')||'';
-        const currentEndDate = localStorage.getItem('endDate') || '';
-
-        // const currentStartDate = localStorage.getItem('startDate');
-        //  const currentEndDate = localStorage.getItem('endDate');
-        const fromDate=currentStartDate ? moment(currentStartDate).format('YYYY-MM-DD') : '';
-        const toDate=currentEndDate ? moment(currentEndDate).format('YYYY-MM-DD') : '';
+    const currentStartDate = localStorage.getItem('startDate') || '';
+    const currentEndDate = localStorage.getItem('endDate') || '';
+    const fromDate = currentStartDate
+      ? moment(currentStartDate).format('YYYY-MM-DD')
+      : '';
+    const toDate = currentEndDate
+      ? moment(currentEndDate).format('YYYY-MM-DD')
+      : '';
     this.logCveService
       .loadAllAssets(fromDate, toDate)
       .subscribe((data: any[]) => {
-        // console.log("loadAsset",data)
-
         this._assets = data;
         this.dataSource = data;
         this.vulnerabilityDataService.hide();
+        this.paginate();
         if (this._assets) {
           this.prepareFilters();
         }
-        this.resetPagination();
-        this.paginate();
-
+        this._projectChange()
         this.cdr.detectChanges();
       });
   }
@@ -287,18 +259,7 @@ export class AssetsComponent {
     this.loadAssets();
   }
 
-  // uploadFile($event: any): void {
-  //   this.vulnerabilitiesService.setDataLoading(true);
-  //   const selectedFile: File = $event.target.files[0];
-  //   if (selectedFile) {
-  //     const formData = new FormData();
-  //     formData.append('xlsx', selectedFile);
-  //     this.vulnerabilitiesService.uploadAssets(formData);
-  //     $event.target.value = null;
-  //     //this.asertMessage = "Assets Uploaded Successfully."
-  //     this.showAlert = true;
-  //   }
-  // }
+ 
 
   uploadFile($event: any): void {
     this.vulnerabilitiesService.setDataLoading(true);
@@ -331,110 +292,159 @@ export class AssetsComponent {
     byProject: boolean = false,
     edit: boolean = false
   ): void {
-    const partNo = this._partNo;
-    const osTypes = this._osTypes;
-    const firmwareVersions = this._firmwareVersions;
-    if (!byProduct) {
-      this._vendors = new Set();
-      this._vendors.add(this.defaultOptionAll);
-    }
-    if (!byProject && !byProduct) {
-      this._projects = new Set();
-      this._projects.add(this.defaultOptionAll);
-    }
+    try {
+      if (!this._assets || !Array.isArray(this._assets)) {
+        console.error('❌ _assets is undefined or not an array:', this._assets);
+        return;
+      }
+      if (!this.dataSource || !Array.isArray(this.dataSource)) {
+        console.error('❌ dataSource is undefined or not an array:', this.dataSource);
+        return;
+      }
+  
+      // Preserve previously selected filters
+      const previousSelectedVendor = Array.isArray(this._selectedVendor) ? [...this._selectedVendor] : [this.defaultOptionAll];
 
-    this._partNo = new Set();
-    this._partNo.add(this.defaultProductOptionAll);
-
-    // Initialize OS Type and Firmware Version sets
-    this._osTypes = new Set();
-    this._osTypes.add(this.defaultOptionAll);
-    this._firmwareVersions = new Set();
-    this._firmwareVersions.add(this.defaultOptionAll);
-
-    if (byProduct || byProject) {
-      if (byProject) {
+     
+  
+      // Initialize filter sets if they don't exist
+      this._vendors = this._vendors ?? new Set();
+      this._projects = this._projects ?? new Set();
+      this._partNo = this._partNo ?? new Set();
+      this._osTypes = this._osTypes ?? new Set();
+      this._firmwareVersions = this._firmwareVersions ?? new Set();
+  
+      // Backup existing values for restoration
+      const partNo = this._partNo;
+      const osTypes = this._osTypes;
+      const firmwareVersions = this._firmwareVersions;
+  
+      if (!byProduct) {
+        this._vendors = new Set();
+        this._vendors.add(this.defaultOptionAll);
+      }
+      if (!byProject && !byProduct) {
+        this._projects = new Set();
+        this._projects.add(this.defaultOptionAll);
+      }
+  
+      this._partNo = new Set();
+      this._partNo.add(this.defaultProductOptionAll);
+      this._osTypes = new Set();
+      this._osTypes.add(this.defaultOptionAll);
+      this._firmwareVersions = new Set();
+      this._firmwareVersions.add(this.defaultOptionAll);
+  
+      if (byProduct || byProject) {
+        if (byProject) {
+          this.dataSource.forEach((item) => {
+            this._vendors.add(item.vendor);
+          });
+          this._selectedVendor = [...this._vendors];
+        }
+  
         this.dataSource.forEach((item) => {
-          this._vendors.add(item.vendor);
+          if (this._selectedVendor.includes(this.defaultOptionAll)) {
+            this._partNo.add(item.partNo);
+            this._osTypes.add(item.osType);
+            this._firmwareVersions.add(item.firmwareVersion);
+          } else if (this._selectedVendor.includes(item.vendor)) {
+            this._partNo.add(item.partNo);
+            this._osTypes.add(item.osType);
+            this._firmwareVersions.add(item.firmwareVersion);
+          }
         });
-        this._selectedVendor = [...this._vendors];
+      } else {
+        this._partNo = partNo;
+        this._osTypes = osTypes;
+        this._firmwareVersions = firmwareVersions;
+  
+        this._assets.forEach((item) => {
+          if (item.vendor) {
+            this._vendors.add(item.vendor);
+          }
+          if (item.project) {
+            this._projects.add(item.project);
+          }
+          if (item.osType) {
+            this._osTypes.add(item.osType);
+          }
+          if (item.partNo) {
+            this._partNo.add(item.partNo);
+          }
+          if (item.firmwareVersion) {
+            this._firmwareVersions.add(item.firmwareVersion);
+          }
+        });
+      }
+  
+      // Sorting logic
+      const alphanumericSort = (a: string, b: string) =>
+        a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  
+      this._projects = new Set([
+        this.defaultOptionAll,
+        ...[...this._projects].filter((p) => p !== this.defaultOptionAll).sort(alphanumericSort),
+      ]);
+  
+      this._vendors = new Set([
+        this.defaultOptionAll,
+        ...[...this._vendors].filter((v) => v !== this.defaultOptionAll).sort(alphanumericSort),
+      ]);
+  
+      this._partNo = new Set([
+        this.defaultProductOptionAll,
+        ...[...this._partNo].filter((p) => p !== this.defaultProductOptionAll).sort(alphanumericSort),
+      ]);
+  
+      this._osTypes = new Set([
+        this.defaultOptionAll,
+        ...[...this._osTypes].filter((o) => o !== this.defaultOptionAll).sort(alphanumericSort),
+      ]);
+  
+      this._firmwareVersions = new Set([
+        this.defaultOptionAll,
+        ...[...this._firmwareVersions].filter((f) => f !== this.defaultOptionAll).sort(alphanumericSort),
+      ]);
+  
+      // Restore previously selected vendor if valid
+      const validVendors = [...this._vendors];
+      this._selectedVendor = previousSelectedVendor.filter(vendor => validVendors.includes(vendor));
+      if (this._selectedVendor.length === 0) {
+        this._selectedVendor = [];
       }
 
-      this.dataSource.forEach((item) => {
-        if (this._selectedVendor.includes(this.defaultOptionAll)) {
-          this._partNo.add(item.partNo);
-          this._osTypes.add(item.osType);
-          this._firmwareVersions.add(item.firmwareVersion);
-        } else if (this._selectedVendor.includes(item.vendor)) {
-          this._partNo.add(item.partNo);
-          this._osTypes.add(item.osType);
-          this._firmwareVersions.add(item.firmwareVersion);
-        }
-      });
-    } else {
-      this._partNo = partNo;
-      this._osTypes = osTypes;
-      this._firmwareVersions = firmwareVersions;
-      //  console.log("this._ass",this._assets);
-      this._assets.forEach((item) => {
-        if (item.vendor) {
-          this._vendors.add(item.vendor);
-        }
-        if (item.project) {
-          this._projects.add(item.project);
-        }
-        if (item.osType) {
-          this._osTypes.add(item.osType);
-        }
-        if(item.partNo){
-          this._partNo.add(item.partNo)
-        }
-        if (item.firmwareVersion) {
-          this._firmwareVersions.add(item.firmwareVersion);
-        }
-      });
+      this.paginate();
+    } catch (error) {
+      console.error('❌ Error inside prepareFilters:', error);
     }
-
-    const alphanumericSort = (a: string, b: string) =>
-      a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
-
-    const projectsArray = [...this._projects]
-      .filter((project) => project !== this.defaultOptionAll)
-      .sort(alphanumericSort);
-    this._projects = new Set([this.defaultOptionAll, ...projectsArray]);
-
-    const vendorsArray = [...this._vendors]
-      .filter((vendor) => vendor !== this.defaultOptionAll)
-      .sort(alphanumericSort);
-    this._vendors = new Set([this.defaultOptionAll, ...vendorsArray]);
-
-    const partNoArray = [...this._partNo]
-      ?.filter((part) => part !== this.defaultProductOptionAll)
-      .sort(alphanumericSort);
-    this._partNo = new Set([this.defaultProductOptionAll, ...partNoArray]);
-
-    const osTypesArray = [...this._osTypes]
-      .filter((os) => os !== this.defaultOptionAll)
-      .sort(alphanumericSort);
-    this._osTypes = new Set([this.defaultOptionAll, ...osTypesArray]);
-
-    const firmwareVersionsArray = [...this._firmwareVersions]
-      .filter((fw) => fw !== this.defaultOptionAll)
-      .sort(alphanumericSort);
-    this._firmwareVersions = new Set([
-      this.defaultOptionAll,
-      ...firmwareVersionsArray,
-    ]);
-    this.initializeFilters();
-    this.paginate();
   }
-  private initializeFilters() {
-    this.filteredProjects = Array.from(this._projects);
-    this.filteredVendor = Array.from(this._vendors);
-    this.filteredPartNo = Array.from(this._partNo);
-    this.filteredOsType = Array.from(this._osTypes);
-    this.filteredFwVersion = Array.from(this._firmwareVersions);
-  }
+  
+  
+  handleProjectSelection(): void {
+    if (this._selectedPoject.length > 0) {
+        if (this._selectedPoject.includes(this.defaultOptionAll)) {
+            // If "All" is selected in projects, show all options
+            this.filteredVendor = [this.defaultOptionAll, ...Array.from(this._vendors).filter(v => v !== this.defaultOptionAll)];
+            this.filteredPartNo = [this.defaultProductOptionAll, ...Array.from(this._partNo).filter(p => p !== this.defaultProductOptionAll)];
+            this.filteredOsType = [this.defaultOptionAll, ...Array.from(this._osTypes).filter(o => o !== this.defaultOptionAll)];
+            this.filteredFwVersion = [this.defaultOptionAll, ...Array.from(this._firmwareVersions).filter(f => f !== this.defaultOptionAll)];
+        } else {
+            // If individual projects are selected, show relevant options
+            this.filteredVendor = Array.from(this._vendors);
+            this.filteredPartNo = Array.from(this._partNo);
+            this.filteredOsType = Array.from(this._osTypes);
+            this.filteredFwVersion = Array.from(this._firmwareVersions);
+        }
+    } else {
+        this.filteredVendor = [this.defaultOptionAll];
+        this.filteredPartNo = [this.defaultProductOptionAll];
+        this.filteredOsType = [this.defaultOptionAll];
+        this.filteredFwVersion = [this.defaultOptionAll];
+    }
+}
+
+  
 
   openDialog(action: string, obj: any): void {
     obj.action = action;
@@ -445,11 +455,9 @@ export class AssetsComponent {
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    // console.log("num seletecd",this.selection.selected)
     const numRows = this.dataSource.length;
     this._selectedCount = numSelected;
     return numSelected === numRows;
-    
   }
 
   toggleAllRows() {
@@ -468,7 +476,6 @@ export class AssetsComponent {
     this.cdr.markForCheck(); // Ensure UI updates immediately
   }
 
-
   checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -485,33 +492,9 @@ export class AssetsComponent {
       let assetsList = [];
       assetsList = [this._assetToDelete];
       this.loadAssets();
-      // this.store$.dispatch(deleteAssets({ assets: assetsList }));
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000);
     });
   }
-  // deleteAsset(multiple?: boolean): void {
-  //   this.vulnerabilitiesService.setDataLoading(true);
-  //   this._isAssetDeletion = true;
-  //   let assetsList = [];
-  //   // if (multiple) {
-  //   //   assetsList = [...this.selection.selected];
-  //   // } else {
-  //     assetsList = [this._assetToDelete];
-  //   // }
-  //   console.log("assetsList123",assetsList)
-  //   this.vulnerabilitiesService.deleteAssets(assetsList);
-  //   setTimeout(() => {
-  //     this.vulnerabilitiesService.setDataLoading(false);
-  //     // this.toastr.success('Assets deleted successfully', 'Success', {
-  //     //   timeOut: 3000,
-  //     //   positionClass: 'toast-top-right',
-  //     // });
-  //     // window.location.reload();
-  //   }, 2000);
-  //   // this.showAlert = true;
-  // }
+ 
   deleteAsset(multiple?: boolean) {
     let assetsList = [];
     if (multiple) {
@@ -727,7 +710,7 @@ export class AssetsComponent {
     if (!allSelected && this.isProductAllPrevSelected) {
       this._selectedProduct = [];
     }
-    this.vulnerabilitiesService.setSelectedPartNo(this._selectedProduct);
+    this.vulnerabilitiesService.setSelectedAssetPartNo(this._selectedProduct);
   }
   productChange(): void {
     let byProduct = false;
@@ -772,23 +755,6 @@ export class AssetsComponent {
     this.filterPartNo();
   }
 
-  // private updateFilteredOsTypes(): void {
-  //   const filteredAssets = this._assets.filter(
-  //     (item) =>
-  //       (!this._selectedPoject.length ||
-  //         this._selectedPoject.includes(item.project)) &&
-  //       (!this._selectedVendor.length ||
-  //         this._selectedVendor.includes(item.vendor)) &&
-  //       (!this._selectedProduct.length ||
-  //         this._selectedProduct.includes(item.partNo))
-  //   );
-  //   this.filteredOsType = [
-  //     ...new Set(filteredAssets.map((item) => item.osType)),
-  //   ];
-  //   if (!this.filteredOsType.includes(this.defaultOsTypeOptionAll)) {
-  //     this.filteredOsType.unshift(this.defaultOsTypeOptionAll);
-  //   }
-  // }
   private updateFilteredOsTypes(): void {
     const filteredAssets = this._assets.filter(
       (item) =>
@@ -799,18 +765,19 @@ export class AssetsComponent {
         (!this._selectedProduct.length ||
           this._selectedProduct.includes(item.partNo))
     );
-  
+
     this.filteredOsType = [
       ...new Set(filteredAssets.map((item) => item.osType)),
     ].sort();
-  
+
     if (!this.filteredOsType.includes(this.defaultOsTypeOptionAll)) {
-      this.filteredOsType.unshift(this.defaultOsTypeOptionAll); 
+      this.filteredOsType.unshift(this.defaultOsTypeOptionAll);
     }
   }
 
   _osTypeChange(): void {
     let byOsType = false;
+    this.vulnerabilitiesService.setSelectedAssetOsType(this._selectedOsType);
     const allSelected = this._selectedOsType.includes(
       this.defaultOsTypeOptionAll
     );
@@ -875,7 +842,7 @@ export class AssetsComponent {
     );
     this.filteredFwVersion = [
       ...new Set(filteredAssets.map((item) => item.firmwareVersion)),
-    ].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));;
+    ].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
     if (!this.filteredFwVersion.includes(this.defaultFwOptionAll)) {
       this.filteredFwVersion.unshift(this.defaultFwOptionAll);
@@ -884,6 +851,7 @@ export class AssetsComponent {
 
   _firmwareVersionChange(): void {
     let byFirmwareVersion = false;
+    this.vulnerabilitiesService.setSelectedAssetFwVersion(this._selectedFirmwareVersion);
     const allSelected = this._selectedFirmwareVersion.includes(
       this.defaultFwOptionAll
     );
@@ -928,7 +896,7 @@ export class AssetsComponent {
       firmwareVersion: asset.firmwareVersion,
       osType: asset.osType,
       fromDate: this.previousStartDate,
-      toDate:  this.previousEndDate,
+      toDate: this.previousEndDate,
     };
     this.router.navigate(['cve/vulnerabilties'], {
       queryParams: payload,
@@ -948,70 +916,51 @@ export class AssetsComponent {
   }
   _projectChange(): void {
     let byProject = false;
+    this.vulnerabilitiesService.setSelectedAssetProject(this._selectedPoject);
     const allSelected = this._selectedPoject.includes(this.defaultOptionAll);
 
     if (!allSelected && this.isPojectAllPrevSelected) {
-      this._selectedPoject = [];
+        this._selectedPoject = [];
     }
 
     if (this._selectedPoject.length > 0) {
-      if (allSelected && this._selectedPoject.length > 0) {
-        if (
-          this._selectedPoject.length === 1 ||
-          !this.isPojectAllPrevSelected
-        ) {
-          this.dataSource = this._assets;
+        if (allSelected) {
+            this._selectedPoject = [...this._projects]; 
+            this.dataSource = this._assets;
         } else {
-          this.dataSource = this._assets.filter((item) =>
-            this._selectedPoject.includes(item.project)
-          );
+            this.dataSource = this._assets.filter(item =>
+                this._selectedPoject.includes(item.project)
+            );
         }
-        byProject = false;
-      } else {
-        this.dataSource = this._assets;
-      }
-
-      if (allSelected) {
-        if (
-          this._selectedPoject.length < this._projects.size &&
-          this._selectedPoject.length !== 1 &&
-          this.isPojectAllPrevSelected
-        ) {
-          this._selectedPoject = this._selectedPoject.filter(
-            (item) => item !== this.defaultOptionAll
-          );
-        } else {
-          this._selectedPoject = [...this._projects];
-        }
-      } else if (this._selectedPoject.length === this._projects.size - 1) {
-        if (this.isPojectAllPrevSelected) {
-          this._selectedPoject = [];
-        } else {
-          this._selectedPoject = this._selectedPoject.filter(
-            (item) => item !== this.defaultOptionAll
-          );
-        }
-        this.dataSource = this._assets.filter((item) =>
-          this._selectedPoject.includes(item.project)
-        );
-      } else {
-        this._selectedPoject = this._selectedPoject.filter(
-          (item) => item !== this.defaultOptionAll
-        );
-        this.dataSource = this._assets.filter((item) =>
-          this._selectedPoject.includes(item.project)
-        );
-      }
     } else {
-      this.dataSource = this._assets;
+        this.dataSource = this._assets;
     }
 
+    // ✅ Auto-select Vendors based on selected Projects
+    this._selectedVendor = [];
+    this.dataSource.forEach(item => {
+        if (this._selectedPoject.includes(item.project)) {
+            this._selectedVendor.push(item.vendor);
+        }
+    });
+
+    // Ensure vendors are unique and include 'All' if necessary
+    this._selectedVendor = Array.from(new Set(this._selectedVendor));
+    if (this._selectedVendor.length > 0) {
+        this._selectedVendor.unshift(this.defaultOptionAll);
+    }
+
+    // ✅ Automatically set the selected vendors
+    this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
+
     this.prepareFilters(false, true);
-    this.isPojectAllPrevSelected = this._selectedPoject.includes(
-      this.defaultOptionAll
-    );
-    this.filterProjects();
-  }
+    this.isPojectAllPrevSelected = this._selectedPoject.includes(this.defaultOptionAll);
+
+    this.filterProjects(); 
+    this.handleProjectSelection();
+}
+
+
 
   filterVendor(): void {
     const filterValue = this.vendorFilter.toLowerCase();
@@ -1056,7 +1005,7 @@ export class AssetsComponent {
   // }
   filterOsType(): void {
     const filterValue = this.osTypeFilter.toLowerCase() || '';
-  
+
     if (filterValue) {
       this.filteredOsType = this.filteredOsType
         .filter(
@@ -1084,7 +1033,7 @@ export class AssetsComponent {
   // }
   filterFwVersion(): void {
     const filterValue = this.fwVersionFilter.toLowerCase() || '';
-  
+
     if (filterValue) {
       this.filteredFwVersion = this.filteredFwVersion
         .filter(
@@ -1101,6 +1050,4 @@ export class AssetsComponent {
     this.currentPageIndex = 0;
     this.pageSize = this.DEFAULT_PAGE_SIZE;
   }
-
-
 }

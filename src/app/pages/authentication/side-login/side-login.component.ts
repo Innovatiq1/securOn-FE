@@ -29,7 +29,7 @@ export class AppSideLoginComponent {
   resetForm: FormGroup;
   form: FormGroup;
   hide = true;
-
+  rememberMe: boolean = false;
   constructor(
     private settings: CoreService,
     private router: Router,
@@ -47,6 +47,7 @@ export class AppSideLoginComponent {
         ]),
       ],
     password: new FormControl('', [Validators.required]),
+    rememberMe: [false]
   });
   this.resetForm = this.formBuilder.group({
     email: [
@@ -64,19 +65,36 @@ ngOnInit() {
     this.router.navigate(['/dashboards']);
   }
 }
-  
+loadRememberedUser() {
+  const storedEmail = localStorage.getItem('rememberedEmail');
+  if (storedEmail) {
+    this.form.patchValue({
+      email: storedEmail,
+      rememberMe: true
+    });
+  }
+}
 
   get f() {
     return this.form.controls;
   }
 
   submit() {
-    console.log(this.form.value);
+    // console.log(this.form.value);
     this.submitted = true;
 
     if (this.form.invalid) {
       return;
     }
+
+    const { email, password, rememberMe } = this.form.value;
+
+    if (rememberMe) {
+      localStorage.setItem('rememberedEmail', email);
+    } else {
+      localStorage.removeItem('rememberedEmail');
+    }
+
 
     let obj = this.form.value;
     this.userService.validateLogin(obj).subscribe(

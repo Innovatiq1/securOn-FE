@@ -53,7 +53,7 @@ export class ViewSearchComponent {
     this.http.post(apiUrl, { cveId: this.cveId }).subscribe(
       (response: any) => {
         this.details = response
-        
+        console.log("Success",this.details)
       },
       (error) => {
         console.error('API Error:', error);
