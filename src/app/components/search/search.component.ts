@@ -254,16 +254,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.vulnerabilitiesService
       .getSelectedPartNo()
       .subscribe((selectedPartNo: string[]) => {
-        this._selectedProduct = [...selectedPartNo];
+        this._selectedPartNo = [...selectedPartNo];
         this.cdr.detectChanges();
       });
 
     this.vulnerabilitiesService
       .getSelectedOsType()
       .subscribe((SelectedOs: string[]) => {
-        // console.log("Restoring SelectedOs:", SelectedOs);
         this._selectedOsType = [...SelectedOs];
-        this.cdr.detectChanges(); // Force UI update
+        this.cdr.detectChanges(); 
       });
 
     this.vulnerabilitiesService
@@ -274,7 +273,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     if (
       this._selectedVendor.length === 0 &&
-      this._selectedProduct.length === 0 &&
+      this._selectedPartNo.length === 0 &&
       this._selectedOsType.length === 0 &&
       this._selectedVersion.length === 0 &&
       this._selectedProject.length === 0
@@ -346,7 +345,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.defaultOptionOstypeAll,
       Array.from(this._osType)
     );
-    console.log('selectedOsType', this._selectedOsType);
     this.vulnerabilitiesService.setSelectedOsType(this._selectedOsType);
 
     this.onSearch();
@@ -764,7 +762,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     const previousOsTypeSelection = new Set(this._selectedOsType);
     const previousPartNoSelection = new Set(this._selectedPartNo);
     const previousFwVersionSelection = new Set(this._selectedVersion);
-    const previousProjectSelection = new Set(this._selectedVersion);
+    const previousProjectSelection = new Set(this._selectedProject);
   
     // Initialize sets with 'All' as the first option and then add selected values
     this._vendors = new Set([this.defaultOptionAll, ...previousVendorSelection].filter(Boolean));

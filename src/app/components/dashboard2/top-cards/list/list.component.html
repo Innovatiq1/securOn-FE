@@ -35,8 +35,8 @@
   <mat-card class="cardWithShadow m-t-5">
     <mat-card-content class="mt-5">
       <div class="row">
-        <div class="col-8">
-          <p>{{ vulerabilities?.cveDetails?.cve?.id }}</p>
+        <div class="col-8" (click)="view(vulerabilities?.cveDetails?.cve?.id)">
+          <p class="text-primary " style="cursor: pointer;">{{ vulerabilities?.cveDetails?.cve?.id }}</p>
           <p class="f-s-13 mt-3" style="max-height: 100px; overflow-y: false">
             {{ vulerabilities?.cveDetails?.cve?.descriptions[0].value }}
           </p>

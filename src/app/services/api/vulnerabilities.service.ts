@@ -39,7 +39,10 @@ import { UserService } from '../auth/user.service';
 @Injectable()
 export class VulnerabilitiesService {
   private currentRouteName: string = '';
-  
+  private selectedAssetProject: string[] = [];
+  private selectedAssetPartNo: string[] = [];
+  private selectedAssetOsType: string[] = [];
+  private selectedAssetFwVersion: string[] = [];
   private selectedVendorSubject: BehaviorSubject<string[]> =
     new BehaviorSubject<string[]>([]);
   public selectedVendor$: Observable<string[]> =
@@ -66,6 +69,7 @@ public selectedOsType$: Observable<string[]> =
 public selectedVersion$: Observable<string[]> =
   this.selectedVersionSubject.asObservable();
   currentPageIndex$: any;
+  selectedProject: string[];
 
   constructor(private store$: Store, private readonly httpClient: HttpClient,
     private readonly userService: UserService,) {}
@@ -90,6 +94,7 @@ public selectedVersion$: Observable<string[]> =
     return this.selectedVendor$;
   }
 
+  
 
   setSelectedOsType(selectedOsType: string[]): void {
     this.selectedOsTypeSubject.next(selectedOsType);
@@ -108,9 +113,6 @@ public selectedVersion$: Observable<string[]> =
     return this.selectedVersion$;
   }
 
-  setSelectedPartNo(selectedPartNo: string[]): void {
-    this.selectedPartNoSubject.next(selectedPartNo);
-  }
 
   setSelectedProject(selectedProject: string[]): void {
     this.selectedProjectSubject.next(selectedProject);
@@ -119,9 +121,48 @@ public selectedVersion$: Observable<string[]> =
     return this.selectedProject$;
   }
 
+  setSelectedPartNo(selectedPartNo: string[]): void {
+    this.selectedPartNoSubject.next(selectedPartNo);
+  }
+
   getSelectedPartNo(): Observable<string[]> {
     return this.selectedPartNo$;
   }
+
+  //Asset
+
+  setSelectedAssetProject(projects: string[]): void {
+    this.selectedAssetProject = projects;
+  }
+
+  getSelectedAssetProject(): string[] {
+    return this.selectedAssetProject;
+  }
+
+  setSelectedAssetPartNo(projects: string[]): void {
+    this.selectedAssetPartNo = projects;
+  }
+
+  getSelectedAssetPartNo(): string[] {
+    return this.selectedAssetPartNo;
+  }
+
+  setSelectedAssetOsType(projects: string[]): void {
+    this.selectedAssetOsType = projects;
+  }
+
+  getSelectedAssetOsType(): string[] {
+    return this.selectedAssetOsType;
+  }
+
+  setSelectedAssetFwVersion(projects: string[]): void {
+    this.selectedAssetFwVersion = projects;
+  }
+
+  getSelectedAssetFwVesrion(): string[] {
+    return this.selectedAssetFwVersion;
+  }
+
 
   public getAllVulnerabilities(): Observable<any[]> {
     return this.store$.select(getAllVulnerabilities);

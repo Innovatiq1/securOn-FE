@@ -39,13 +39,13 @@ export class VulnerabilityDataService {
       if (this._loading.value) {
         this._showLargeRecordsMessage = true;
       }
-    }, 5000); // 5 seconds timeout
+    }, 5000); 
   }
   hide() {
     this._loading.next(false);
-    this._showLargeRecordsMessage = false; // Hide the message when loading finishes
+    this._showLargeRecordsMessage = false; 
     if (this._largeRecordsMessageTimeout) {
-      clearTimeout(this._largeRecordsMessageTimeout); // Clear the timeout
+      clearTimeout(this._largeRecordsMessageTimeout); 
     }
   }
 
