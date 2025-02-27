@@ -67,9 +67,11 @@ ngOnInit() {
 }
 loadRememberedUser() {
   const storedEmail = localStorage.getItem('rememberedEmail');
-  if (storedEmail) {
+  const storedPassword = localStorage.getItem('rememberedPassword');
+  if (storedEmail && storedPassword) {
     this.form.patchValue({
       email: storedEmail,
+      password:storedPassword,
       rememberMe: true
     });
   }
