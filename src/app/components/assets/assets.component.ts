@@ -454,8 +454,9 @@ export class AssetsComponent {
     dialogRef.afterClosed().subscribe(() => {});
   }
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.length;
+    const numSelected = this.selection?.selected?.length;
+    const numRows = this.dataSource?.length;
+
     this._selectedCount = numSelected;
     return numSelected === numRows;
   }
@@ -566,7 +567,7 @@ export class AssetsComponent {
     if (!allSelected && this.isVendorAllPrevSelected) {
       this._selectedVendor = [];
     }
-    this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
+    // this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
   }
   vendorChange(): void {
     const allSelected = this._selectedVendor.includes(this.defaultOptionAll);
@@ -697,12 +698,34 @@ export class AssetsComponent {
     this.isVendorAllPrevSelected = this._selectedVendor.includes(
       this.defaultOptionAll
     );
-    // this.updateFilteredPartNo();
+    this.updateFilteredPartNo();
     this.updateFilteredFirmwareVersions();
     this.updateFilteredOsTypes();
     this.filterVendor();
   }
+  private updateFilteredPartNo(): void {
+    const filteredAssets = this._assets.filter(
+      (item) =>
+        (!this._selectedPoject.length || this._selectedPoject.includes(item.project)) &&
+        (!this._selectedVendor.length || this._selectedVendor.includes(item.vendor)) &&
+        (!this._selectedOsType.length || this._selectedOsType.includes(item.osType))
+    );
 
+    this.filteredPartNo = [...new Set(filteredAssets.map((item) => item.partNo))].sort();
+
+    if (!this.filteredPartNo.includes(this.defaultProductOptionAll)) {
+      this.filteredPartNo.unshift(this.defaultProductOptionAll);
+    }
+  }
+  // _productChange(): void {
+  //   const allSelected = this._selectedProduct.includes(
+  //     this.defaultProductOptionAll
+  //   );
+  //   if (!allSelected && this.isProductAllPrevSelected) {
+  //     this._selectedProduct = [];
+  //   }
+  //   this.vulnerabilitiesService.setSelectedAssetPartNo(this._selectedProduct);
+  // }
   _productChange(): void {
     const allSelected = this._selectedProduct.includes(
       this.defaultProductOptionAll
@@ -714,46 +737,92 @@ export class AssetsComponent {
   }
   productChange(): void {
     let byProduct = false;
-    const allSelected = this._selectedProduct.includes(
-      this.defaultProductOptionAll
-    );
+    this.vulnerabilitiesService.setSelectedAssetPartNo(this._selectedProduct);
+
+    const allSelected = this._selectedProduct.includes(this.defaultProductOptionAll);
 
     if (allSelected) {
-      if (
-        this._selectedProduct.length === 1 ||
-        !this.isProductAllPrevSelected
-      ) {
-        this._selectedProduct = [...this._partNo];
-        this.dataSource = this._assets;
-        byProduct = false;
-      } else {
-        this.dataSource = this._assets.filter((item) =>
-          this._selectedProduct.includes(item.partNo)
-        );
-      }
+        // If "All" is selected, select all part numbers
+        if (this._selectedProduct.length === 1 || !this.isProductAllPrevSelected) {
+            this._selectedProduct = [...this._partNo]; // Select all
+            this.dataSource = this._assets;
+            byProduct = false;
+        } else {
+            this.dataSource = this._assets.filter((item) =>
+                this._selectedProduct.includes(item.partNo)
+            );
+        }
     } else {
-      this._selectedProduct = this._selectedProduct.filter(
-        (item) => item !== this.defaultProductOptionAll
-      );
-      byProduct = true;
-      this.dataSource = this.filterDataSource();
+        // If "All" is deselected, clear all selections
+        if (this.isProductAllPrevSelected) {
+            this._selectedProduct = []; // Clear selection
+        } else {
+            this._selectedProduct = this._selectedProduct.filter(
+                (item) => item !== this.defaultProductOptionAll
+            );
+        }
+        byProduct = true;
+        this.dataSource = this.filterDataSource();
     }
 
     this.prepareFilters();
 
-    this.isProductAllPrevSelected = this._selectedProduct.includes(
-      this.defaultProductOptionAll
-    );
+    this.isProductAllPrevSelected = this._selectedProduct.includes(this.defaultProductOptionAll);
 
-    this.filteredPartNo = byProduct ? this._selectedProduct : [...this._partNo];
+    this.filteredPartNo = byProduct ? [...new Set([...this.filteredPartNo, ...this._selectedProduct])] : [...this._partNo];
 
-    if (this.filteredPartNo.length) {
-      this._selectedProduct = [...this.filteredPartNo];
-    }
     this.updateFilteredOsTypes();
     this.updateFilteredFirmwareVersions();
-    this.filterPartNo();
-  }
+    this.updateFilteredPartNo(); // Ensure dropdown options are refreshed
+}
+
+
+
+  // productChange(): void {
+  //   let byProduct = false;
+  //   this.vulnerabilitiesService.setSelectedAssetPartNo(this._selectedProduct);
+  //   const allSelected = this._selectedProduct.includes(
+  //     this.defaultProductOptionAll
+  //   );
+
+
+  //   if (allSelected) {
+  //     if (
+  //       this._selectedProduct.length === 1 ||
+  //       !this.isProductAllPrevSelected
+  //     ) {
+  //       this._selectedProduct = [...this._partNo];
+  //       this.dataSource = this._assets;
+  //       byProduct = false;
+  //     } else {
+  //       this.dataSource = this._assets.filter((item) =>
+  //         this._selectedProduct.includes(item.partNo)
+  //       );
+  //     }
+  //   } else {
+  //     this._selectedProduct = this._selectedProduct.filter(
+  //       (item) => item !== this.defaultProductOptionAll
+  //     );
+  //     byProduct = true;
+  //     this.dataSource = this.filterDataSource();
+  //   }
+
+  //   this.prepareFilters();
+
+  //   this.isProductAllPrevSelected = this._selectedProduct.includes(
+  //     this.defaultProductOptionAll
+  //   );
+
+  //   this.filteredPartNo = byProduct ? this._selectedProduct : [...this._partNo];
+
+  //   if (this.filteredPartNo.length) {
+  //     this._selectedProduct = [...this.filteredPartNo];
+  //   }
+  //   this.updateFilteredOsTypes();
+  //   this.updateFilteredFirmwareVersions();
+  //   this.filterPartNo();
+  // }
+
 
   private updateFilteredOsTypes(): void {
     const filteredAssets = this._assets.filter(
@@ -951,7 +1020,9 @@ export class AssetsComponent {
     }
 
     // ✅ Automatically set the selected vendors
-    this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
+
+    // this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
+
 
     this.prepareFilters(false, true);
     this.isPojectAllPrevSelected = this._selectedPoject.includes(this.defaultOptionAll);
@@ -985,7 +1056,7 @@ export class AssetsComponent {
           this._selectedProduct.includes(project)
       );
     } else {
-      this.filteredPartNo = [...this._partNo];
+      this.updateFilteredPartNo();
     }
   }
 
