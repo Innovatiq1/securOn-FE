@@ -456,6 +456,7 @@ export class AssetsComponent {
   isAllSelected() {
     const numSelected = this.selection?.selected?.length;
     const numRows = this.dataSource?.length;
+
     this._selectedCount = numSelected;
     return numSelected === numRows;
   }
@@ -784,6 +785,7 @@ export class AssetsComponent {
   //     this.defaultProductOptionAll
   //   );
 
+
   //   if (allSelected) {
   //     if (
   //       this._selectedProduct.length === 1 ||
@@ -1018,7 +1020,9 @@ export class AssetsComponent {
     }
 
     // ✅ Automatically set the selected vendors
+
     // this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
+
 
     this.prepareFilters(false, true);
     this.isPojectAllPrevSelected = this._selectedPoject.includes(this.defaultOptionAll);
