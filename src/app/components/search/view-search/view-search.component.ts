@@ -48,7 +48,7 @@ export class ViewSearchComponent {
   postView() {
     console.log('Making POST request with cveId:', this.cveId);
 
-    const apiUrl = 'http://localhost:8000/getCveDetails';
+    const apiUrl = 'http://localhost:8000/getCveSearchDetails';
 
     this.http.post(apiUrl, { cveId: this.cveId }).subscribe(
       (response: any) => {
