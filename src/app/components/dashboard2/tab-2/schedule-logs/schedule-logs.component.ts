@@ -77,6 +77,30 @@ getUserActivityLog(){
   })
 
 }
+
+convertToSingaporeTime(timestamp: string): string {
+  if (!timestamp) return '-'; 
+
+  const date = new Date(timestamp);
+  
+  const options: Intl.DateTimeFormatOptions = {
+      timeZone: 'Asia/Singapore',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      fractionalSecondDigits: 3, 
+      hour12: false, 
+  };
+
+  return new Intl.DateTimeFormat('en-GB', options)
+      .format(date)
+      .replace(',', '')
+      .replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1') // Reformat to yyyy-MM-dd
+      .replace(' ', 'T'); // Convert space to 'T' for correct format
+}
 schedulerExcel(): void {
   this.toastr.info('Downloading...', 'Info', {
       timeOut: 0,
@@ -87,7 +111,7 @@ schedulerExcel(): void {
   const allDataToExport = this.schedulerLogsData.map((x: any) => ({
       'Priority': x.meta?.priority || '-',
       'Version': x.meta?.version || '-',
-      'Time Stamp': x.meta?.timestamp || '-',
+      'Time Stamp': this.convertToSingaporeTime(x.meta?.timestamp) || '-',
       'Host Name': x.hostname || '-',
       'App Name': x.meta?.appName || '-',
       'Process ID': x.meta?.processId || '-',
@@ -203,7 +227,7 @@ this.toastr.info('Downloading...', 'Info', {
 const allDataToExport = this.schedulerLogsData.map((x: any) => ({
   'Priority': x.meta?.priority || '-',
   'Version': x.meta?.version || '-',
-  'Time Stamp': x.meta?.timestamp || '-',
+  'Time Stamp': this.convertToSingaporeTime(x.meta?.timestamp) || '-',
   'Host Name': x.hostname || '-',
   'App Name': x.meta?.appName || '-',
   'Process ID': x.meta?.processId || '-',
@@ -246,7 +270,7 @@ auditExcel(): void {
   const allDataToExport = this.UserActivityLogsData.map((x: any) => ({
       'Priority': x.meta?.priority || '-',
       'Version': x.meta?.version || '-',
-      'Time Stamp': x.meta?.timestamp || '-',
+      'Time Stamp': this.convertToSingaporeTime(x.meta?.timestamp)|| '-',
       'Host Name': x.hostname || '-',
       'App Name': x.meta?.appName || '-',
       'Process ID': x.meta?.processId || '-',
