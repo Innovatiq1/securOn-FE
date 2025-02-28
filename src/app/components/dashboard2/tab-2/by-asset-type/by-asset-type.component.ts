@@ -27,6 +27,7 @@ export class ByAssetTypeComponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe((data) => {
       this.byAssets = data?.byAssetTypes?.filter((item: { type: any }) => item.type !== null) || [];
+      
       this.count = this.byAssets.reduce(
         (sum: any, item: { count: any }) => sum + item.count,
         0
