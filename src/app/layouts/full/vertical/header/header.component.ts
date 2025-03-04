@@ -170,7 +170,9 @@ export class HeaderComponent {
     });
   }
   logout(): void {
-    localStorage.clear(); 
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('userId'); 
+    localStorage.removeItem('userName'); 
     this.router.navigate(['/authentication/login']);
   
   }
