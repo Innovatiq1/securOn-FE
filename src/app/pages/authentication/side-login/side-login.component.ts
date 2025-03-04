@@ -64,6 +64,7 @@ ngOnInit() {
   if (this.authService.isLoggedIn()) {
     this.router.navigate(['/dashboards']);
   }
+  this.loadRememberedUser();
 }
 loadRememberedUser() {
   const storedEmail = localStorage.getItem('rememberedEmail');
@@ -72,8 +73,9 @@ loadRememberedUser() {
     this.form.patchValue({
       email: storedEmail,
       password:storedPassword,
-      rememberMe: true
+      rememberMe: [false]
     });
+    this.cdr.detectChanges();
   }
 }
 
@@ -93,8 +95,10 @@ loadRememberedUser() {
 
     if (rememberMe) {
       localStorage.setItem('rememberedEmail', email);
+      localStorage.setItem('rememberedPassword', password);
     } else {
       localStorage.removeItem('rememberedEmail');
+      localStorage.removeItem('rememberedPassword');
     }
 
 
