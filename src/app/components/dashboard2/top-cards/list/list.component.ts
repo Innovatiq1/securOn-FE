@@ -51,46 +51,58 @@ export class ListComponent {
 
       if (params['data']) {
         const severity = JSON.parse(params['data']);
+        console.log(`vulerabilities`,severity);
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
           (data) => {
             if (Array.isArray(data)) {
               // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
-              // this._filteredVulnerabilities = [...this.vulerabilities];
-              this._filteredVulnerabilities.data = this.vulerabilities;
-              this._filteredVulnerabilities.paginator = this.paginator;
+              this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+              // this._filteredVulnerabilities.data = this.vulerabilities;
+              // this._filteredVulnerabilities.paginator = this.paginator;
+              setTimeout(() => {
+                const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+                if (savedPageIndex) {
+                  this.paginator.pageIndex = +savedPageIndex;
+                  sessionStorage.removeItem('paginationPageIndex');
+                }
+                this._filteredVulnerabilities.paginator = this.paginator;
+              });
             } else {
               console.error('Unexpected data structure:', data);
             }
-            this.vulnerabilityDataService.hide(); // Hide loader after processing ends
+            this.vulnerabilityDataService.hide(); 
           },
           (error) => {
             console.error('Error fetching data by criticality:', error);
-            this.vulnerabilityDataService.hide(); // Hide loader in case of error
+            this.vulnerabilityDataService.hide(); 
           }
         );
       } else {
         this.vulerabilityService.getCveDataFromAssets(params).subscribe(
           (data) => {
             if (Array.isArray(data)) {
-              // console.log("data",data)
-
-              // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
-              this._filteredVulnerabilities.data = this.vulerabilities;
-              this._filteredVulnerabilities.paginator = this.paginator;
+              this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+        
+              setTimeout(() => {
+                const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+                if (savedPageIndex) {
+                  this.paginator.pageIndex = +savedPageIndex;
+                  sessionStorage.removeItem('paginationPageIndex');
+                }
+                this._filteredVulnerabilities.paginator = this.paginator;
+              });
             } else {
               console.error('Unexpected data structure:', data);
             }
-            this.vulnerabilityDataService.hide(); // Hide loader after processing ends
-          },
-          (error) => {
-            console.error('Error fetching data from assets:', error);
-            this.vulnerabilityDataService.hide(); // Hide loader in case of error
+            this.vulnerabilityDataService.hide();
           }
         );
+        
+        
       }
     });
 
@@ -105,9 +117,19 @@ export class ListComponent {
         // console.log('Filtered Vulnerabilities:', this._filteredVulnerabilities);
       });
   }
-  ngAfterViewInit() {
-    this._filteredVulnerabilities.paginator = this.paginator;
+ // In your component.ts
+ ngAfterViewInit() {
+  this._filteredVulnerabilities.paginator = this.paginator;
+
+  const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+  if (savedPageIndex) {
+    this.paginator.pageIndex = +savedPageIndex;
   }
+
+  this.paginator.page.subscribe(() => {
+    this._filteredVulnerabilities.paginator = this.paginator;
+  });
+}
 
   exportToExcel(): void {
     this.toastr.info('Downloading...', 'Info', {
@@ -198,6 +220,7 @@ export class ListComponent {
   }
 
   view(cveid:number){ 
+    sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
     this.router.navigate(['cve/vulnerabilty'], {queryParams: {cveId: cveid}});
   }
   back() {

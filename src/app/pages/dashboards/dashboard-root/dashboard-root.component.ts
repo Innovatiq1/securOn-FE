@@ -9,7 +9,7 @@ import {
 import { MatTabsModule } from '@angular/material/tabs';
 import { AppDashboard2Component } from '../dashboard2/dashboard2.component';
 import { UpdatedCveChartsComponent } from '../updated-cve-charts/updated-cve-charts.component';
-import { Observable, Subject, firstValueFrom, of } from 'rxjs';
+import { Observable, Subject, Subscription, firstValueFrom, of } from 'rxjs';
 import moment from 'moment';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import { CommonModule } from '@angular/common';
@@ -30,7 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class DashboardRootComponent implements OnInit, OnDestroy {
   valnerabilitiesResponse: any;
-  results: { range: string; count: number; }[];
+  results: { range: string; count: number }[];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -49,6 +49,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   totalAssets: any[] = [];
   totalContracts: any[] = [];
   private storageInterval: any;
+  private dataSubscription!: Subscription;
 
   onTabChange(index: number): void {
     setTimeout(() => {
@@ -63,12 +64,23 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
     this.onTabChangeDate();
     this.startStorageWatcher();
     this._isDataLoading$ = this.vulnerabilityDataService.isDataLoading();
+    this.dataSubscription = this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
+      if (data) {
+        console.log("Data Loaded:", data);
+      }
+    });
   }
 
   ngOnDestroy() {
     if (this.storageInterval) {
       clearInterval(this.storageInterval);
     }
+
+      // ✅ Clear API data when component is destroyed
+      this.vulnerabilityDataService.setVulnerabilitiesData(null);
+      this.vulnerabilityDataService.setDataLoading(false);
+    
+    
   }
 
   startStorageWatcher(): void {
@@ -90,38 +102,31 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
       }
     }, 1000);
   }
-
   onTabChangeDate(): void {
-    const fromDate = localStorage.getItem('startDate');
-    const toDate = localStorage.getItem('endDate');
-
-    const Trendpayload = {
-      startDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-      endDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+    const fromDateRaw = localStorage.getItem('startDate');
+    const toDateRaw = localStorage.getItem('endDate');
+  
+    const fromDate = fromDateRaw ? moment(fromDateRaw).format('YYYY-MM-DD') : '';
+    const toDate = toDateRaw ? moment(toDateRaw).format('YYYY-MM-DD') : '';
+  
+    const commonPayload = {
+      fromDate,
+      toDate,
       duration: '',
       allData: this.toggleSwitchState,
     };
-    const payload = {
-      fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-      toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
-      duration: '',
-      allData: this.toggleSwitchState,
-    };
-    const Cvsspayload = {
-      fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-      toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
-      duration: '',
-      allData: this.toggleSwitchState,
-    };
-    this.loadData(payload);
-    this.loadVulnerabilityTrendData(Trendpayload);
-    this.getFilteredCve(Cvsspayload);
-let CwePayload ={
-  fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-      endDate: toDate ? moment(toDate).format('YYYY-MM-DD') : ''
-}
+  
+  
+    this.loadVulnerabilityTrendData({ ...commonPayload });
+    this.loadData(commonPayload);
+   
+    this.getFilteredCve(commonPayload);
+  
+    const CwePayload = { fromDate, toDate };
     this.getCveCountByWeakness(CwePayload);
   }
+  
+  
 
   async loadVulnerabilityTrendData(requestData: any): Promise<void> {
     this.vulnerabilityDataService.show();
@@ -161,10 +166,9 @@ let CwePayload ={
     }
   }
 
-  private getFilteredCve(payload:any): Promise<void> {
+  private getFilteredCve(payload: any): Promise<void> {
     this.vulnerabilityDataService.show();
     return new Promise((resolve) => {
-      
       this.vulnerabilitiesService
         .getFilteredCves(payload)
         .subscribe((res: Record<string, number>) => {
@@ -185,7 +189,7 @@ let CwePayload ={
     try {
       this.vulnerabilitiesService.getCveCountByWeakness(req).subscribe(
         async (response) => {
-          console.log("cwe count",response)
+          console.log('cwe count', response);
           if (response) {
             this.vulnerabilityDataService.setVulnerabilitiesCweData(response);
           }
@@ -202,4 +206,6 @@ let CwePayload ={
       console.error('Call failed', error);
     }
   }
+
+
 }

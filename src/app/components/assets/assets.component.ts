@@ -220,32 +220,56 @@ export class AssetsComponent {
           })
         );
   }
- 
-
   public loadAssets() {
     this.vulnerabilityDataService.show();
+
     const currentStartDate = localStorage.getItem('startDate') || '';
     const currentEndDate = localStorage.getItem('endDate') || '';
-    const fromDate = currentStartDate
-      ? moment(currentStartDate).format('YYYY-MM-DD')
-      : '';
-    const toDate = currentEndDate
-      ? moment(currentEndDate).format('YYYY-MM-DD')
-      : '';
-    this.logCveService
-      .loadAllAssets(fromDate, toDate)
-      .subscribe((data: any[]) => {
+    const fromDate = currentStartDate ? moment(currentStartDate).format('YYYY-MM-DD') : '';
+    const toDate = currentEndDate ? moment(currentEndDate).format('YYYY-MM-DD') : '';
+
+    this.logCveService.loadAllAssets(fromDate, toDate).subscribe((data: any[]) => {
         this._assets = data;
         this.dataSource = data;
         this.vulnerabilityDataService.hide();
-        this.paginate();
+
         if (this._assets) {
-          this.prepareFilters();
+            this.prepareFilters();
         }
-        this._projectChange()
+
+        this._projectChange();
         this.cdr.detectChanges();
-      });
-  }
+
+        // **Ensure pagination is applied after data is loaded**
+        this.paginate();
+    });
+}
+
+
+  // public loadAssets() {
+  //   this.vulnerabilityDataService.show();
+  //   const currentStartDate = localStorage.getItem('startDate') || '';
+  //   const currentEndDate = localStorage.getItem('endDate') || '';
+  //   const fromDate = currentStartDate
+  //     ? moment(currentStartDate).format('YYYY-MM-DD')
+  //     : '';
+  //   const toDate = currentEndDate
+  //     ? moment(currentEndDate).format('YYYY-MM-DD')
+  //     : '';
+  //   this.logCveService
+  //     .loadAllAssets(fromDate, toDate)
+  //     .subscribe((data: any[]) => {
+  //       this._assets = data;
+  //       this.dataSource = data;
+  //       this.vulnerabilityDataService.hide();
+  //       this.paginate();
+  //       if (this._assets) {
+  //         this.prepareFilters();
+  //       }
+  //       this._projectChange()
+  //       this.cdr.detectChanges();
+  //     });
+  // }
   resetFilters(): void {
     this.dataSource = this._assets;
     this._selectedPoject = [];
@@ -515,53 +539,101 @@ export class AssetsComponent {
     });
   }
 
+  // _onPageChange(page: PageEvent): void {
+  //   this.currentPageIndex = page.pageIndex;
+  //   this.pageSize = page.pageSize;
+  //   this.paginate();
+  // }
   _onPageChange(page: PageEvent): void {
     this.currentPageIndex = page.pageIndex;
     this.pageSize = page.pageSize;
+
+    // **Save state in localStorage**
+    localStorage.setItem('currentPageIndex', this.currentPageIndex.toString());
+    localStorage.setItem('pageSize', this.pageSize.toString());
+
     this.paginate();
-  }
+}
+
+
+  // private paginate(): void {
+  //   const sortedDataSource = [...this.dataSource];
+  //   sortedDataSource.reverse();
+  //   this.totalItemCount = sortedDataSource.length;
+  //   if (this.totalItemCount > this.pageSize) {
+  //     const start = localStorage.getItem('start');
+  //     const end = localStorage.getItem('end');
+  //     const pageSize = localStorage.getItem('pageSize');
+  //     const currentPageIndex = localStorage.getItem('currentPageIndex');
+
+  //     if (start && end && pageSize && currentPageIndex) {
+  //       const startIndex = parseInt(start);
+  //       const endIndex = parseInt(end);
+  //       const pageSizeIndex = parseInt(pageSize);
+  //       const currentPage = parseInt(currentPageIndex);
+  //       this.disablePaginator = false;
+  //       this.start = startIndex;
+  //       this.end = endIndex;
+  //       this.pageSize = pageSizeIndex;
+  //       this.currentPageIndex = currentPage;
+  //       this.currentPageItems = sortedDataSource.slice(startIndex, endIndex);
+  //       setTimeout(() => {
+  //         localStorage.removeItem('start');
+  //         localStorage.removeItem('end');
+  //       }, 2000);
+  //     } else {
+  //       this.disablePaginator = false;
+  //       const itemsToShowStartIndex = this.currentPageIndex * this.pageSize;
+  //       const itemsToShowEndIndex = itemsToShowStartIndex + this.pageSize;
+  //       this.start = itemsToShowStartIndex;
+  //       this.end = itemsToShowEndIndex;
+  //       this.currentPageItems = sortedDataSource.slice(
+  //         itemsToShowStartIndex,
+  //         itemsToShowEndIndex
+  //       );
+  //     }
+  //   } else {
+  //     this.disablePaginator = true;
+  //     this.currentPageItems = sortedDataSource;
+  //   }
+  // }
 
   private paginate(): void {
-    const sortedDataSource = [...this.dataSource];
-    sortedDataSource.reverse();
-    this.totalItemCount = sortedDataSource.length;
-    if (this.totalItemCount > this.pageSize) {
-      const start = localStorage.getItem('start');
-      const end = localStorage.getItem('end');
-      const pageSize = localStorage.getItem('pageSize');
-      const currentPageIndex = localStorage.getItem('currentPageIndex');
-
-      if (start && end && pageSize && currentPageIndex) {
-        const startIndex = parseInt(start);
-        const endIndex = parseInt(end);
-        const pageSizeIndex = parseInt(pageSize);
-        const currentPage = parseInt(currentPageIndex);
-        this.disablePaginator = false;
-        this.start = startIndex;
-        this.end = endIndex;
-        this.pageSize = pageSizeIndex;
-        this.currentPageIndex = currentPage;
-        this.currentPageItems = sortedDataSource.slice(startIndex, endIndex);
-        setTimeout(() => {
-          localStorage.removeItem('start');
-          localStorage.removeItem('end');
-        }, 2000);
-      } else {
-        this.disablePaginator = false;
-        const itemsToShowStartIndex = this.currentPageIndex * this.pageSize;
-        const itemsToShowEndIndex = itemsToShowStartIndex + this.pageSize;
-        this.start = itemsToShowStartIndex;
-        this.end = itemsToShowEndIndex;
-        this.currentPageItems = sortedDataSource.slice(
-          itemsToShowStartIndex,
-          itemsToShowEndIndex
-        );
-      }
-    } else {
-      this.disablePaginator = true;
-      this.currentPageItems = sortedDataSource;
+    if (!this.dataSource || this.dataSource.length === 0) {
+        this.currentPageItems = [];
+        return;
     }
-  }
+
+    const sortedDataSource = [...this.dataSource].reverse();
+    this.totalItemCount = sortedDataSource.length;
+
+    if (this.totalItemCount > this.pageSize) {
+        // **Retrieve stored pagination state**
+        const savedPageIndex = localStorage.getItem('currentPageIndex');
+        const savedPageSize = localStorage.getItem('pageSize');
+
+        this.pageSize = savedPageSize ? parseInt(savedPageSize) : this.pageSize;
+        this.currentPageIndex = savedPageIndex ? parseInt(savedPageIndex) : 0;
+
+        // **Calculate start & end indices**
+        this.start = this.currentPageIndex * this.pageSize;
+        this.end = Math.min(this.start + this.pageSize, this.totalItemCount);
+        this.currentPageItems = sortedDataSource.slice(this.start, this.end);
+
+        this.disablePaginator = false;
+
+        // **Ensure state is saved every time paginate() is called**
+        localStorage.setItem('currentPageIndex', this.currentPageIndex.toString());
+        localStorage.setItem('pageSize', this.pageSize.toString());
+    } else {
+        this.disablePaginator = true;
+        this.currentPageItems = sortedDataSource;
+    }
+}
+
+
+
+
   _vendorChange(): void {
     const allSelected = this._selectedVendor.includes(this.defaultOptionAll);
     if (!allSelected && this.isVendorAllPrevSelected) {
@@ -964,8 +1036,8 @@ export class AssetsComponent {
       brand: asset.vendor,
       firmwareVersion: asset.firmwareVersion,
       osType: asset.osType,
-      fromDate: this.previousStartDate,
-      toDate: this.previousEndDate,
+      // fromDate: this.formattedStartDate,
+      // toDate: this.formattedEndDate,
     };
     this.router.navigate(['cve/vulnerabilties'], {
       queryParams: payload,

@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CvssAttribute } from "../../../pipe/cvss-attribute.pipe";
 import { ScoreChipComponent } from "../../score-chip/score-chip.component";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -46,7 +46,7 @@ export class ViewByTypeComponent {
   constructor(
     private vulnerabilitiesService: VulnerabilitiesService,
     public vulnerabilityDataService: VulnerabilityDataService,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef, public router:Router,
     private route: ActivatedRoute
   ) {}
 
@@ -89,6 +89,17 @@ export class ViewByTypeComponent {
   }
   ngAfterViewInit() {
     this.response.paginator = this.paginator;
+
+    this.response.paginator = this.paginator;
+  
+    const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+    if (savedPageIndex) {
+      this.paginator.pageIndex = +savedPageIndex;
+    }
+  
+    this.paginator.page.subscribe(() => {
+      this.response.paginator = this.paginator;
+    });
   }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -109,7 +120,16 @@ export class ViewByTypeComponent {
           if (response) {
             this.response.data = response.data;
             this.response.data = response.data;
-            this.response.paginator = this.paginator;
+            this.response = new MatTableDataSource(this.response.data );
+
+            setTimeout(() => {
+              const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+              if (savedPageIndex) {
+                this.paginator.pageIndex = +savedPageIndex;
+                sessionStorage.removeItem('paginationPageIndex');
+              }
+              this.response.paginator = this.paginator;
+            });
             
           }
           this.vulnerabilityDataService.hide();
@@ -126,6 +146,10 @@ export class ViewByTypeComponent {
     }
   }
 
+  view(cveid:number){ 
+    sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
+    this.router.navigate(['cve/vulnerabilty'], {queryParams: {cveId: cveid}});
+  }
   back(){
     window.history.back();
   }
