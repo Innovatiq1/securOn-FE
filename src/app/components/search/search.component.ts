@@ -62,7 +62,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   public dataSource: any[] = [];
   public currentPageItems: any[] = [];
   public pageSize = 10;
-  public currentPageIndex = 0;
+  public currentPageIndex = 2;
   public disablePaginator = false;
   public totalItemCount = 0;
   displayedColumns: string[] = [
@@ -288,9 +288,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.startStorageWatcher();
   }
 
-  ngAfterViewInit() {
-    // this.loadData();
-  }
+  
   startStorageWatcher(): void {
     this.previousStartDate = localStorage.getItem('startDate');
     this.previousEndDate = localStorage.getItem('endDate');
@@ -324,9 +322,22 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   onPageChange(event: PageEvent): void {
-    this.currentPageIndex = event?.pageIndex;
+    this.currentPageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    sessionStorage.setItem('paginationPageIndex', this.currentPageIndex.toString());
+  
     this.onSearch();
+  }
+  ngAfterViewInit() {
+    const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+  
+    if (savedPageIndex) {
+      this.currentPageIndex = +savedPageIndex;
+    }
+  
+    if (this.paginator) {
+      this.paginator.pageIndex = this.currentPageIndex;
+    }
   }
 
   onProjectChange(selectedItems: string[]): void {
@@ -384,10 +395,172 @@ export class SearchComponent implements OnInit, AfterViewInit {
     return selectedItems;
   }
 
+  // onSearch(title?: string): void {
+  //   this._isDataLoading$ = of(true);
+  //   const page = title ? 1 : this.currentPageIndex + 1;
+  //   console.log('title: ', this._selectedOsType);
+  //   let payload: any = {
+  //     vendorName: this._selectedVendor,
+  //     productName: this.searchService.product,
+  //     partNo: this._selectedPartNo,
+  //     version: this._selectedVersion,
+  //     project: this._selectedProject,
+  //     osType: this._selectedOsType,
+  //     page: page,
+  //     limit: this.pageSize,
+  //     startDate: this.previousStartDate || this.formattedStartDate,
+  //     endDate: this.previousEndDate || this.formattedEndDate,
+  //   };
+
+  //   const cvePartFirmware = this.cvePartFirmware;
+  //   const startsWithNumber = (str: string) => /^\d/.test(str);
+  //   const startsWithAlphabet = (str: string) => /^[a-zA-Z]/.test(str);
+
+  //   if (cvePartFirmware) {
+  //     const cveIds = this.cvePartFirmware.split(',').map((cve) => cve.trim());
+  //     payload.cveId = cveIds;
+  //     this.searchService.currentCveId = cveIds;
+  //   }
+
+  //   if (cvePartFirmware) {
+  //     const searchSplit = cvePartFirmware.split(/[\s,]*\,[,\s]*/);
+  //     const partsSplit = {
+  //       cve: searchSplit
+  //         .filter((record) => record.startsWith('CVE'))
+  //         .map((cve) => cve.trim()),
+  //       part: searchSplit.find(
+  //         (f) => !f.startsWith('CVE') && startsWithAlphabet(f)
+  //       ),
+  //       firmware: searchSplit.find((f) => startsWithNumber(f)),
+  //     };
+
+  //     if (partsSplit.cve && partsSplit.cve.length > 0) {
+  //       payload.cveId = partsSplit.cve;
+  //       this.searchService.currentCveId = partsSplit.cve;
+  //     }
+
+  //     if (partsSplit.part) {
+  //       payload.partNo = [partsSplit.part];
+  //       this.searchService.currentPartNo = partsSplit.part;
+  //     }
+
+  //     if (partsSplit.firmware) {
+  //       payload.firmwareVersion = [partsSplit.firmware];
+  //       this.searchService.currentFirmware = partsSplit.firmware;
+  //     }
+  //   }
+  //   this.searchService
+  //     .postSearch(payload)
+  //     .pipe(
+  //       finalize(() => {
+  //         this._isDataLoading$ = of(false);
+  //         this.cdr.markForCheck();
+  //       })
+  //     )
+  //     .subscribe({
+  //       next: (data: any) => {
+  //         if (!data.docs || data.docs.length === 0) {
+  //           this.dataSource = [];
+  //           this.totalItemCount = 0;
+  //         } else {
+  //           const uniqueDocs = Array.from(
+  //             new Set(data.docs.map((doc: any) => JSON.stringify(doc)))
+  //           ).map((str: any) => JSON.parse(str) as any);
+
+  //           this.dataSource = uniqueDocs;
+
+  //           this.totalItemCount = data.total || 0;
+  //         }
+  //         if (title) {
+  //           this.currentPageIndex = 0;
+  //         }
+
+  //         this.prepareFilters(true);
+  //         this.currentPageItems = this.dataSource;
+  //         // this.filterVendors();
+  //         // this.filterProjects();
+  //         // this.filterOsType();
+  //         // this.filterPartNo();
+  //         // this.filterFw();
+  //         if (this.paginator) {
+  //           this.paginator.pageIndex = this.currentPageIndex;
+  //           this.paginator.length = this.totalItemCount;
+  //         }
+
+  //         this.cdr.detectChanges();
+  //         this.searchService.isSearchPerformed = true;
+  //       },
+  //       error: (err: any) => {
+  //         this.dataSource = [];
+  //         this.totalItemCount = 0;
+  //         this.cdr.markForCheck();
+  //       },
+  //     });
+  // }
+  // onSearch(title?: string): void {
+  //   this._isDataLoading$ = of(true);
+  
+  //   // Use the stored page index only when navigating back
+  //   const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+  //   if (savedPageIndex && !title) {
+  //     this.currentPageIndex = +savedPageIndex;
+  //   } else if (title) {
+  //     this.currentPageIndex = 0; // Reset pagination for new searches
+  //   }
+  
+  //   const page = this.currentPageIndex + 1; // API pagination starts from 1
+  //   let payload: any = {
+  //     vendorName: this._selectedVendor,
+  //     productName: this.searchService.product,
+  //     partNo: this._selectedPartNo,
+  //     version: this._selectedVersion,
+  //     project: this._selectedProject,
+  //     osType: this._selectedOsType,
+  //     page: page,
+  //     limit: this.pageSize,
+  //     startDate: this.previousStartDate || this.formattedStartDate,
+  //     endDate: this.previousEndDate || this.formattedEndDate,
+  //   };
+  
+  //   this.searchService.postSearch(payload).pipe(
+  //     finalize(() => {
+  //       this._isDataLoading$ = of(false);
+  //       this.cdr.markForCheck();
+  //     })
+  //   ).subscribe({
+  //     next: (data: any) => {
+  //       if (!data.docs || data.docs.length === 0) {
+  //         this.dataSource = [];
+  //         this.totalItemCount = 0;
+  //       } else {
+  //         this.dataSource = Array.from(new Set(data.docs.map((doc: any) => JSON.stringify(doc))))
+  //                                .map((str: any) => JSON.parse(str) as any);
+  //         this.totalItemCount = data.total || 0;
+  //       }
+  
+  //       if (this.paginator) {
+  //         this.paginator.pageIndex = this.currentPageIndex;
+  //         this.paginator.length = this.totalItemCount;
+  //       }
+  //       this.currentPageItems = this.dataSource;
+  
+  //       this.cdr.detectChanges();
+  //       this.searchService.isSearchPerformed = true;
+  //     },
+  //     error: (err: any) => {
+  //       this.dataSource = [];
+  //       this.totalItemCount = 0;
+  //       this.cdr.markForCheck();
+  //     },
+  //   });
+  // }
+  
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
+    
+    // Maintain the current page unless a new search is performed
     const page = title ? 1 : this.currentPageIndex + 1;
-    console.log('title: ', this._selectedOsType);
+  
     let payload: any = {
       vendorName: this._selectedVendor,
       productName: this.searchService.product,
@@ -400,17 +573,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
       startDate: this.previousStartDate || this.formattedStartDate,
       endDate: this.previousEndDate || this.formattedEndDate,
     };
-
+  
+    // CVE, Part No, and Firmware Parsing
     const cvePartFirmware = this.cvePartFirmware;
     const startsWithNumber = (str: string) => /^\d/.test(str);
     const startsWithAlphabet = (str: string) => /^[a-zA-Z]/.test(str);
-
-    if (cvePartFirmware) {
-      const cveIds = this.cvePartFirmware.split(',').map((cve) => cve.trim());
-      payload.cveId = cveIds;
-      this.searchService.currentCveId = cveIds;
-    }
-
+  
     if (cvePartFirmware) {
       const searchSplit = cvePartFirmware.split(/[\s,]*\,[,\s]*/);
       const partsSplit = {
@@ -422,24 +590,25 @@ export class SearchComponent implements OnInit, AfterViewInit {
         ),
         firmware: searchSplit.find((f) => startsWithNumber(f)),
       };
-
+  
       if (partsSplit.cve && partsSplit.cve.length > 0) {
         payload.cveId = partsSplit.cve;
         this.searchService.currentCveId = partsSplit.cve;
       }
-
+  
       if (partsSplit.part) {
         payload.partNo = [partsSplit.part];
         this.searchService.currentPartNo = partsSplit.part;
       }
-
+  
       if (partsSplit.firmware) {
         payload.firmwareVersion = [partsSplit.firmware];
         this.searchService.currentFirmware = partsSplit.firmware;
       }
     }
-    this.searchService
-      .postSearch(payload)
+  
+    // Fetch Data
+    this.searchService.postSearch(payload)
       .pipe(
         finalize(() => {
           this._isDataLoading$ = of(false);
@@ -452,30 +621,30 @@ export class SearchComponent implements OnInit, AfterViewInit {
             this.dataSource = [];
             this.totalItemCount = 0;
           } else {
+            // Ensure uniqueness in data
             const uniqueDocs = Array.from(
               new Set(data.docs.map((doc: any) => JSON.stringify(doc)))
             ).map((str: any) => JSON.parse(str) as any);
-
+  
             this.dataSource = uniqueDocs;
-
             this.totalItemCount = data.total || 0;
           }
+  
+          // If it's a new search, reset to first page
           if (title) {
             this.currentPageIndex = 0;
           }
-
+  
           this.prepareFilters(true);
           this.currentPageItems = this.dataSource;
-          // this.filterVendors();
-          // this.filterProjects();
-          // this.filterOsType();
-          // this.filterPartNo();
-          // this.filterFw();
+
+          console.log("cves",[...new Set(this.dataSource.map(cve => cve.cveId))]);
+  
           if (this.paginator) {
             this.paginator.pageIndex = this.currentPageIndex;
             this.paginator.length = this.totalItemCount;
           }
-
+  
           this.cdr.detectChanges();
           this.searchService.isSearchPerformed = true;
         },
@@ -486,6 +655,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
         },
       });
   }
+  
   public loadAssets() {
     this.logCveService.loadOnlyAssets().subscribe((data: any[]) => {
       this._assets = data;

@@ -6,10 +6,40 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
-import { NgApexchartsModule} from 'ng-apexcharts';
-import { ChartOptions } from '../by-criticality/by-criticality.component';
+// import { ChartOptions } from '../by-criticality/by-criticality.component';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexYAxis,
+  ApexLegend,
+  ApexXAxis,
+  ApexTooltip,
+  ApexTheme,
+  ApexGrid,
+  ApexPlotOptions,
+  ApexFill,
+  NgApexchartsModule,
+} from 'ng-apexcharts';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: any;
+  theme: ApexTheme;
+  tooltip: ApexTooltip;
+  dataLabels: ApexDataLabels;
+  legend: ApexLegend;
+  colors: string[];
+  markers: any;
+  grid: ApexGrid;
+  plotOptions: ApexPlotOptions;
+  fill: ApexFill;
+  labels: string[];
+};
 @Component({
   selector: 'app-by-brand',
   standalone: true,

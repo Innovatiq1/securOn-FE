@@ -480,8 +480,8 @@ public getUserActivityLogs(req: any): Observable<any> {
     const url = environment.baseUrl + '/getVulnarabilityTrendData';
     // const body = { year: requestData.year, allData: requestData.allData };
     const body = {
-      startDate: requestData.startDate,
-      endDate: requestData.endDate,
+      startDate: requestData.fromDate,
+      endDate: requestData.toDate,
       allData: requestData.allData,
     };
     return this.httpClient.post<any>(url, body);

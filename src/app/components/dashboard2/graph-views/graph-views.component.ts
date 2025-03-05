@@ -61,6 +61,15 @@ export class GraphViewsComponent {
   }
   ngAfterViewInit() {
     this._filteredVulnerabilities.paginator = this.paginator;
+  
+    const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+    if (savedPageIndex) {
+      this.paginator.pageIndex = +savedPageIndex;
+    }
+  
+    this.paginator.page.subscribe(() => {
+      this._filteredVulnerabilities.paginator = this.paginator;
+    });
   }
   getVenderProductForGraph(severity: string){
     this.vulnerabilityDataService.show();
@@ -68,8 +77,18 @@ export class GraphViewsComponent {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
-        this._filteredVulnerabilities.data = this.vulerabilities;
-        this._filteredVulnerabilities.paginator = this.paginator;
+        // this._filteredVulnerabilities.data = this.vulerabilities;
+        // this._filteredVulnerabilities.paginator = this.paginator;
+
+        this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+        setTimeout(() => {
+          const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+          if (savedPageIndex) {
+            this.paginator.pageIndex = +savedPageIndex;
+            sessionStorage.removeItem('paginationPageIndex');
+          }
+          this._filteredVulnerabilities.paginator = this.paginator;
+        });
         this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
@@ -84,8 +103,15 @@ export class GraphViewsComponent {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
-        this._filteredVulnerabilities.data = this.vulerabilities;
-        this._filteredVulnerabilities.paginator = this.paginator;
+        this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+        setTimeout(() => {
+          const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+          if (savedPageIndex) {
+            this.paginator.pageIndex = +savedPageIndex;
+            sessionStorage.removeItem('paginationPageIndex');
+          }
+          this._filteredVulnerabilities.paginator = this.paginator;
+        });
         this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
@@ -99,8 +125,15 @@ export class GraphViewsComponent {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
-        this._filteredVulnerabilities.data = this.vulerabilities;
-        this._filteredVulnerabilities.paginator = this.paginator;
+        this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+        setTimeout(() => {
+          const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+          if (savedPageIndex) {
+            this.paginator.pageIndex = +savedPageIndex;
+            sessionStorage.removeItem('paginationPageIndex');
+          }
+          this._filteredVulnerabilities.paginator = this.paginator;
+        });
         this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
@@ -113,8 +146,15 @@ export class GraphViewsComponent {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
-        this._filteredVulnerabilities.data = this.vulerabilities;
-        this._filteredVulnerabilities.paginator = this.paginator;
+        this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+        setTimeout(() => {
+          const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+          if (savedPageIndex) {
+            this.paginator.pageIndex = +savedPageIndex;
+            sessionStorage.removeItem('paginationPageIndex');
+          }
+          this._filteredVulnerabilities.paginator = this.paginator;
+        });
         this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
@@ -128,8 +168,15 @@ export class GraphViewsComponent {
       if (Array.isArray(data)) {
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
-        this._filteredVulnerabilities.data = this.vulerabilities;
-        this._filteredVulnerabilities.paginator = this.paginator;
+        this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
+        setTimeout(() => {
+          const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+          if (savedPageIndex) {
+            this.paginator.pageIndex = +savedPageIndex;
+            sessionStorage.removeItem('paginationPageIndex');
+          }
+          this._filteredVulnerabilities.paginator = this.paginator;
+        });
         this.vulnerabilityDataService.hide();
       } else {
         console.error('Unexpected data structure:', data);
@@ -143,6 +190,7 @@ export class GraphViewsComponent {
   }
 
   view(cveid:number){ 
+    sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
     this.router.navigate(['cve/vulnerabilty'], {queryParams: {cveId: cveid}});
   }
   exportToExcel(): void {
