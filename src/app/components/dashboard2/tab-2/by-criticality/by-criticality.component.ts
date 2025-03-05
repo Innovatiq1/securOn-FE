@@ -320,14 +320,41 @@ _openVulnerability(seviarity: string): void {
 
   this.router.navigate(['cve/vulnerabilties-view'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
 }
+// getLabelStyle(index: number, total: number) {
+//   const startAngle = this.criticalChartOptions1.series
+//     .slice(0, index)
+//     .reduce((sum: number, value: number) => sum + (value / total) * 360, 0);
+//   const segmentAngle = (this.criticalChartOptions1.series[index] / total) * 360;
+//   const angle = startAngle + segmentAngle / 2 - 90;
+
+//   const radius = 50;
+//   const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
+//   const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+
+//   return {
+//     top: `${y}%`,
+//     left: `${x}%`,
+//     transform: 'translate(-50%, -50%)',
+//     fontWeight: 'bold',
+//     color: '#fff',
+//     // background: '#f4f4f4',
+//     // padding: '4px 6px',
+//     // borderRadius: '4px',
+//   };
+// }
 getLabelStyle(index: number, total: number) {
   const startAngle = this.criticalChartOptions1.series
     .slice(0, index)
     .reduce((sum: number, value: number) => sum + (value / total) * 360, 0);
   const segmentAngle = (this.criticalChartOptions1.series[index] / total) * 360;
-  const angle = startAngle + segmentAngle / 2 - 90;
+  const angle = startAngle + segmentAngle / 2 - 90; 
 
-  const radius = 60;
+  let radius = 55; 
+
+  if (segmentAngle < 20) {
+    radius = 70;
+  }
+
   const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
   const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
 
@@ -337,9 +364,11 @@ getLabelStyle(index: number, total: number) {
     transform: 'translate(-50%, -50%)',
     fontWeight: 'bold',
     color: '#fff',
-    // background: '#f4f4f4',
-    // padding: '4px 6px',
-    // borderRadius: '4px',
+    whiteSpace: 'nowrap', 
+    textAlign: 'center', 
+    // background: 'rgba(0, 0, 0, 0.7)',
+    padding: '4px 6px',
+    borderRadius: '4px'
   };
 }
 

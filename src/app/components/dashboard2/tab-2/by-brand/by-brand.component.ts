@@ -174,7 +174,7 @@ export class ByBrandComponent {
     const segmentAngle = (this.byBrands[index].count / total) * 360;
     const angle = startAngle + segmentAngle / 2 - 90;
   
-    const radius = 60;
+    const radius = 55;
     const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
     let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
     if (index > 0) {
@@ -193,6 +193,8 @@ export class ByBrandComponent {
       transform: 'translate(-50%, -50%)',
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
+      padding: '4px 6px',
+    borderRadius: '4px'
     };
   }
   

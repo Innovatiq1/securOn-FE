@@ -169,7 +169,7 @@ export class ByAssetTypeComponent {
     const segmentAngle = (this.byAssets[index].count / total) * 360;
     const angle = startAngle + segmentAngle / 2 - 90;
 
-    const radius = 55;
+    const radius = 50;
     const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
     let y = 50 + radius * Math.sin((angle * Math.PI) / 180);
     if (index > 0) {
@@ -185,7 +185,10 @@ export class ByAssetTypeComponent {
       top: `${y}%`,
       left: `${x}%`,
       transform: 'translate(-50%, -50%)',
+      whiteSpace: 'nowrap', 
       fontWeight: 'bold',
+      padding: '4px 6px',
+    borderRadius: '4px'
     };
   }
 }
