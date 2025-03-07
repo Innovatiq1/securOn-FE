@@ -215,7 +215,10 @@ export class GraphViewsComponent {
         'Security Advisory Title':x.advisoryTitle || '-',
         'Security Impact Rating':x.seviarity || '-',
           'CVSS Base Score':x.cvssScore || '-',
-          'Vulnerable Component or Feature':x.vulnerableComponent || '-',
+          // 'Vulnerable Component or Feature':x.vulnerableComponent || '-',
+          'Vulnerable Component or Feature':x.vulnerableComponent
+          ? x.vulnerableComponent.split(/For information.*/i)[0].trim()
+          : '-',
           'Determine Whether Vulnerable Feature is Enabled':x.vulnerableFeature || '-',
           'Workaround/Mitigation':x.workarounds || '-',
 
@@ -292,7 +295,7 @@ export class GraphViewsComponent {
     worksheet.mergeCells('Q1:Q2');
 
     const columnWidths = [20, 15, 25, 15, 15, 20, 15, 20, 15,15,15,15,15,20,25,30,25];
-    columnWidths.forEach((width, index) => {
+    columnWidths.forEach((width, index) => { 
         worksheet.getColumn(index + 1).width = width;
     });
 

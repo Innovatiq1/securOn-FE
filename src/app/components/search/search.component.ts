@@ -763,7 +763,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
           'Security Advisory Title': item.advisoryTitle || '-',
           'Security Impact Rating': item.seviarity || '-',
           'CVSS Base Score': item.cvssScore || '-',
-          'Vulnerable Component or Feature': item.vulnerableComponent || '-',
+          'Vulnerable Component or Feature': item.vulnerableComponent
+          ? item.vulnerableComponent.split(/For information.*/i)[0].trim()
+          : '-',
           'Determine Whether Vulnerable Feature is Enabled':
             item.vulnerableFeature || '-',
           'Workaround/Mitigation': item.workarounds || '-',
