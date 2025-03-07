@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
+import moment from 'moment';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -54,6 +55,7 @@ export class ByCriticalityComponent {
   byContractId: any;
   vulerabilities: string[];
   loading: boolean = false;
+  public toggleSwitchState: boolean = false;
 hoveredSeverityData: { label: string; count: number; projects: string[] } | null = null;
 severityDataCache: Map<string, { count: number; projects: string[] }> = new Map();
 isGraphLoaded = false;
@@ -64,17 +66,48 @@ constructor(private vulnerabilityDataService: VulnerabilityDataService,public ro
 }
 
 ngOnInit() {
-  this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
-    this.byCriticality = data?.byCriticality;
-    this.byContractId = data?.byContractId; 
-    if (this.byCriticality) {
-      this.initializeCharts();
-    }
+   this.getCircularDashboardData2();
+  // this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
+  //   this.byCriticality = data?.byCriticality;
+  //   this.byContractId = data?.byContractId; 
+  //   if (this.byCriticality) {
+  //     this.initializeCharts();
+  //   }
+  // });
+  // this.vulnerabilityDataService.startDate$.subscribe(() => {
+  //   this.getCircularDashboardData2(); 
+  // });
+
+  this.vulnerabilityDataService.endDate$.subscribe(() => {
+    this.getCircularDashboardData2(); 
   });
   this.isGraphLoaded = true;
   if (this.isGraphLoaded) {
     this.clearData();
   }
+}
+
+getChnages(){
+  
+}
+
+getCircularDashboardData2(){
+  const fromDate = localStorage.getItem('startDate');
+    const toDate = localStorage.getItem('endDate');
+    const payload = {
+      fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+      toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+      duration: '',
+      allData: this.toggleSwitchState
+    };
+  this.vulerabilityService.loadVulnerabilitiesByDateRange(payload).subscribe((data)=>{
+console.log("by Criticality",data)
+this.byCriticality = data?.byCriticality;
+    this.byContractId = data?.byContractId; 
+    if (this.byCriticality) {
+      this.initializeCharts();
+    }
+  })
 }
 
 
@@ -349,10 +382,10 @@ getLabelStyle(index: number, total: number) {
   const segmentAngle = (this.criticalChartOptions1.series[index] / total) * 360;
   const angle = startAngle + segmentAngle / 2 - 90; 
 
-  let radius = 55; 
+  let radius = 50; 
 
   if (segmentAngle < 20) {
-    radius = 70;
+    radius = 60;
   }
 
   const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
