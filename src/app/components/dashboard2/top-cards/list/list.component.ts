@@ -55,12 +55,11 @@ export class ListComponent {
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
           (data) => {
             if (Array.isArray(data)) {
-              // this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              
+
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
               this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
-              // this._filteredVulnerabilities.data = this.vulerabilities;
-              // this._filteredVulnerabilities.paginator = this.paginator;
               setTimeout(() => {
                 const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
                 if (savedPageIndex) {
@@ -82,9 +81,13 @@ export class ListComponent {
       } else {
         this.vulerabilityService.getCveDataFromAssets(params).subscribe(
           (data) => {
+            
             if (Array.isArray(data)) {
+              this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
+              console.log("all", this.vulerabilities)
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
+             
               this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
         
               setTimeout(() => {
