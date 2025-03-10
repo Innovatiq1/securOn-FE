@@ -23,6 +23,7 @@ import {
   NgApexchartsModule,
 } from 'ng-apexcharts';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -43,7 +44,7 @@ export type ChartOptions = {
 @Component({
   selector: 'app-by-brand',
   standalone: true,
-  imports: [MatCardModule,NgApexchartsModule,CommonModule],
+  imports: [MatCardModule,NgApexchartsModule,CommonModule,MatProgressSpinnerModule],
   templateUrl: './by-brand.component.html',
   styleUrl: './by-brand.component.scss'
 })
@@ -53,14 +54,16 @@ export class ByBrandComponent {
   byBrands: any;
   totalCount: any;
   count: number =0;
-  constructor(private vulnerabilityDataService: VulnerabilityDataService,public router: Router){
+  constructor(public vulnerabilityDataService: VulnerabilityDataService,public router: Router){
   
   }
   
   ngOnInit() {
+    this.vulnerabilityDataService.show();
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byBrands = data?.byBrands;
-      this.count = this.byBrands.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
+      this.count = this.byBrands?.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
+      this.vulnerabilityDataService.hide();
       if(this.byBrands){
         this.initializeCharts();
       }

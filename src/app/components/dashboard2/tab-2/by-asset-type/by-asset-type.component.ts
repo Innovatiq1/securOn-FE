@@ -5,11 +5,12 @@ import { ChartOptions } from '../by-criticality/by-criticality.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-by-asset-type',
   standalone: true,
-  imports: [MatCardModule, NgApexchartsModule, CommonModule],
+  imports: [MatCardModule, NgApexchartsModule, CommonModule,MatProgressSpinnerModule],
   templateUrl: './by-asset-type.component.html',
   styleUrl: './by-asset-type.component.scss',
 })
@@ -20,11 +21,12 @@ export class ByAssetTypeComponent {
   totalCount: any;
   count: number = 0;
   constructor(
-    private vulnerabilityDataService: VulnerabilityDataService,
+    public vulnerabilityDataService: VulnerabilityDataService,
     public router: Router
   ) {}
 
   ngOnInit() {
+    this.vulnerabilityDataService.show();
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe((data) => {
       this.byAssets = data?.byAssetTypes?.filter((item: { type: any }) => item.type !== null) || [];
       
@@ -32,6 +34,7 @@ export class ByAssetTypeComponent {
         (sum: any, item: { count: any }) => sum + item.count,
         0
       );
+      this.vulnerabilityDataService.hide();
       if (this.byAssets) {
         this.initializeCharts();
       }

@@ -325,18 +325,25 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.currentPageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     sessionStorage.setItem('paginationPageIndex', this.currentPageIndex.toString());
+    sessionStorage.setItem('paginationPageSize',  this.pageSize.toString());
   
     this.onSearch();
   }
   ngAfterViewInit() {
     const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
+    const savedPageSize = sessionStorage.getItem('paginationPageSize');
+    console.log("size",savedPageSize);
   
     if (savedPageIndex) {
       this.currentPageIndex = +savedPageIndex;
     }
+    if (savedPageSize) {
+      this.pageSize = +savedPageSize;
+    }
   
     if (this.paginator) {
       this.paginator.pageIndex = this.currentPageIndex;
+      this.paginator.pageSize = this.pageSize;
     }
   }
 
@@ -557,7 +564,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   
   onSearch(title?: string): void {
     this._isDataLoading$ = of(true);
-    
+    const pageSize = sessionStorage.getItem('paginationPageSize') || 10;
     // Maintain the current page unless a new search is performed
     const page = title ? 1 : this.currentPageIndex + 1;
   
@@ -569,7 +576,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       project: this._selectedProject,
       osType: this._selectedOsType,
       page: page,
-      limit: this.pageSize,
+      limit: pageSize,
       startDate: this.previousStartDate || this.formattedStartDate,
       endDate: this.previousEndDate || this.formattedEndDate,
     };
@@ -637,8 +644,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   
           this.prepareFilters(true);
           this.currentPageItems = this.dataSource;
-
-          console.log("cves",[...new Set(this.dataSource.map(cve => cve.cveId))]);
+          sessionStorage.removeItem('pageSize')
   
           if (this.paginator) {
             this.paginator.pageIndex = this.currentPageIndex;

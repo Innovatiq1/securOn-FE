@@ -11,12 +11,18 @@ import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 })
 export class AppWelcomeCardComponent {
   @Input() byCriticality: any; 
+  totalCount: number = 0;
 
   constructor(private vulnerabilityDataService: VulnerabilityDataService){}
 
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byCriticality = data?.byCriticality;
+      this.totalCount =
+      this.byCriticality?.criticalCount +
+      this.byCriticality?.highCount +
+      this.byCriticality?.lowCount +
+      this.byCriticality?.mediumCount;
     });
   }
 }

@@ -14,6 +14,7 @@ import { MaterialModule } from '../../../material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import moment from 'moment';
+import { CommonModule } from '@angular/common';
 export interface trafficChart {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -26,7 +27,7 @@ export interface trafficChart {
 @Component({
   selector: 'app-traffic-distribution',
   standalone: true,
-  imports: [MaterialModule, NgApexchartsModule, TablerIconsModule],
+  imports: [MaterialModule, NgApexchartsModule, TablerIconsModule,CommonModule,MaterialModule],
   templateUrl: './traffic-distribution.component.html',
 })
 export class AppTrafficDistributionComponent implements OnInit {

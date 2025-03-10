@@ -37,7 +37,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
     private vulnerabilitiesService: VulnerabilitiesService,
     public vulnerabilityDataService: VulnerabilityDataService
   ) {}
-  selectedTab = 0;
+  selectedTab:any;
   public selectedDateRange: Date[];
   public selectSwitchDate: Date[];
   private unsubscribe$ = new Subject<void>();
@@ -54,19 +54,28 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   onTabChange(index: number): void {
     setTimeout(() => {
       this.selectedTab = index;
-      this.toggleSwitchState = index === 0;
-      this.cdr.detectChanges();
+      this.toggleSwitchState = this.selectedTab === 0;
+      sessionStorage.setItem("tabChange", this.selectedTab.toString());
       this.onTabChangeDate();
+      this.cdr.detectChanges();
     }, 0);
   }
-
+  
   ngOnInit(): void {
-    this.onTabChangeDate();
+    const storedTab = sessionStorage.getItem("tabChange");
+    if (storedTab !== null) {
+      this.selectedTab = Number(storedTab); 
+    } else {
+      this.selectedTab = 0;
+    }
+  
+    this.onTabChange(this.selectedTab); // Ensure tab is set correctly on init
+  
     this.startStorageWatcher();
     this._isDataLoading$ = this.vulnerabilityDataService.isDataLoading();
     this.dataSubscription = this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       if (data) {
-        console.log("Data Loaded:", data);
+        // console.log("Data Loaded:", data);
       }
     });
   }
@@ -118,7 +127,8 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
   
   
     this.loadVulnerabilityTrendData({ ...commonPayload });
-    this.loadData(commonPayload);
+    if(commonPayload.allData === true) {  this.loadData(commonPayload);}
+  
    
     this.getFilteredCve(commonPayload);
   
@@ -172,7 +182,7 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
       this.vulnerabilitiesService
         .getFilteredCves(payload)
         .subscribe((res: Record<string, number>) => {
-          const result = Object.entries(res).map(([range, count]) => ({
+          const result = Object.entries(res)?.map(([range, count]) => ({
             range,
             count,
           }));
@@ -189,7 +199,6 @@ export class DashboardRootComponent implements OnInit, OnDestroy {
     try {
       this.vulnerabilitiesService.getCveCountByWeakness(req).subscribe(
         async (response) => {
-          console.log('cwe count', response);
           if (response) {
             this.vulnerabilityDataService.setVulnerabilitiesCweData(response);
           }

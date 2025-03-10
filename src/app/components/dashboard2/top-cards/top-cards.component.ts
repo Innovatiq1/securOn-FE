@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class AppTopCardsComponent {
   @Input() byCriticality: any;
+  totalCount: number = 0;
 
   constructor(
     private vulnerabilityDataService: VulnerabilityDataService,
@@ -23,6 +24,12 @@ export class AppTopCardsComponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe((data) => {
       this.byCriticality = data?.byCriticality;
+
+      this.totalCount =
+      this.byCriticality?.criticalCount +
+      this.byCriticality?.highCount +
+      this.byCriticality?.lowCount +
+      this.byCriticality?.mediumCount;
     });
   }
 

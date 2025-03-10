@@ -1,10 +1,14 @@
-<mat-tab-group (selectedIndexChange)="onTabChange($event)">
-    <mat-tab label="All CVE's">
-      <app-dashboard2 [isActive]="selectedTab === 0"></app-dashboard2>
-    </mat-tab>
-    <mat-tab label="Uploaded Asset CVE's">
-      <app-updated-cve-charts [isActive]="selectedTab === 1"></app-updated-cve-charts>
-    </mat-tab>
-    
-    
-  </mat-tab-group>
+<!-- Loader -->
+<div *ngIf="vulnerabilityDataService._loading | async" class="mat-loader-overlay">
+  <mat-spinner></mat-spinner>
+</div>
+
+<!-- Tab Group -->
+<mat-tab-group [(selectedIndex)]="selectedTab" (selectedIndexChange)="onTabChange($event)">
+  <mat-tab label="All CVE's">
+    <app-dashboard2 [isActive]="selectedTab === 0"></app-dashboard2>
+  </mat-tab>
+  <mat-tab label="Uploaded Asset CVE's">
+    <app-updated-cve-charts [isActive]="selectedTab === 1"></app-updated-cve-charts>
+  </mat-tab>
+</mat-tab-group>

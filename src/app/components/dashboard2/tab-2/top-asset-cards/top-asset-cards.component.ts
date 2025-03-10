@@ -21,8 +21,8 @@ export class TopAssetCardsComponent {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byCriticality = data?.byCriticality;
     });
-    this.getCircularDashboardData()
-    this.getAllVendors();
+    // this.getCircularDashboardData()
+    // this.getAllVendors();
   }
 
   viewAllVendors(){
@@ -39,27 +39,29 @@ export class TopAssetCardsComponent {
 
     this.router.navigate(['cve/vulnerabilties'], { queryParams: { data: JSON.stringify(seviarityPayload) }});
   }
-  getCircularDashboardData(){
-    const fromDate = localStorage.getItem('startDate');
-    const toDate = localStorage.getItem('endDate');
-    const payload = {
-      fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
-      toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
-      duration: '',
-      allData: this.toggleSwitchState
-    };
-    this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe((res)=>{
-      // console.log("req",res.byVendors);
-      this.totalVender=res.byVendors.length;
+  // getCircularDashboardData(){
+  //   this.vulnerabilityDataService.show();
+  //   const fromDate = localStorage.getItem('startDate');
+  //   const toDate = localStorage.getItem('endDate');
+  //   const payload = {
+  //     fromDate: fromDate ? moment(fromDate).format('YYYY-MM-DD') : '',
+  //     toDate: toDate ? moment(toDate).format('YYYY-MM-DD') : '',
+  //     duration: '',
+  //     allData: this.toggleSwitchState
+  //   };
+  //   this.vulnerabilitiesService.loadVulnerabilitiesByDateRange(payload).subscribe((res)=>{
+  //     // console.log("req",res.byVendors);
+  //     this.totalVender=res.byVendors.length;
+  //     this.vulnerabilityDataService.hide();
 
-    })
-  }
+  //   })
+  // }
 
-  getAllVendors(){
-    this.vulnerabilitiesService.getAllVendors().subscribe((res)=>{
-      console.log("getAll",res)
-    })
-  }
+  // getAllVendors(){
+  //   this.vulnerabilitiesService.getAllVendors().subscribe((res)=>{
+  //     // console.log("getAll",res)
+  //   })
+  // }
 
 
 }

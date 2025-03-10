@@ -120,7 +120,11 @@
 </mat-card>
 
 </ng-container>
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20, 50, 100]"
+  [pageSize]="savedPageSize || 10"
+  showFirstLastButtons
+></mat-paginator>
 
     
     <div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">

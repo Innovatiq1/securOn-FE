@@ -39,7 +39,12 @@ export interface productSalesChart {
 @Component({
   selector: 'app-product-sales',
   standalone: true,
-  imports: [MaterialModule, NgApexchartsModule, TablerIconsModule,CommonModule],
+  imports: [
+    MaterialModule,
+    NgApexchartsModule,
+    TablerIconsModule,
+    CommonModule,
+  ],
   templateUrl: './product-sales.component.html',
 })
 export class AppProductSalesComponent {
@@ -47,25 +52,25 @@ export class AppProductSalesComponent {
   public productSalesChart!: Partial<productSalesChart> | any;
   public trafficChart: Partial<ChartOptions> | any;
   byCriticality: any;
-  
+  totalCount: number = 0;
 
-  constructor(private vulnerabilityDataService: VulnerabilityDataService) {
-   
-  }
-
+  constructor(private vulnerabilityDataService: VulnerabilityDataService) {}
 
   ngOnInit() {
-    this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
+    this.vulnerabilityDataService.vulnerabilitiesData$.subscribe((data) => {
       this.byCriticality = data?.byCriticality;
-      if(this.byCriticality){
+      this.totalCount =
+        this.byCriticality?.criticalCount +
+        this.byCriticality?.highCount +
+        this.byCriticality?.lowCount +
+        this.byCriticality?.mediumCount;
+      if (this.byCriticality) {
         this.initializeCharts();
       }
     });
   }
 
-
   private initializeCharts() {
-  
     const baseChartOptions = {
       chart: {
         type: 'donut',
@@ -116,13 +121,14 @@ export class AppProductSalesComponent {
         fillSeriesColor: false,
       },
     };
-  
-  
-    if (this.byCriticality && 
-        (this.byCriticality.criticalCount > 0 || 
-         this.byCriticality.highCount > 0 || 
-         this.byCriticality.mediumCount > 0 || 
-         this.byCriticality.lowCount > 0)) {
+
+    if (
+      this.byCriticality &&
+      (this.byCriticality.criticalCount > 0 ||
+        this.byCriticality.highCount > 0 ||
+        this.byCriticality.mediumCount > 0 ||
+        this.byCriticality.lowCount > 0)
+    ) {
       this.trafficChart = {
         ...baseChartOptions,
         series: [
@@ -136,9 +142,9 @@ export class AppProductSalesComponent {
     } else {
       this.trafficChart = {
         ...baseChartOptions,
-        series: [0],  
+        series: [0],
         labels: ['No Data Found'],
-        colors: ['#d3d3d3'],  
+        colors: ['#d3d3d3'],
         plotOptions: {
           pie: {
             donut: {
@@ -161,5 +167,4 @@ export class AppProductSalesComponent {
       };
     }
   }
-  
 }

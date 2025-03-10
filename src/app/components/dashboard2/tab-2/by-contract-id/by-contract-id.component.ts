@@ -46,7 +46,7 @@ export class ByContractIdComponent {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byContractId = data?.byContractId;
       this.byCriticality = data?.byCriticality;
-     this.count = this.byContractId.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
+     this.count = this.byContractId?.reduce((sum: any, item: { count: any; }) => sum + item.count, 0);
       if(this.byContractId){
         console.log(this.byContractId)
         this.initializeCharts();
@@ -200,12 +200,13 @@ export class ByContractIdComponent {
             useSeriesColors: true,
           },
           formatter: (seriesName: string, opts: any) => {
-            const percentage = opts.w.config.series[opts.seriesIndex].toFixed(1);
+            const total = opts.w.config.series?.reduce((a: number, b: number) => a + b, 0);
+            const percentage = ((opts.w.config.series[opts.seriesIndex] / total) * 100).toFixed(1);
             return `<span style="display: flex; align-items: center;">
                       <span style="margin-right: 8px;color: white;font-weight: bold;">${percentage}%</span> 
-                      <span style="color: white;font-weight: bold;">${seriesName}</span 
+                      <span style="color: white;font-weight: bold;">${seriesName}</span>
                     </span>`;
-          },
+          }
         },
         plotOptions: {
           pie: {

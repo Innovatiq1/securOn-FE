@@ -23,7 +23,7 @@ export class VulnerabilityDataService {
 
   startDate$ = this.startDateSubject.asObservable();
   endDate$ = this.endDateSubject.asObservable();
-  private _loading = new BehaviorSubject<boolean>(false);
+   _loading = new BehaviorSubject<boolean>(false);
   loading$ = this._loading.asObservable();
   public _showLargeRecordsMessage = false;
   private _largeRecordsMessageTimeout: any;
@@ -73,7 +73,7 @@ export class VulnerabilityDataService {
   }
 
   setVulnerabilitiesData(data: any) {
-    this.vulnerabilitiesDataSubject.next(data);
+    this.vulnerabilitiesDataSubject?.next(data);
   }
 
   setVulnerabilitiesTrendsData(data: any) {

@@ -37,6 +37,7 @@ export class ListComponent {
   // _filteredVulnerabilities: any[] = [];
   _filteredVulnerabilities = new MatTableDataSource<any>([]);
   _allVulnerabilities: any[] = [];
+  savedPageSize: number = 10;
   constructor(
     private activeRoute: ActivatedRoute,
     private vulerabilityService: VulnerabilitiesService,
@@ -47,11 +48,10 @@ export class ListComponent {
 
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
-      this.vulnerabilityDataService.show(); // Show loader before processing begins
+      this.vulnerabilityDataService.show(); 
 
       if (params['data']) {
         const severity = JSON.parse(params['data']);
-        console.log(`vulerabilities`,severity);
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
           (data) => {
             if (Array.isArray(data)) {
@@ -66,7 +66,13 @@ export class ListComponent {
                   this.paginator.pageIndex = +savedPageIndex;
                   sessionStorage.removeItem('paginationPageIndex');
                 }
+                const savedSize = sessionStorage.getItem('paginationPageSize');
+                if (savedSize) {
+                  this.savedPageSize = +savedSize; 
+                  sessionStorage.removeItem('paginationPageSize');
+                }
                 this._filteredVulnerabilities.paginator = this.paginator;
+                this.paginator.pageSize = this.savedPageSize;
               });
             } else {
               console.error('Unexpected data structure:', data);
@@ -96,7 +102,13 @@ export class ListComponent {
                   this.paginator.pageIndex = +savedPageIndex;
                   sessionStorage.removeItem('paginationPageIndex');
                 }
+                const savedSize = sessionStorage.getItem('paginationPageSize');
+                if (savedSize) {
+                  this.savedPageSize = +savedSize; // Retrieve saved size
+                  sessionStorage.removeItem('paginationPageSize');
+                }
                 this._filteredVulnerabilities.paginator = this.paginator;
+                this.paginator.pageSize = this.savedPageSize;
               });
             } else {
               console.error('Unexpected data structure:', data);
@@ -122,15 +134,22 @@ export class ListComponent {
   }
  // In your component.ts
  ngAfterViewInit() {
-  this._filteredVulnerabilities.paginator = this.paginator;
+  const savedSize = sessionStorage.getItem('paginationPageSize');
+  const savedIndex = sessionStorage.getItem('paginationPageIndex');
 
-  const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
-  if (savedPageIndex) {
-    this.paginator.pageIndex = +savedPageIndex;
+  if (savedSize) {
+    this.paginator.pageSize = +savedSize;
   }
 
+  if (savedIndex) {
+    this.paginator.pageIndex = +savedIndex;
+  }
+
+  this._filteredVulnerabilities.paginator = this.paginator;
+
   this.paginator.page.subscribe(() => {
-    this._filteredVulnerabilities.paginator = this.paginator;
+    sessionStorage.setItem('paginationPageSize', this.paginator.pageSize.toString());
+    sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
   });
 }
 
@@ -223,6 +242,7 @@ export class ListComponent {
   }
 
   view(cveid:number){ 
+    sessionStorage.setItem('paginationPageSize', this.paginator.pageSize.toString());
     sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
     this.router.navigate(['cve/vulnerabilty'], {queryParams: {cveId: cveid}});
   }

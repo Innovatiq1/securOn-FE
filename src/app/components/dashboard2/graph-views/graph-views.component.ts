@@ -29,6 +29,7 @@ export class GraphViewsComponent {
   vulerabilities: any[] = [];
   // _filteredVulnerabilities: any[] = [];
   _allVulnerabilities: any[] = [];
+  savedPageSize: number = 10;
   constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public router:Router,public toastr: ToastrService, public vulnerabilityDataService: VulnerabilityDataService){}
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
@@ -60,15 +61,22 @@ export class GraphViewsComponent {
     });
   }
   ngAfterViewInit() {
-    this._filteredVulnerabilities.paginator = this.paginator;
+    const savedSize = sessionStorage.getItem('paginationPageSize');
+    const savedIndex = sessionStorage.getItem('paginationPageIndex');
   
-    const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
-    if (savedPageIndex) {
-      this.paginator.pageIndex = +savedPageIndex;
+    if (savedSize) {
+      this.paginator.pageSize = +savedSize;
     }
   
+    if (savedIndex) {
+      this.paginator.pageIndex = +savedIndex;
+    }
+  
+    this._filteredVulnerabilities.paginator = this.paginator;
+  
     this.paginator.page.subscribe(() => {
-      this._filteredVulnerabilities.paginator = this.paginator;
+      sessionStorage.setItem('paginationPageSize', this.paginator.pageSize.toString());
+      sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
     });
   }
   getVenderProductForGraph(severity: string){
@@ -87,7 +95,13 @@ export class GraphViewsComponent {
             this.paginator.pageIndex = +savedPageIndex;
             sessionStorage.removeItem('paginationPageIndex');
           }
-          this._filteredVulnerabilities.paginator = this.paginator;
+          const savedSize = sessionStorage.getItem('paginationPageSize');
+                if (savedSize) {
+                  this.savedPageSize = +savedSize; // Retrieve saved size
+                  sessionStorage.removeItem('paginationPageSize');
+                }
+                this._filteredVulnerabilities.paginator = this.paginator;
+                this.paginator.pageSize = this.savedPageSize;
         });
         this.vulnerabilityDataService.hide();
       } else {
@@ -109,8 +123,14 @@ export class GraphViewsComponent {
           if (savedPageIndex) {
             this.paginator.pageIndex = +savedPageIndex;
             sessionStorage.removeItem('paginationPageIndex');
+            sessionStorage.removeItem('paginationPageSize');
+          }
+          const savedSize = sessionStorage.getItem('paginationPageSize');
+          if (savedSize) {
+            this.savedPageSize = +savedSize; // Retrieve saved size
           }
           this._filteredVulnerabilities.paginator = this.paginator;
+          this.paginator.pageSize = this.savedPageSize;
         });
         this.vulnerabilityDataService.hide();
       } else {
@@ -132,7 +152,13 @@ export class GraphViewsComponent {
             this.paginator.pageIndex = +savedPageIndex;
             sessionStorage.removeItem('paginationPageIndex');
           }
-          this._filteredVulnerabilities.paginator = this.paginator;
+          const savedSize = sessionStorage.getItem('paginationPageSize');
+                if (savedSize) {
+                  this.savedPageSize = +savedSize; // Retrieve saved size
+                  sessionStorage.removeItem('paginationPageSize');
+                }
+                this._filteredVulnerabilities.paginator = this.paginator;
+                this.paginator.pageSize = this.savedPageSize;
         });
         this.vulnerabilityDataService.hide();
       } else {
@@ -152,8 +178,15 @@ export class GraphViewsComponent {
           if (savedPageIndex) {
             this.paginator.pageIndex = +savedPageIndex;
             sessionStorage.removeItem('paginationPageIndex');
+            sessionStorage.removeItem('paginationPageSize');
+          }
+          const savedSize = sessionStorage.getItem('paginationPageSize');
+          if (savedSize) {
+            this.savedPageSize = +savedSize; 
+            
           }
           this._filteredVulnerabilities.paginator = this.paginator;
+          this.paginator.pageSize = this.savedPageSize;
         });
         this.vulnerabilityDataService.hide();
       } else {
@@ -175,7 +208,13 @@ export class GraphViewsComponent {
             this.paginator.pageIndex = +savedPageIndex;
             sessionStorage.removeItem('paginationPageIndex');
           }
-          this._filteredVulnerabilities.paginator = this.paginator;
+          const savedSize = sessionStorage.getItem('paginationPageSize');
+                if (savedSize) {
+                  this.savedPageSize = +savedSize; // Retrieve saved size
+                  sessionStorage.removeItem('paginationPageSize');
+                }
+                this._filteredVulnerabilities.paginator = this.paginator;
+                this.paginator.pageSize = this.savedPageSize;
         });
         this.vulnerabilityDataService.hide();
       } else {
@@ -191,6 +230,7 @@ export class GraphViewsComponent {
 
   view(cveid:number){ 
     sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
+    sessionStorage.setItem('paginationPageSize', this.paginator.pageSize.toString());
     this.router.navigate(['cve/vulnerabilty'], {queryParams: {cveId: cveid}});
   }
   exportToExcel(): void {

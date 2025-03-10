@@ -349,7 +349,6 @@ public getVenderProductCves(req: any): Observable<any> {
 }
 
 public getNewUpdatedCves(req: any): Observable<any> {
-  console.log("res",req)
   const body = {
     fromDate: req.fromDate,
     toDate: req.toDate,
