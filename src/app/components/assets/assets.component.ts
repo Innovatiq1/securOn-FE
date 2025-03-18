@@ -286,7 +286,7 @@ export class AssetsComponent {
  
 
   uploadFile($event: any): void {
-    this.vulnerabilitiesService.setDataLoading(true);
+this.vulnerabilityDataService.show();
     const selectedFile: File = $event.target.files[0];
 
     if (selectedFile) {
@@ -297,7 +297,9 @@ export class AssetsComponent {
         next: (response: any) => {
           this.showAlert = true;
           //  console.log('Upload successful:', response);
+          this.toastr.success("Uploaded Successfully");
           this.loadAssets();
+          this.vulnerabilityDataService.hide();
         },
         error: (error: any) => {
           console.error('Upload failed:', error);
@@ -307,6 +309,7 @@ export class AssetsComponent {
           this.vulnerabilitiesService.setDataLoading(false);
           $event.target.value = null;
           this.loadAssets();
+          this.vulnerabilityDataService.hide();
         },
       });
     }
@@ -556,54 +559,20 @@ export class AssetsComponent {
 }
 
 
-  // private paginate(): void {
-  //   const sortedDataSource = [...this.dataSource];
-  //   sortedDataSource.reverse();
-  //   this.totalItemCount = sortedDataSource.length;
-  //   if (this.totalItemCount > this.pageSize) {
-  //     const start = localStorage.getItem('start');
-  //     const end = localStorage.getItem('end');
-  //     const pageSize = localStorage.getItem('pageSize');
-  //     const currentPageIndex = localStorage.getItem('currentPageIndex');
-
-  //     if (start && end && pageSize && currentPageIndex) {
-  //       const startIndex = parseInt(start);
-  //       const endIndex = parseInt(end);
-  //       const pageSizeIndex = parseInt(pageSize);
-  //       const currentPage = parseInt(currentPageIndex);
-  //       this.disablePaginator = false;
-  //       this.start = startIndex;
-  //       this.end = endIndex;
-  //       this.pageSize = pageSizeIndex;
-  //       this.currentPageIndex = currentPage;
-  //       this.currentPageItems = sortedDataSource.slice(startIndex, endIndex);
-  //       setTimeout(() => {
-  //         localStorage.removeItem('start');
-  //         localStorage.removeItem('end');
-  //       }, 2000);
-  //     } else {
-  //       this.disablePaginator = false;
-  //       const itemsToShowStartIndex = this.currentPageIndex * this.pageSize;
-  //       const itemsToShowEndIndex = itemsToShowStartIndex + this.pageSize;
-  //       this.start = itemsToShowStartIndex;
-  //       this.end = itemsToShowEndIndex;
-  //       this.currentPageItems = sortedDataSource.slice(
-  //         itemsToShowStartIndex,
-  //         itemsToShowEndIndex
-  //       );
-  //     }
-  //   } else {
-  //     this.disablePaginator = true;
-  //     this.currentPageItems = sortedDataSource;
-  //   }
-  // }
 
   private paginate(): void {
     if (!this.dataSource || this.dataSource.length === 0) {
-        this.currentPageItems = [];
-        return;
-    }
-
+      this.currentPageItems = [];
+      this.totalItemCount = 0;
+      this.currentPageIndex = 0;
+      this.disablePaginator = true;
+    
+      localStorage.removeItem('currentPageIndex');
+      localStorage.removeItem('pageSize');
+      
+      this.cdr.detectChanges();
+      return;
+  }
     const sortedDataSource = [...this.dataSource].reverse();
     this.totalItemCount = sortedDataSource.length;
 
@@ -621,7 +590,7 @@ export class AssetsComponent {
         this.currentPageItems = sortedDataSource.slice(this.start, this.end);
 
         this.disablePaginator = false;
-
+this.cdr.detectChanges();
         // **Ensure state is saved every time paginate() is called**
         localStorage.setItem('currentPageIndex', this.currentPageIndex.toString());
         localStorage.setItem('pageSize', this.pageSize.toString());
@@ -817,7 +786,7 @@ export class AssetsComponent {
         // If "All" is selected, select all part numbers
         if (this._selectedProduct.length === 1 || !this.isProductAllPrevSelected) {
             this._selectedProduct = [...this._partNo]; // Select all
-            this.dataSource = this._assets;
+            this.dataSource = this.filterDataSource();
             byProduct = false;
         } else {
             this.dataSource = this._assets.filter((item) =>
@@ -848,52 +817,6 @@ export class AssetsComponent {
     this.updateFilteredPartNo(); // Ensure dropdown options are refreshed
 }
 
-
-
-  // productChange(): void {
-  //   let byProduct = false;
-  //   this.vulnerabilitiesService.setSelectedAssetPartNo(this._selectedProduct);
-  //   const allSelected = this._selectedProduct.includes(
-  //     this.defaultProductOptionAll
-  //   );
-
-
-  //   if (allSelected) {
-  //     if (
-  //       this._selectedProduct.length === 1 ||
-  //       !this.isProductAllPrevSelected
-  //     ) {
-  //       this._selectedProduct = [...this._partNo];
-  //       this.dataSource = this._assets;
-  //       byProduct = false;
-  //     } else {
-  //       this.dataSource = this._assets.filter((item) =>
-  //         this._selectedProduct.includes(item.partNo)
-  //       );
-  //     }
-  //   } else {
-  //     this._selectedProduct = this._selectedProduct.filter(
-  //       (item) => item !== this.defaultProductOptionAll
-  //     );
-  //     byProduct = true;
-  //     this.dataSource = this.filterDataSource();
-  //   }
-
-  //   this.prepareFilters();
-
-  //   this.isProductAllPrevSelected = this._selectedProduct.includes(
-  //     this.defaultProductOptionAll
-  //   );
-
-  //   this.filteredPartNo = byProduct ? this._selectedProduct : [...this._partNo];
-
-  //   if (this.filteredPartNo.length) {
-  //     this._selectedProduct = [...this.filteredPartNo];
-  //   }
-  //   this.updateFilteredOsTypes();
-  //   this.updateFilteredFirmwareVersions();
-  //   this.filterPartNo();
-  // }
 
 
   private updateFilteredOsTypes(): void {
@@ -1036,6 +959,7 @@ export class AssetsComponent {
       brand: asset.vendor,
       firmwareVersion: asset.firmwareVersion,
       osType: asset.osType,
+      serialNo: asset.serialNo,
       // fromDate: this.formattedStartDate,
       // toDate: this.formattedEndDate,
     };

@@ -42,6 +42,7 @@ export class ViewByTypeComponent {
     'CWE-611': 'XXE',
     'CWE-918': 'SSRF',
   };
+  savedPageSize: number = 10;
   cweId: string | undefined;
   constructor(
     private vulnerabilitiesService: VulnerabilitiesService,
@@ -92,6 +93,7 @@ export class ViewByTypeComponent {
 
     this.response.paginator = this.paginator;
   
+    const savedSize = sessionStorage.getItem('paginationPageSize');
     const savedPageIndex = sessionStorage.getItem('paginationPageIndex');
     if (savedPageIndex) {
       this.paginator.pageIndex = +savedPageIndex;
@@ -99,6 +101,17 @@ export class ViewByTypeComponent {
   
     this.paginator.page.subscribe(() => {
       this.response.paginator = this.paginator;
+    });
+
+
+    if (savedSize) {
+      this.paginator.pageSize = +savedSize;
+    }
+  
+  
+    this.paginator.page.subscribe(() => {
+      sessionStorage.setItem('paginationPageSize', this.paginator.pageSize.toString());
+      sessionStorage.setItem('paginationPageIndex', this.paginator.pageIndex.toString());
     });
   }
   ngOnDestroy(): void {
@@ -127,6 +140,12 @@ export class ViewByTypeComponent {
               if (savedPageIndex) {
                 this.paginator.pageIndex = +savedPageIndex;
                 sessionStorage.removeItem('paginationPageIndex');
+              }
+
+              const savedSize = sessionStorage.getItem('paginationPageSize');
+              if (savedSize) {
+                this.savedPageSize = +savedSize;
+                sessionStorage.removeItem('paginationPageSize');
               }
               this.response.paginator = this.paginator;
             });

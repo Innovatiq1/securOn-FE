@@ -142,7 +142,7 @@ export class HeaderComponent {
     const endDate = moment(selectedDateRange[1]).format('YYYY-MM-DD');
     if (startDate) localStorage.setItem('startDate', startDate);
     if (endDate) localStorage.setItem('endDate', endDate);
-
+    
     if (startDate) this.localStorageService.updateStartDate(startDate);
     if (endDate) this.localStorageService.updateEndDate(endDate);
   }

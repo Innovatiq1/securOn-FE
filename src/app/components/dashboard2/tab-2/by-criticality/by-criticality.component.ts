@@ -101,7 +101,7 @@ export class ByCriticalityComponent {
         this.vulnerabilityDataService.setVulnerabilitiesData(data);
         this.byCriticality = data?.byCriticality;
         this.byContractId = data?.byContractId;
-        if (this.byCriticality) {
+        if (this.byCriticality)  {
           this.initializeCharts();
         }
         this.vulnerabilityDataService.hide();
