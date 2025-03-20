@@ -20,6 +20,7 @@ export class TopAssetCardsComponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byCriticality = data?.byCriticality;
+      this.totalVender = data?.byVendors.length;
     });
     // this.getCircularDashboardData()
     // this.getAllVendors();

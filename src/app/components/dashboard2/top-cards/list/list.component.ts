@@ -90,7 +90,6 @@ export class ListComponent {
             
             if (Array.isArray(data)) {
               this.vulerabilities = data.map((v: { cveDetails: any }) => v.cveDetails);
-              console.log("all", this.vulerabilities)
               this.vulerabilities = data;
               this._allVulnerabilities = this.vulerabilities;
              
@@ -104,7 +103,7 @@ export class ListComponent {
                 }
                 const savedSize = sessionStorage.getItem('paginationPageSize');
                 if (savedSize) {
-                  this.savedPageSize = +savedSize; // Retrieve saved size
+                  this.savedPageSize = +savedSize; 
                   sessionStorage.removeItem('paginationPageSize');
                 }
                 this._filteredVulnerabilities.paginator = this.paginator;
