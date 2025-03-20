@@ -960,8 +960,8 @@ this.cdr.detectChanges();
       firmwareVersion: asset.firmwareVersion,
       osType: asset.osType,
       serialNo: asset.serialNo,
-      // fromDate: this.formattedStartDate,
-      // toDate: this.formattedEndDate,
+      fromDate: this.formattedStartDate,
+      toDate: this.formattedEndDate,
     };
     this.router.navigate(['cve/vulnerabilties'], {
       queryParams: payload,
