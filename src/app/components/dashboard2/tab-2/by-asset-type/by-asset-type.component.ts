@@ -155,6 +155,7 @@ export class ByAssetTypeComponent {
       fromDate: localStorage.getItem('startDate'),
       type: seviarity,
       toDate: localStorage.getItem('endDate'),
+      title:""
     };
 
     this.router.navigate(['cve/vulnerabilties-view'], {

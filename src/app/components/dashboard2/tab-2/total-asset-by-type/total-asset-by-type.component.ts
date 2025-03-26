@@ -276,6 +276,7 @@ ngOnDestroy(): void {
       fromDate: localStorage.getItem('startDate'),
       type: type,
       toDate: localStorage.getItem('endDate'),
+      title:'Total Asset by Brands'
     };
   
     this.router.navigate(['cve/view-AssesstByType'], { queryParams: { data: JSON.stringify(seviarityPayload) }});

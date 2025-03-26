@@ -40,6 +40,7 @@ import { UserService } from '../auth/user.service';
 export class VulnerabilitiesService {
   private currentRouteName: string = '';
   private selectedAssetProject: string[] = [];
+  private selectedAssetVendor: string[] = [];
   private selectedAssetPartNo: string[] = [];
   private selectedAssetOsType: string[] = [];
   private selectedAssetFwVersion: string[] = [];
@@ -131,10 +132,19 @@ public selectedVersion$: Observable<string[]> =
 
   //Asset
 
+  setSelectedAssetVendor(vendor: string[]): void {
+    this.selectedAssetVendor = vendor;
+  }
+
+  getSelectedAssetVendor(): string[] {
+    return this.selectedAssetVendor;
+  }
+
   setSelectedAssetProject(projects: string[]): void {
     this.selectedAssetProject = projects;
   }
 
+  
   getSelectedAssetProject(): string[] {
     return this.selectedAssetProject;
   }

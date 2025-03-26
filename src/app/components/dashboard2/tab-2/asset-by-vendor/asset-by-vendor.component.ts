@@ -295,6 +295,7 @@ ngOnInit(): void {
       fromDate: localStorage.getItem('startDate'),
       type: label,
       toDate: localStorage.getItem('endDate'),
+      title:"Total Asset"
     };
   
     this.router.navigate(['cve/view-AssesstByType'], { queryParams: { data: JSON.stringify(seviarityPayload) }});

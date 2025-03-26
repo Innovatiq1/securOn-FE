@@ -19,75 +19,75 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-view-assets-by-type',
   standalone: true,
-  imports: [MaterialModule, TablerIconsModule, ScoreChipComponent,CvssAttribute,CommonModule, FormsModule,ReactiveFormsModule],
+  imports: [MaterialModule, TablerIconsModule, ScoreChipComponent, CvssAttribute, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './view-assets-by-type.component.html',
   styleUrl: './view-assets-by-type.component.scss'
 })
 export class ViewAssetsByTypeComponent {
-  
- @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   searchControl: FormControl = new FormControl("");
   vulerabilities: any[] = [];
+  titleHead = '';
   _filteredVulnerabilities = new MatTableDataSource<any>([]);
-  constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService,public toastr: ToastrService,public vulnerabilityDataService: VulnerabilityDataService){
+  constructor(private activeRoute: ActivatedRoute, private vulerabilityService: VulnerabilitiesService, public toastr: ToastrService, public vulnerabilityDataService: VulnerabilityDataService) {
     // this.getAssetByType();
   }
 
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe((params) => {
       this.vulnerabilityDataService.show(); // Show loader before processing begins
-  
+
       if (params['data']) {
         const severity = JSON.parse(params['data']);
-
-        const playload={
+        this.titleHead = severity.title;
+        const playload = {
           type: severity.type,
-         fromDate: severity.fromDate ? moment(severity.fromDate).format('YYYY-MM-DD') : '',
-         toDate: severity.toDate ? moment(severity.toDate).format('YYYY-MM-DD') : '',
+          fromDate: severity.fromDate ? moment(severity.fromDate).format('YYYY-MM-DD') : '',
+          toDate: severity.toDate ? moment(severity.toDate).format('YYYY-MM-DD') : '',
         }
-        if(severity.name=='assetByBrandName')
-        {
-          this.vulerabilityService.getAssetsByBrandName(playload).subscribe((data:any)=>{
-        if (Array.isArray(data)) {
-          this.vulerabilities = data;
-          this._filteredVulnerabilities.data = this.vulerabilities;
-          this._filteredVulnerabilities.paginator = this.paginator;
-        } else {
-          console.error('Unexpected data structure:', data);
+        if (severity.name == 'assetByBrandName') {
+          this.vulerabilityService.getAssetsByBrandName(playload).subscribe((data: any) => {
+            if (Array.isArray(data)) {
+              this.vulerabilities = data;
+              this._filteredVulnerabilities.data = this.vulerabilities;
+              this._filteredVulnerabilities.paginator = this.paginator;
+            } else {
+              console.error('Unexpected data structure:', data);
+            }
+            this.vulnerabilityDataService.hide();
+          },
+            (error) => {
+              console.error('Error fetching data by criticality:', error);
+              this.vulnerabilityDataService.hide();
+            }
+
+
+          )
         }
-        this.vulnerabilityDataService.hide(); 
-      },
-      (error) => {
-        console.error('Error fetching data by criticality:', error);
-        this.vulnerabilityDataService.hide();
-      }
+        else {
+          this.vulerabilityService.getAssetsByType(playload).subscribe((data: any) => {
+            if (Array.isArray(data)) {
+              this.vulerabilities = data;
+              this._filteredVulnerabilities.data = this.vulerabilities;
+              this._filteredVulnerabilities.paginator = this.paginator;
+            } else {
+              console.error('Unexpected data structure:', data);
+            }
+            this.vulnerabilityDataService.hide();
+          },
+            (error) => {
+              console.error('Error fetching data by criticality:', error);
+              this.vulnerabilityDataService.hide();
+            }
 
 
-        )
-      }
-      else{
-          this.vulerabilityService.getAssetsByType(playload).subscribe((data:any)=>{
-        if (Array.isArray(data)) {
-          this.vulerabilities = data;
-          this._filteredVulnerabilities.data = this.vulerabilities;
-          this._filteredVulnerabilities.paginator = this.paginator;
-        } else {
-          console.error('Unexpected data structure:', data);
+          )
+
         }
-        this.vulnerabilityDataService.hide(); 
-      },
-      (error) => {
-        console.error('Error fetching data by criticality:', error);
-        this.vulnerabilityDataService.hide();
-      }
 
-
-        )
 
       }
-
-      
-      } 
     });
 
   }
@@ -95,8 +95,8 @@ export class ViewAssetsByTypeComponent {
   ngAfterViewInit() {
     this._filteredVulnerabilities.paginator = this.paginator;
   }
-back(){
-  window.history.back();
-}
+  back() {
+    window.history.back();
+  }
 
 }

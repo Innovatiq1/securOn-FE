@@ -153,22 +153,30 @@ export class AssetsComponent {
     this.loadAssets();
 
     this._selectedPoject = this.vulnerabilitiesService.getSelectedAssetProject() || [];
-    if (this._selectedPoject.length > 0) {
-        this._projectChange();
-    }
+    // if (this._selectedPoject.length > 0) {
+    //     this._projectChange();
+    // }
 
     this._selectedProduct = this.vulnerabilitiesService.getSelectedAssetPartNo() || [];
-    if (this._selectedProduct.length > 0) {
-        this._projectChange();
-    }
+    // if (this._selectedProduct.length > 0) {
+    //     this._projectChange();
+    // }
+
+   
+
+    this._selectedVendor = this.vulnerabilitiesService.getSelectedAssetVendor() || [];
+    // if (this._selectedVendor.length > 0) {
+    //     this._projectChange();
+    // }
+
     this._selectedOsType = this.vulnerabilitiesService.getSelectedAssetOsType() || [];
-    if (this._selectedOsType.length > 0) {
-        this._projectChange();
-    }
+    // if (this._selectedOsType.length > 0) {
+    //     this._projectChange();
+    // }
     this._selectedFirmwareVersion = this.vulnerabilitiesService.getSelectedAssetFwVesrion() || [];
-    if (this._selectedFirmwareVersion.length > 0) {
-        this._projectChange();
-    }
+    // if (this._selectedFirmwareVersion.length > 0) {
+    //     this._projectChange();
+    // }
     this.select._handleKeydown = (event: KeyboardEvent) => {
       if (event.keyCode==SPACE)
         return
@@ -238,8 +246,16 @@ export class AssetsComponent {
         }
 
         this._projectChange();
+      
         this.cdr.detectChanges();
-
+        const storedVendors = sessionStorage.getItem('selectedVendor');
+        if (storedVendors) {
+          this._selectedVendor = JSON.parse(storedVendors);
+        }
+          this.vendorChange();
+          this._osTypeChange();
+          this.productChange();
+          this._firmwareVersionChange();
         // **Ensure pagination is applied after data is loaded**
         this.paginate();
     });
@@ -277,6 +293,7 @@ export class AssetsComponent {
     this._selectedVendor = [];
     this._selectedOsType = [];
     this._selectedFirmwareVersion = [];
+     sessionStorage.removeItem('selectedVendor')
     this.resetPagination();
     this.prepareFilters();
     this.paginate();
@@ -611,6 +628,8 @@ this.cdr.detectChanges();
     // this.vulnerabilitiesService.setSelectedVendor(this._selectedVendor);
   }
   vendorChange(): void {
+    this.vulnerabilitiesService.setSelectedAssetVendor(this._selectedVendor)
+    sessionStorage.setItem('selectedVendor', JSON.stringify(this._selectedVendor));
     const allSelected = this._selectedVendor.includes(this.defaultOptionAll);
     if (!allSelected && this.isVendorAllPrevSelected) {
       this._selectedVendor = [];
@@ -1003,12 +1022,11 @@ this.cdr.detectChanges();
 
     // ✅ Auto-select Vendors based on selected Projects
     this._selectedVendor = [];
-    this.dataSource.forEach(item => {
-        if (this._selectedPoject.includes(item.project)) {
-            this._selectedVendor.push(item.vendor);
-        }
-    });
-
+    // this.dataSource.forEach(item => {
+    //     if (this._selectedPoject.includes(item.project)) {
+    //         this._selectedVendor.push(item.vendor);
+    //     }
+    // });
     // Ensure vendors are unique and include 'All' if necessary
     this._selectedVendor = Array.from(new Set(this._selectedVendor));
     if (this._selectedVendor.length > 0) {
