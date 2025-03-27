@@ -2,7 +2,7 @@
     <mat-spinner></mat-spinner>
   </div>
 
-<mat-card class="cardWithShadow theme-card">
+<mat-card class="cardWithShadow theme-card card-height">
     <mat-card-header>
         <mat-card-title class="m-b-0">Vulnerability Distribution by Asset Type</mat-card-title>
     </mat-card-header>
@@ -14,11 +14,11 @@
             [tooltip]="assetChartOptions1.tooltip" [labels]="assetChartOptions1.labels"
             [stroke]="assetChartOptions1.stroke">
         </apx-chart>
-        <div class="chart-labels">
+        <!-- <div class="chart-labels">
             <span class="label" *ngFor="let item of byAssets; let i = index" [ngStyle]="getLabelStyle(i, totalCount)">
               {{ item.type }}: {{ item.count }}
             </span>
-          </div>
+          </div> -->
           </div>
         <h4  style="float: right; margin-top: 10px;">Total: {{count}} </h4>
     </mat-card-content>

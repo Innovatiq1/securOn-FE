@@ -154,9 +154,28 @@ export class ByCriticalityComponent {
       dataLabels: { enabled: false },
       stroke: { show: false },
       legend: {
-        show: false,
+        show:
+        this.byCriticality &&
+        (this.byCriticality.criticalCount > 0 ||
+          this.byCriticality.highCount > 0 ||
+          this.byCriticality.mediumCount > 0 ||
+          this.byCriticality.lowCount > 0),
         labels: { colors: '#ffffff' },
-        position: 'bottom',
+        position: 'right', // Move legend to the right
+        horizontalAlign: 'center', // Center-align legend items
+        fontSize: '14px',
+        markers: {
+          width: 12,
+          height: 12,
+          radius: 12,
+        },
+        itemMargin: {
+          vertical: 5,
+        },
+        formatter: (seriesName: string, opts: any) => {
+          const count = opts.w.globals.series[opts.seriesIndex];
+          return `${seriesName}: ${count}`; // Displaying severity label along with count
+        },
       },
       tooltip: {
         theme: 'dark',

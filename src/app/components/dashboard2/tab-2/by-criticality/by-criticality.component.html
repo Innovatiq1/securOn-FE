@@ -1,5 +1,5 @@
 
-<mat-card class="cardWithShadow theme-card">
+<mat-card class="cardWithShadow theme-card card-height">
     <mat-card-header>
       <mat-card-title class="m-b-0">Vulnerability Distribution by Criticality</mat-card-title>
     </mat-card-header>
@@ -30,11 +30,12 @@
               </div>
             </span>
           </div> -->
+          <h4 style="float: right; margin-top: 10px;">
+            Total: {{byCriticality?.totalCount || 0}}
+          </h4>
           </div>
           
-      <h4 style="float: right; margin-top: 10px;">
-        Total: {{byCriticality?.totalCount || 0}}
-      </h4>
+      
     </mat-card-content>
   </mat-card>
   

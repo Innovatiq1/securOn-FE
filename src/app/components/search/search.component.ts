@@ -225,19 +225,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.vulnerabilitiesService.getAssetUploadMessage().subscribe((message) => {
       this.asertMessage = message;
     });
-    // this.prepareFilters();
-    // this.filteredVendors = Array.from(this._vendors);
-    // this.filteredProjects = Array.from(this._projects);
-    // this.filteredOsType = Array.from(this._osType);
-    // this.filteredPartNo = Array.from(this._partNo);
-    // this.filteredfwVersion = Array.from(this._firmwareVersion);
-
-    // this.vulnerabilitiesService
-    //   .getSelectedVendor()
-    //   .subscribe((selectedVendor: string[]) => {
-    //     this._selectedVendor = selectedVendor;
-    //   });
-
     this.vulnerabilitiesService
       .getSelectedVendor()
       .subscribe((SelectedOs: string[]) => {
@@ -269,6 +256,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       .getSelectedVersion()
       .subscribe((SelectedVersion: string[]) => {
         this._selectedVersion = SelectedVersion;
+       this.cdr.detectChanges(); 
       });
 
     if (
@@ -1095,16 +1083,26 @@ export class SearchComponent implements OnInit, AfterViewInit {
   resetSearch(): void {
     this._selectedVendor = [];
     this._selectedPartNo = [];
-    this._selectedVersion = [];
+    this._selectedVersion = []; // Reset local value
     this._selectedProject = [];
     this._selectedOsType = [];
     this.searchService.currentCveId = [];
     this.searchService.currentFirmware = '';
     this.searchService.currentPartNo = '';
     this.cvePartFirmware = '';
+    this.searchService.isSearchPerformed = false;
+  
+    // Reset the selected version in the service
+    this.vulnerabilitiesService.setSelectedVersion([]);
+    this.vulnerabilitiesService.setSelectedPartNo([]);
+    this.vulnerabilitiesService.setSelectedOsType([]);
+    this.vulnerabilitiesService.setSelectedProject([]);
+    this.vulnerabilitiesService.setSelectedVendor([]);
+  
     this.tableData();
     this.resetPaginator();
-    this.searchService.isSearchPerformed = false;
+  
+    this.cdr.detectChanges(); // Ensure change detection
   }
   resetFilter() {
     this.tableData();

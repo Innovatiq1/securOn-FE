@@ -67,8 +67,7 @@ export class ByContractIdComponent {
         toolbar: {
           show: false,
         },
-        height: 500,  
-  width: 420,
+        height: 270, 
         events: {
           dataPointMouseEnter: (event: any, chartContext: any, config: any) => {
             const label = config.w.config.labels[config.dataPointIndex];

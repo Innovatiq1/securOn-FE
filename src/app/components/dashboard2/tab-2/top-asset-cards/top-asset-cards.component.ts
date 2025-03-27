@@ -15,19 +15,23 @@ export class TopAssetCardsComponent {
   byCriticality: any;
   totalVender:0;
   public toggleSwitchState: boolean = true;
+  vendorsList: any;
 
   constructor(private vulnerabilityDataService: VulnerabilityDataService,private vulnerabilitiesService:VulnerabilitiesService, public router: Router){}
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesData$.subscribe(data => {
       this.byCriticality = data?.byCriticality;
+      this.vendorsList = data?.byVendors;
       this.totalVender = data?.byVendors.length;
     });
     // this.getCircularDashboardData()
     // this.getAllVendors();
   }
 
-  viewAllVendors(){
-    this.router.navigate(['cve/cve-vendorsList'], { });
+  viewAllVendors() {
+    this.router.navigate(['cve/cve-vendorsList'], { 
+      queryParams: { vendor: JSON.stringify(this.vendorsList) }
+    });
   }
   seviarityList(seviarity: string) {
     const seviarityPayload = {

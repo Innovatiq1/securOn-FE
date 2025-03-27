@@ -95,7 +95,24 @@ export class ByAssetTypeComponent {
         show: false,
       },
       legend: {
-        show: false,
+        show:
+        this.byAssets && this.byAssets.length > 0 ,
+        labels: { colors: '#ffffff' },
+        position: 'right', // Move legend to the right
+        horizontalAlign: 'center', // Center-align legend items
+        fontSize: '14px',
+        markers: {
+          width: 12,
+          height: 12,
+          radius: 12,
+        },
+        itemMargin: {
+          vertical: 5,
+        },
+        formatter: (seriesName: string, opts: any) => {
+          const count = opts.w.globals.series[opts.seriesIndex];
+          return `${seriesName}: ${count}`; // Displaying severity label along with count
+        },
       },
       tooltip: {
         theme: 'dark',
