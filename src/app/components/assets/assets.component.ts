@@ -571,31 +571,29 @@ export class AssetsComponent {
   showConfirmation(confirmation: any, asset?: any): void {
     this._assetToDelete = asset;
     const dialogRef = this.dialog.open(confirmation, {});
+  
     dialogRef.afterClosed().subscribe((result) => {
-      let assetsList = [];
-      assetsList = [this._assetToDelete];
-      this.loadAssets();
+      if (result) { // Ensure delete is confirmed
+        this.deleteAsset(Array.isArray(this._assetToDelete)); 
+      }
     });
   }
-
+  
   deleteAsset(multiple?: boolean) {
-    let assetsList = [];
-    if (multiple) {
-      assetsList = [...this.selection.selected];
-    } else {
-      assetsList = [this._assetToDelete];
-    }
+    let assetsList = multiple ? [...this.selection.selected] : [this._assetToDelete];
+  
     this.vulnerabilitiesService.deleteAsset(assetsList).subscribe({
       next: () => {
-        // console.log('Assets deleted successfully');
         this.toastr.success('Assets deleted successfully');
-        this.loadAssets();
-        error: (error: any) => {
-          console.error('Error:', error);
-        };
+        this.loadAssets(); // Only call after delete API success
       },
+      error: (error: any) => {
+        console.error('Error:', error);
+        this.toastr.error('Failed to delete assets');
+      }
     });
   }
+  
 
   // _onPageChange(page: PageEvent): void {
   //   this.currentPageIndex = page.pageIndex;

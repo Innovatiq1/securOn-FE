@@ -27,6 +27,7 @@ export class GraphViewsComponent {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   vulerabilities: any[] = [];
+  fileName = '';
   // _filteredVulnerabilities: any[] = [];
   _allVulnerabilities: any[] = [];
   savedPageSize: number = 10;
@@ -115,6 +116,9 @@ export class GraphViewsComponent {
     this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByCriticality(severity).subscribe((data) => {
       if (Array.isArray(data)) {
+        if(data){
+          this.fileName = 'Vulnerability_Distribution_By_Criticality.xlsx'
+        }
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
@@ -143,6 +147,9 @@ export class GraphViewsComponent {
     this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByBrand(severity).subscribe((data) => {
       if (Array.isArray(data)) {
+        if(data){
+          this.fileName = 'Vulnerability_Distribution_By_Brand.xlsx'
+        }
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
@@ -170,6 +177,9 @@ export class GraphViewsComponent {
     this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByAsset(severity).subscribe((data) => {
       if (Array.isArray(data)) {
+        if(data){
+          this.fileName = 'Vulnerability_by_Asset_Type.xlsx'
+        }
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
@@ -199,6 +209,9 @@ export class GraphViewsComponent {
     this.vulnerabilityDataService.show();
     this.vulerabilityService.getCveDataByProject(severity).subscribe((data) => {
       if (Array.isArray(data)) {
+        if(data){
+          this.fileName = 'Vulnerability_by_Contract_ID.xlsx'
+        }
         this.vulerabilities = data.map((v: { cveDetails: any; }) => v);
         this._allVulnerabilities = this.vulerabilities;
         this._filteredVulnerabilities = new MatTableDataSource(this.vulerabilities);
@@ -350,7 +363,7 @@ export class GraphViewsComponent {
         const blob = new Blob([buffer], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-        const fileName = 'Vulnerability_by_Contract_ID.xlsx';
+        const fileName = this.fileName;
         FileSaver.saveAs(blob, fileName);
     }).catch((error: any) => {
         console.error('Error generating Excel file:', error);

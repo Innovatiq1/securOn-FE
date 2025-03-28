@@ -38,6 +38,7 @@ export class ListComponent {
   _filteredVulnerabilities = new MatTableDataSource<any>([]);
   _allVulnerabilities: any[] = [];
   savedPageSize: number = 10;
+  fileName: string = '';
   constructor(
     private activeRoute: ActivatedRoute,
     private vulerabilityService: VulnerabilitiesService,
@@ -52,6 +53,15 @@ export class ListComponent {
 
       if (params['data']) {
         const severity = JSON.parse(params['data']);
+        if(severity.seviarity === 'LOW' ){
+          this.fileName = 'Low_Criticality'
+        } else if (severity.seviarity === 'MEDIUM') {
+           this.fileName = 'Medium_Criticality'
+        } else if (severity.seviarity === 'HIGH'){
+          this.fileName = 'High_Criticality'
+        }else if (severity.seviarity === 'CRITICAL'){
+          this.fileName = 'Critical_Criticality'
+        }
         this.vulerabilityService.getCveDataByCriticality(severity).subscribe(
           (data) => {
             if (Array.isArray(data)) {
@@ -158,17 +168,38 @@ export class ListComponent {
       extendedTimeOut: 0,
       positionClass: 'toast-bottom-right',
     });
-
-    const allDataToExport = this._filteredVulnerabilities.data.map((x: any) => {
-      const cvssV31 = x.cve.metrics.cvssMetricV31?.[0];
-      const cvssV30 = x.cve.metrics.cvssMetricV30?.[0];
+    const allDataToExport = this.vulerabilities.map((x: any) => {
+      const cvssV31 = x?.cveDetails?.cve?.metrics?.cvssMetricV31?.[0];
+      const cvssV30 = x?.cveDetails?.cve?.metrics.cvssMetricV30?.[0];
       return {
+        CveId:x?.cveId,
         EPSS:
           cvssV31?.exploitabilityScore || cvssV30?.exploitabilityScore || '-',
         'Max Base Score':
           cvssV31?.cvssData?.baseScore || cvssV30?.cvssData?.baseScore || '-',
-        Published: x.cve.published || '-',
-        Updated: x.cve.lastModified || '-',
+          advisoryTitle: x?.advisoryTitle || '',
+          advisoryUrl: x?.advisoryUrl || '',
+          cveId: x?.cveId || '',
+          cvssScore: x?.cvssScore || '',
+          date: x?.date || '',
+          fix: x?.fix || '',
+          fixedRelease: x?.fixedRelease || '',
+          month: x?.month || '',
+          osType: x?.osType || '',
+          partNo: x?.partNo || '',
+          productName: x?.productName || '',
+          project: x?.project || '',
+          serialNo: x?.serialNo || '',
+          severity: x?.seviarity || '',
+          type: x?.type || '',
+          vendorName: x?.vendorName || '',
+          version: x?.version || '',
+          vulnerableComponent: x?.vulnerableComponent || '',
+          vulnerableFeature: x?.vulnerableFeature || '',
+          workarounds: x?.workarounds || '',
+          year: x?.year || '',
+          Published: x?.cveDetails?.cve?.published || '-',
+          Updated: x?.cveDetails?.cve?.lastModified || '-',
       };
     });
 
@@ -227,7 +258,7 @@ export class ListComponent {
         const blob = new Blob([buffer], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-        const fileName = '.xlsx';
+        const fileName = this.fileName;
         FileSaver.saveAs(blob, fileName);
       })
       .catch((error) => {

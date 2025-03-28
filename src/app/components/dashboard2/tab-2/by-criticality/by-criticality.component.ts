@@ -299,7 +299,7 @@ export class ByCriticalityComponent {
   }
 
   fetchData(severity: string) {
-    this.loading = true;
+    this.vulnerabilityDataService.show();
     const seviarityPayload = {
       allData: false,
       duration: '',
@@ -312,7 +312,7 @@ export class ByCriticalityComponent {
       .getCveDataByCriticality(seviarityPayload)
       .subscribe(
         (data) => {
-          this.loading = false;
+     
           if (Array.isArray(data)) {
             const projects = data.map((v: { project: string }) => v.project);
 
@@ -334,6 +334,7 @@ export class ByCriticalityComponent {
               count: result.count,
               projects: result.projects,
             };
+            this.vulnerabilityDataService.hide();
           } else {
             console.error(
               `Unexpected data structure for severity: ${severity}`,
