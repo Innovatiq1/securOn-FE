@@ -303,6 +303,7 @@ export class AssetsComponent {
         }
   
         this._projectChange();
+        this._osTypeChange();
         const storedVendors = sessionStorage.getItem('selectedVendor') || '';
   
         if (storedVendors) {
@@ -313,7 +314,7 @@ export class AssetsComponent {
           }
         }
   
-        this._osTypeChange();
+ 
         this.productChange();
         this._firmwareVersionChange();
         this.cdr.detectChanges();
@@ -894,17 +895,69 @@ export class AssetsComponent {
     }
   }
 
+  // _osTypeChange(): void {
+  //   let byOsType = false;
+  //   this.vulnerabilitiesService.setSelectedAssetOsType(this._selectedOsType);
+  //   const allSelected = this._selectedOsType.includes(
+  //     this.defaultOsTypeOptionAll
+  //   );
+
+  //   if (
+  //     allSelected &&
+  //     (this._selectedOsType.length > 0 || !this.isOsTypeAllPrevSelected)
+  //   ) {
+  //     this._selectedOsType = [...this._osTypes];
+  //     this.dataSource = this.filterDataSource();
+  //     byOsType = false;
+  //   } else if (!allSelected && this.isOsTypeAllPrevSelected) {
+  //     this._selectedOsType = [];
+  //     this.dataSource = this.filterDataSource();
+  //   } else {
+  //     this._selectedOsType = this._selectedOsType.filter(
+  //       (item) => item !== this.defaultOsTypeOptionAll
+  //     );
+
+  //     if (this._selectedOsType.length === 0) {
+  //       this.dataSource = this.filterDataSource();
+  //     } else {
+  //       byOsType = true;
+  //       this.dataSource = this.filterDataSource();
+  //     }
+  //   }
+  //   if (this._selectedOsType.length > 0) {
+  //     if (allSelected) {
+  //       this._selectedOsType = [...this._osTypes];
+  //       this.dataSource = this.filterDataSource();;
+  //     } else {
+  //       this.dataSource = this._assets.filter(item =>
+  //         this._selectedOsType.includes(item.osType)
+  //       );
+  //     }
+  //   } else {
+  //     this.dataSource = this._assets;
+  //   }
+
+  //   this.prepareFilters();
+  //   this.updateFilteredOsTypes();
+
+  //   this.isOsTypeAllPrevSelected = this._selectedOsType.includes(
+  //     this.defaultOsTypeOptionAll
+  //   );
+  //   this.updateFilteredFirmwareVersions();
+  // }
+
+
   _osTypeChange(): void {
-    console.log("ost", this._selectedOsType)
     let byOsType = false;
     this.vulnerabilitiesService.setSelectedAssetOsType(this._selectedOsType);
     const allSelected = this._selectedOsType.includes(
-      this.defaultOsTypeOptionAll
+      this.defaultFwOptionAll
     );
 
     if (
       allSelected &&
-      (this._selectedOsType.length > 0 || !this.isOsTypeAllPrevSelected)
+      (this._selectedOsType.length === 1 ||
+        !this.isOsTypeAllPrevSelected)
     ) {
       this._selectedOsType = [...this._osTypes];
       this.dataSource = this.filterDataSource();
@@ -914,7 +967,7 @@ export class AssetsComponent {
       this.dataSource = this.filterDataSource();
     } else {
       this._selectedOsType = this._selectedOsType.filter(
-        (item) => item !== this.defaultOsTypeOptionAll
+        (item) => item !== this.defaultFwOptionAll
       );
 
       if (this._selectedOsType.length === 0) {
@@ -924,18 +977,6 @@ export class AssetsComponent {
         this.dataSource = this.filterDataSource();
       }
     }
-    if (this._selectedOsType.length > 0) {
-      if (allSelected) {
-        this._selectedOsType = [...this._osTypes];
-        this.dataSource = this._assets;
-      } else {
-        this.dataSource = this._assets.filter(item =>
-          this._selectedOsType.includes(item.osType)
-        );
-      }
-    } else {
-      this.dataSource = this._assets;
-    }
 
     this.prepareFilters();
     this.updateFilteredOsTypes();
@@ -944,6 +985,45 @@ export class AssetsComponent {
       this.defaultOsTypeOptionAll
     );
     this.updateFilteredFirmwareVersions();
+  }
+
+  _firmwareVersionChange(): void {
+    let byFirmwareVersion = false;
+    this.vulnerabilitiesService.setSelectedAssetOsType(this._selectedFirmwareVersion);
+    const allSelected = this._selectedFirmwareVersion.includes(
+      this.defaultOsTypeOptionAll
+    );
+
+    if (
+      allSelected &&
+      (this._selectedFirmwareVersion.length === 1 ||
+        !this.isFirmwareAllPrevSelected)
+    ) {
+      this._selectedFirmwareVersion = [...this._firmwareVersions];
+      this.dataSource = this.filterDataSource();
+      byFirmwareVersion = false;
+    } else if (!allSelected && this.isFirmwareAllPrevSelected) {
+      this._selectedFirmwareVersion = [];
+      this.dataSource = this.filterDataSource();
+    } else {
+      this._selectedFirmwareVersion = this._selectedFirmwareVersion.filter(
+        (item) => item !== this.defaultOsTypeOptionAll
+      );
+
+      if (this._selectedFirmwareVersion.length === 0) {
+        this.dataSource = this.filterDataSource();
+      } else {
+        byFirmwareVersion = true;
+        this.dataSource = this.filterDataSource();
+      }
+    }
+
+    this.prepareFilters();
+    this.updateFilteredFirmwareVersions();
+
+    this.isFirmwareAllPrevSelected = this._selectedFirmwareVersion.includes(
+      this.defaultOsTypeOptionAll
+    );
   }
 
   private filterDataSource() {
@@ -982,44 +1062,7 @@ export class AssetsComponent {
     }
   }
 
-  _firmwareVersionChange(): void {
-    let byFirmwareVersion = false;
-    this.vulnerabilitiesService.setSelectedAssetFwVersion(this._selectedFirmwareVersion);
-    const allSelected = this._selectedFirmwareVersion.includes(
-      this.defaultFwOptionAll
-    );
 
-    if (
-      allSelected &&
-      (this._selectedFirmwareVersion.length === 1 ||
-        !this.isFirmwareAllPrevSelected)
-    ) {
-      this._selectedFirmwareVersion = [...this._firmwareVersions];
-      this.dataSource = this.filterDataSource();
-      byFirmwareVersion = false;
-    } else if (!allSelected && this.isFirmwareAllPrevSelected) {
-      this._selectedFirmwareVersion = [];
-      this.dataSource = this.filterDataSource();
-    } else {
-      this._selectedFirmwareVersion = this._selectedFirmwareVersion.filter(
-        (item) => item !== this.defaultFwOptionAll
-      );
-
-      if (this._selectedFirmwareVersion.length === 0) {
-        this.dataSource = this.filterDataSource();
-      } else {
-        byFirmwareVersion = true;
-        this.dataSource = this.filterDataSource();
-      }
-    }
-
-    this.prepareFilters();
-    this.updateFilteredFirmwareVersions();
-
-    this.isFirmwareAllPrevSelected = this._selectedFirmwareVersion.includes(
-      this.defaultFwOptionAll
-    );
-  }
 
   _showVulnerabilities(asset: any): void {
     // console.log("asset",asset)
