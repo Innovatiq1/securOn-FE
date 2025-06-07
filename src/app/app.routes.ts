@@ -16,12 +16,14 @@ export const routes: Routes = [
       {
         path: 'cve',
         loadChildren: () =>
-          import('./components/component.routes').then((m) => m.ComponentRoutes), canActivate: [AuthGuard],
+          import('./components/component.routes').then((m) => m.ComponentRoutes),
+        canActivate: [AuthGuard],
       },
       {
         path: 'starter',
         loadChildren: () =>
-          import('./pages/pages.routes').then((m) => m.PagesRoutes), canActivate: [AuthGuard],
+          import('./pages/pages.routes').then((m) => m.PagesRoutes),
+        canActivate: [AuthGuard],
       },
       {
         path: 'dashboards',
@@ -29,7 +31,7 @@ export const routes: Routes = [
           import('./pages/dashboards/dashboards.routes').then(
             (m) => m.DashboardsRoutes
           ),
-          canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       // {
       //   path: 'ui-components',

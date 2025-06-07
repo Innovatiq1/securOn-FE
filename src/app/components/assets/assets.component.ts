@@ -951,7 +951,7 @@ export class AssetsComponent {
     let byOsType = false;
     this.vulnerabilitiesService.setSelectedAssetOsType(this._selectedOsType);
     const allSelected = this._selectedOsType.includes(
-      this.defaultFwOptionAll
+      this.defaultOsTypeOptionAll
     );
 
     if (
@@ -967,7 +967,7 @@ export class AssetsComponent {
       this.dataSource = this.filterDataSource();
     } else {
       this._selectedOsType = this._selectedOsType.filter(
-        (item) => item !== this.defaultFwOptionAll
+        (item) => item !== this.defaultOsTypeOptionAll
       );
 
       if (this._selectedOsType.length === 0) {
@@ -989,7 +989,7 @@ export class AssetsComponent {
 
   _firmwareVersionChange(): void {
     let byFirmwareVersion = false;
-    this.vulnerabilitiesService.setSelectedAssetOsType(this._selectedFirmwareVersion);
+    this.vulnerabilitiesService.setSelectedAssetFwVersion(this._selectedFirmwareVersion);
     const allSelected = this._selectedFirmwareVersion.includes(
       this.defaultOsTypeOptionAll
     );

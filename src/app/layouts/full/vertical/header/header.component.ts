@@ -29,6 +29,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Observable, Subject, firstValueFrom, of, takeUntil } from 'rxjs';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { MsalService } from '@azure/msal-angular';
 
 interface notifications {
   id: number;
@@ -128,7 +129,7 @@ export class HeaderComponent {
 
   constructor(
     private vsidenav: CoreService,
-    public dialog: MatDialog,   private router: Router,
+    public dialog: MatDialog,   private router: Router,private msalService: MsalService,
     private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,private localStorageService: VulnerabilityDataService
   ) {
     translate.setDefaultLang('en');
@@ -174,6 +175,7 @@ export class HeaderComponent {
     localStorage.removeItem('userId'); 
     localStorage.removeItem('userName'); 
     this.router.navigate(['/authentication/login']);
+    // this.msalService.logout();
   
   }
   profiledd: profiledd[] = [

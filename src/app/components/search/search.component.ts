@@ -749,7 +749,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
           'Serial No': item.serialNo || '-',
           Product: item.productName || '-',
           Severity: item.seviarity || '-',
-          'Fix Available': item.fix === 'Y' ? 'Yes' : 'No',
+          'Fix Available': item.fix === 'Y' ? 'Yes' : '-',
           'Affected by CVE': item.affectedCve ? 'No' : 'Yes',
           'CVE ID': item.cveId || '-',
           'Fixed Release': item.fixedRelease || '-',
