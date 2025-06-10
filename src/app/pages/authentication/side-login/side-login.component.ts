@@ -71,11 +71,18 @@ export class AppSideLoginComponent {
     });
   }
 
-  ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboards']);
+  async ngOnInit() {
+    try {
+      // Clear any existing MSAL state on component init
+      await this.authService.clearMsalState();
+      
+      if (this.authService.isLoggedIn()) {
+        this.router.navigate(['/dashboards']);
+      }
+      this.loadRememberedUser();
+    } catch (error) {
+      console.error('Error in ngOnInit:', error);
     }
-    this.loadRememberedUser();
   }
 
   loadRememberedUser() {
@@ -100,43 +107,46 @@ export class AppSideLoginComponent {
     if (this.form.invalid) return;
   
     const { email, password, rememberMe } = this.form.value;
-  
-    // Save or clear credentials based on remember me
-    if (rememberMe) {
-      localStorage.setItem('rememberedEmail', email);
-      localStorage.setItem('rememberedPassword', password);
-    } else {
-      localStorage.removeItem('rememberedEmail');
-      localStorage.removeItem('rememberedPassword');
-    }
+    this._showError = false;
   
     try {
+      // Clear any existing MSAL state before attempting login
+      await this.authService.clearMsalState();
+
       // Step 1: Backend validation
       const response: any = await this.userService.validateLogin({ email, password }).toPromise();
       console.log('Login response:', response);
       
       if (response && response.status === 200 && response.message === "Welcome! Login Successful!") {
-        // Clear any previous error state
-        this._showError = false;
-        
-        // Store the credentials
-        localStorage.setItem('token', response.accessToken);
-        if (response.data) {
-          localStorage.setItem('userId', response.data._id);
-          localStorage.setItem('userName', response.data.username);
-        }
-        
         try {
-          // Step 2: Trigger MSAL login
+          // Step 2: Trigger MSAL login first
           const msalResult = await this.authService.loginWithMSAL();
-          this.msalService.instance.setActiveAccount(msalResult.account);
-          this.router.navigate(['/dashboards']);
+          if (msalResult && msalResult.account) {
+            // Save remember me preferences
+            if (rememberMe) {
+              localStorage.setItem('rememberedEmail', email);
+              localStorage.setItem('rememberedPassword', password);
+            } else {
+              localStorage.removeItem('rememberedEmail');
+              localStorage.removeItem('rememberedPassword');
+            }
+
+            // Only store credentials if MSAL login was successful
+            localStorage.setItem('token', response.accessToken);
+            if (response.data) {
+              localStorage.setItem('userId', response.data._id);
+              localStorage.setItem('userName', response.data.username);
+            }
+            
+            this.msalService.instance.setActiveAccount(msalResult.account);
+            await this.router.navigate(['/dashboards']);
+          } else {
+            throw new Error('MSAL login failed - no account returned');
+          }
         } catch (msalError) {
           console.error('MSAL login failed:', msalError);
-          // Clear credentials if MSAL fails
-          localStorage.removeItem('token');
-          localStorage.removeItem('userId');
-          localStorage.removeItem('userName');
+          // Clear any partial state
+          await this.authService.clearMsalState();
           this._showError = true;
           this.cdr.markForCheck();
         }
@@ -146,7 +156,7 @@ export class AppSideLoginComponent {
         this.cdr.markForCheck();
       }
     } catch (err) {
-      console.error('Backend login failed:', err);
+      console.error('Login failed:', err);
       this._showError = true;
       this.cdr.markForCheck();
     }

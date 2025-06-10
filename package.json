@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^18.0.3",
     "@angular/platform-browser-dynamic": "^18.0.3",
     "@angular/router": "^18.0.3",
+    "@azure/msal-angular": "^4.0.12",
+    "@azure/msal-browser": "^4.13.0",
     "@kolkov/angular-editor": "3.0.0-beta.0",
     "@ng-matero/extensions": "^18.0.3",
     "@ngrx/effects": "^18.1.1",

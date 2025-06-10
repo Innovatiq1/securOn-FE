@@ -30,6 +30,7 @@ import { Observable, Subject, firstValueFrom, of, takeUntil } from 'rxjs';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 import { MsalService } from '@azure/msal-angular';
+import { AuthService } from 'src/app/pages/authentication/auth.service';
 
 interface notifications {
   id: number;
@@ -130,7 +131,8 @@ export class HeaderComponent {
   constructor(
     private vsidenav: CoreService,
     public dialog: MatDialog,   private router: Router,private msalService: MsalService,
-    private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,private localStorageService: VulnerabilityDataService
+    private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,private localStorageService: VulnerabilityDataService,
+    private authService: AuthService
   ) {
     translate.setDefaultLang('en');
     
@@ -170,13 +172,17 @@ export class HeaderComponent {
     dialogRef.afterClosed().subscribe((result) => {
     });
   }
-  logout(): void {
-    localStorage.removeItem('token'); 
-    localStorage.removeItem('userId'); 
-    localStorage.removeItem('userName'); 
-    this.router.navigate(['/authentication/login']);
-    // this.msalService.logout();
-  
+  async logout(): Promise<void> {
+    try {
+      // Disable any UI interactions during logout
+      // Use the AuthService to handle logout properly
+      await this.authService.logout();
+      // The navigation will be handled by the AuthService
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Force a page reload to clear any remaining state
+      window.location.href = '/authentication/login';
+    }
   }
   profiledd: profiledd[] = [
     {
