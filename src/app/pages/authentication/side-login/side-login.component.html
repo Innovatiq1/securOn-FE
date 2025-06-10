@@ -35,7 +35,9 @@
                     <mat-error>Please enter password. </mat-error>
                   </mat-form-field>
 
-                  <mat-hint *ngIf="_showError"><span class="text-error">Invalid Login Details</span></mat-hint>
+                  <mat-hint *ngIf="_showError" class="error-message">
+                    <span class="text-error">{{ errorMessage }}</span>
+                  </mat-hint>
                   <div class="remember align-items-center mb-5">
                     <div class="form-check">
                       <label class="form-check-label">

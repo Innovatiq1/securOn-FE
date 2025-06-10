@@ -129,4 +129,86 @@ export class MsalInitService {
       throw error;
     }
   }
+
+  async clearAllCache(): Promise<void> {
+    try {
+      // Wait for any in-progress operations
+      if (this.inProgress) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
+      // Get current account before clearing
+      const currentAccount = this.msalService.instance.getActiveAccount();
+      
+      // Clear MSAL internal state first
+      this.msalService.instance.setActiveAccount(null);
+      this.msalService.instance.clearCache();
+
+      // Clear all accounts
+      const accounts = this.msalService.instance.getAllAccounts();
+      if (accounts.length > 0) {
+        accounts.forEach(() => {
+          this.msalService.instance.clearCache();
+        });
+      }
+
+      // Clear browser storage
+      const msalKeys = Object.keys(localStorage)
+        .filter(key => key.includes('msal') || key.includes('login') || 
+                      key.includes('token') || key.includes('client-info'));
+      
+      msalKeys.forEach(key => localStorage.removeItem(key));
+
+      const sessionKeys = Object.keys(sessionStorage)
+        .filter(key => key.includes('msal') || key.includes('login') || 
+                      key.includes('token') || key.includes('client-info'));
+      
+      sessionKeys.forEach(key => sessionStorage.removeItem(key));
+
+      // Clear auth-specific cookies
+      const cookiesToClear = document.cookie.split(';')
+        .map(cookie => cookie.split('=')[0].trim())
+        .filter(name => name.toLowerCase().includes('msal') || 
+                       name.toLowerCase().includes('auth') || 
+                       name.toLowerCase().includes('login'));
+
+      cookiesToClear.forEach(name => {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+      });
+
+      // Reset initialization state
+      this.initialized = false;
+      this.initializationPromise = null;
+      this.initializationSubject.next(false);
+      this.inProgress = false;
+
+      // Force a small delay to ensure cleanup is complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // If there was a previous account, try to logout
+      if (currentAccount) {
+        try {
+          await this.msalService.logoutPopup({
+            account: currentAccount,
+            postLogoutRedirectUri: window.location.origin + '/authentication/login'
+          }).toPromise();
+        } catch (logoutError) {
+          console.warn('Logout popup failed:', logoutError);
+          // Ignore logout errors as we've already cleared the state
+        }
+      }
+
+      // Reinitialize MSAL with clean state
+      await this.initialize();
+
+      // Clear any remaining storage after reinitialization
+      localStorage.removeItem('msal.interaction.status');
+      sessionStorage.removeItem('msal.interaction.status');
+      
+    } catch (error) {
+      console.error('Error clearing MSAL cache:', error);
+      throw error;
+    }
+  }
 } 

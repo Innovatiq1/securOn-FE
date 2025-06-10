@@ -23,18 +23,32 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
+import { MsalInitService } from '../../../services/msal-init.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private msalService: MsalService, private router: Router) {}
+  constructor(
+    private msalService: MsalService, 
+    private router: Router,
+    private msalInitService: MsalInitService
+  ) {}
 
-  canActivate(): boolean {
-    const account = this.msalService.instance.getActiveAccount();
-    if (account) {
-      return true;
-    } else {
+  async canActivate(): Promise<boolean> {
+    try {
+      // Ensure MSAL is initialized before checking authentication
+      await this.msalInitService.ensureInitialized();
+      
+      const account = this.msalService.instance.getActiveAccount();
+      if (account) {
+        return true;
+      } else {
+        this.router.navigate(['/authentication/login']);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error in AuthGuard:', error);
       this.router.navigate(['/authentication/login']);
       return false;
     }

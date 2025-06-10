@@ -5,17 +5,76 @@ import { Injectable } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
 import { Observable, from } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { PublicClientApplication, AccountInfo } from '@azure/msal-browser';
+import { 
+  PublicClientApplication, 
+  AccountInfo, 
+  Configuration,
+  LogLevel,
+  BrowserCacheLocation,
+  EndSessionRequest,
+  InteractionType
+} from '@azure/msal-browser';
 import { MsalInitService } from '../../services/msal-init.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly AZURE_TENANT_ID = 'common'; // or your specific tenant ID
+  private readonly CLIENT_ID = '9bb52b25-f72e-42c8-abbe-51f8fd9bc711';
+
   constructor(
     private msalService: MsalService,
-    private msalInitService: MsalInitService
+    private msalInitService: MsalInitService,
+    private router: Router
   ) {}
+
+  private getAuthConfig(email: string): Configuration {
+    const baseConfig = {
+      auth: {
+        clientId: this.CLIENT_ID,
+        redirectUri: window.location.origin,
+        postLogoutRedirectUri: window.location.origin + '/authentication/login',
+        navigateToLoginRequestUrl: true,
+      },
+      cache: {
+        cacheLocation: BrowserCacheLocation.LocalStorage,
+        storeAuthStateInCookie: false
+      },
+      system: {
+        loggerOptions: {
+          loggerCallback: (level: LogLevel, message: string) => {
+            console.log(message);
+          },
+          logLevel: LogLevel.Verbose,
+          piiLoggingEnabled: false
+        }
+      }
+    };
+
+    // Check email domain to determine the authority
+    if (email.toLowerCase().endsWith('@innovatiqindia.onmicrosoft.com')) {
+      // Azure AD endpoint
+      return {
+        ...baseConfig,
+        auth: {
+          ...baseConfig.auth,
+          authority: `https://login.microsoftonline.com/${this.AZURE_TENANT_ID}`,
+          knownAuthorities: ['login.microsoftonline.com']
+        }
+      };
+    } else {
+      // Personal Microsoft Account endpoint
+      return {
+        ...baseConfig,
+        auth: {
+          ...baseConfig.auth,
+          authority: 'https://login.microsoftonline.com/consumers'
+        }
+      };
+    }
+  }
 
   async clearMsalState(): Promise<void> {
     try {
@@ -76,15 +135,30 @@ export class AuthService {
     }
   }
 
-  async loginWithMSAL(): Promise<any> {
+  async loginWithMSAL(email: string): Promise<any> {
     try {
       // Ensure MSAL is initialized before login
       await this.msalInitService.ensureInitialized();
       
+      // Get the appropriate configuration based on email
+      const config = this.getAuthConfig(email);
+      
+      // Create a new MSAL instance with the appropriate configuration
+      const msalInstance = new PublicClientApplication(config);
+      await msalInstance.initialize();
+      
       // Handle any pending redirect operations
       await this.msalInitService.handleRedirectAfterLogin();
       
-      const result = await this.msalService.loginPopup().toPromise();
+      // Use the new instance for login
+      const loginRequest = {
+        scopes: ['openid', 'profile', 'email', 'User.Read'],
+        prompt: 'select_account',
+        loginHint: email // Pre-fill the email field
+      };
+
+      const result = await msalInstance.loginPopup(loginRequest);
+
       if (result) {
         // Set the active account after successful login
         this.msalService.instance.setActiveAccount(result.account);
@@ -114,29 +188,116 @@ export class AuthService {
 
   async logout(): Promise<void> {
     try {
-      // Clear all state first
-      await this.clearMsalState();
+      const account = this.msalService.instance.getActiveAccount();
+      if (!account) {
+        await this.handleLogoutCleanup();
+        return;
+      }
 
-      // Ensure MSAL is initialized before logout
-      await this.msalInitService.ensureInitialized();
+      // First clear all state and storage
+      await this.handleLogoutCleanup();
 
-      // Perform MSAL logout with specific configuration
-      const logoutRequest = {
-        account: this.msalService.instance.getActiveAccount(),
-        postLogoutRedirectUri: window.location.origin + '/authentication/login',
-        authority: 'https://login.microsoftonline.com/common',
-      };
+      // Determine if it's a personal or Azure AD account
+      const isPersonalAccount = !account.tenantId || account.tenantId === 'consumers';
 
-      // Use logoutPopup instead of redirect to ensure completion
-      await this.msalService.logoutPopup(logoutRequest).toPromise();
-      
-      // Navigate after successful logout
-      window.location.href = '/authentication/login';
+      if (isPersonalAccount) {
+        // For personal accounts, use redirect logout
+        const logoutRequest: EndSessionRequest = {
+          account,
+          postLogoutRedirectUri: window.location.origin + '/authentication/login'
+        };
+
+        // Redirect logout is more reliable for personal accounts
+        await this.msalService.logoutRedirect(logoutRequest);
+      } else {
+        try {
+          // For Azure AD accounts, try popup first
+          const logoutRequest: EndSessionRequest = {
+            account,
+            postLogoutRedirectUri: window.location.origin + '/authentication/login'
+          };
+
+          // Start logout process
+          await this.msalService.logoutPopup(logoutRequest).toPromise();
+          
+          // After logout completes, redirect to login page
+          setTimeout(() => {
+            // Close any open popups by finding them
+            const popups = window.opener ? [window.opener] : 
+                         window.parent !== window ? [window.parent] : [];
+            
+            popups.forEach(popup => {
+              try {
+                if (popup && typeof popup.close === 'function') {
+                  popup.close();
+                }
+              } catch (e) {
+                console.warn('Error closing popup:', e);
+              }
+            });
+
+            // Navigate to login page
+            window.location.href = '/authentication/login';
+          }, 1000);
+
+        } catch (error) {
+          console.warn('Popup logout failed, using redirect:', error);
+          // Fallback to redirect logout
+          await this.msalService.logoutRedirect({
+            account,
+            postLogoutRedirectUri: window.location.origin + '/authentication/login'
+          });
+        }
+      }
     } catch (error) {
       console.error('Error during logout:', error);
-      // Even if MSAL logout fails, ensure we clean up
-      await this.clearMsalState();
+      // Force cleanup and navigation on error
+      await this.handleLogoutCleanup();
       window.location.href = '/authentication/login';
+    }
+  }
+
+  private async handleLogoutCleanup(): Promise<void> {
+    try {
+      // Clear MSAL state
+      await this.clearMsalState();
+
+      // Clear all browser storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear specific MSAL-related items
+      const msalKeys = [
+        'msal.client.info',
+        'msal.interaction.status',
+        'msal.browser.state',
+        'msal.active-account',
+        'msal.account.keys',
+        'msal.token.keys'
+      ];
+      
+      msalKeys.forEach(key => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      });
+
+      // Clear all cookies
+      document.cookie.split(';').forEach(cookie => {
+        const [name] = cookie.split('=');
+        if (name) {
+          const trimmedName = name.trim();
+          document.cookie = `${trimmedName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          document.cookie = `${trimmedName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+          document.cookie = `${trimmedName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${window.location.hostname}`;
+        }
+      });
+
+      // Reset MSAL instance
+      this.msalService.instance.setActiveAccount(null);
+      this.msalService.instance.clearCache();
+
+    } catch (error) {
+      console.error('Error during logout cleanup:', error);
     }
   }
 }
