@@ -53,24 +53,29 @@ export class AuthService {
       }
     };
 
-    // Check email domain to determine the authority
-    if (email.toLowerCase().endsWith('@innovatiqindia.onmicrosoft.com')) {
-      // Azure AD endpoint
-      return {
-        ...baseConfig,
-        auth: {
-          ...baseConfig.auth,
-          authority: `https://login.microsoftonline.com/${this.AZURE_TENANT_ID}`,
-          knownAuthorities: ['login.microsoftonline.com']
-        }
-      };
-    } else {
+  
+    const isPersonalAccount = !email.includes('@') || 
+                            email.toLowerCase().endsWith('@outlook.com') || 
+                            email.toLowerCase().endsWith('@hotmail.com') ||
+                            email.toLowerCase().endsWith('@live.com');
+
+    if (isPersonalAccount) {
       // Personal Microsoft Account endpoint
       return {
         ...baseConfig,
         auth: {
           ...baseConfig.auth,
           authority: 'https://login.microsoftonline.com/consumers'
+        }
+      };
+    } else {
+      // Company/Organization account endpoint
+      return {
+        ...baseConfig,
+        auth: {
+          ...baseConfig.auth,
+          authority: `https://login.microsoftonline.com/${this.AZURE_TENANT_ID}`,
+          knownAuthorities: ['login.microsoftonline.com']
         }
       };
     }
