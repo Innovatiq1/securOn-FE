@@ -1,0 +1,89 @@
+/* Automatic Patch Component Styles */
+.status-select {
+  width: auto;
+  min-width: unset;
+  font-size: 0.95em;
+  font-weight: 500;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 8px !important;
+  height: 32px !important;
+  white-space: nowrap;
+  border-radius: 1em;
+  background: transparent !important;
+
+  ::ng-deep .mat-select-trigger {
+    padding: 0 !important;
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  ::ng-deep .mat-select-value {
+    background: transparent !important;
+    flex-grow: 1;
+    padding-right: 0.5em;
+  }
+}
+
+::ng-deep .status-select .mat-select-arrow {
+  color: #888;
+}
+
+// Global override for mat-select value text within dark theme, to ensure specific colors apply
+:host-context(.dark-theme) {
+  ::ng-deep .mat-select-value-text {
+    color: inherit !important;
+  }
+}
+
+// Specific styles for the mat-select when a particular status is selected (for the displayed value)
+.status-select.status-patched {
+  background-color: transparent !important;
+  ::ng-deep .mat-select-value-text {
+    color: #155724 !important;
+    opacity: 1 !important;
+  }
+}
+
+.status-select.status-in-progress {
+  background-color: transparent !important;
+  ::ng-deep .mat-select-value-text {
+    color: #856404 !important;
+    opacity: 1 !important;
+  }
+}
+
+.status-select.status-not-started {
+  background-color: transparent !important;
+  ::ng-deep .mat-select-value-text {
+    color: #383d41 !important;
+    opacity: 1 !important;
+  }
+}
+
+// Styles for the dropdown options themselves
+// These apply to the items within the dropdown list
+::ng-deep .mat-option.status-patched {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border-radius: 1em;
+  padding: 0.2em 0.8em;
+}
+
+::ng-deep .mat-option.status-in-progress {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+  border-radius: 1em;
+  padding: 0.2em 0.8em;
+}
+
+::ng-deep .mat-option.status-not-started {
+  background-color: #e2e3e5 !important;
+  color: #383d41 !important;
+  border-radius: 1em;
+  padding: 0.2em 0.8em;
+}
+
+// Remove duplicate class definitions that were causing background issues 

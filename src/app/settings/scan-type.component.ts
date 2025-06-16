@@ -1,0 +1,1 @@
+import { ScanTypeCreateDialogComponent } from './scan-type-create-dialog/scan-type-create-dialog.component'; 

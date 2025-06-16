@@ -16,6 +16,7 @@ import {
 } from '@azure/msal-browser';
 import { MsalInitService } from '../../services/msal-init.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -37,12 +38,15 @@ export class AuthService {
         redirectUri: window.location.origin,
         postLogoutRedirectUri: window.location.origin + '/authentication/login',
         navigateToLoginRequestUrl: true,
+        validateAuthority: true,
+        knownAuthorities: ['login.microsoftonline.com']
       },
       cache: {
         cacheLocation: BrowserCacheLocation.LocalStorage,
-        storeAuthStateInCookie: false
+        storeAuthStateInCookie: true
       },
       system: {
+        allowRedirectInIframe: true,
         loggerOptions: {
           loggerCallback: (level: LogLevel, message: string) => {
             console.log(message);
@@ -74,8 +78,7 @@ export class AuthService {
         ...baseConfig,
         auth: {
           ...baseConfig.auth,
-          authority: `https://login.microsoftonline.com/${this.AZURE_TENANT_ID}`,
-          knownAuthorities: ['login.microsoftonline.com']
+          authority: `https://login.microsoftonline.com/${this.AZURE_TENANT_ID}`
         }
       };
     }

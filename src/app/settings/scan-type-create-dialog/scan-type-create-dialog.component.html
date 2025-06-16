@@ -1,0 +1,94 @@
+<button mat-icon-button class="close-btn" (click)="onCancel()" style="position: absolute; top: 16px; right: 16px; z-index: 10;">
+  <mat-icon>close</mat-icon>
+</button>
+<h2 mat-dialog-title>Create Scan Type</h2>
+<div *ngIf="alertMessage" class="custom-alert {{alertType}}" role="alert">
+  <strong>{{ alertType | titlecase }} – </strong>{{ alertMessage }}
+  <button class="alert-close-btn" (click)="alertMessage = null" aria-label="Close alert">&times;</button>
+</div>
+<form [formGroup]="form" mat-dialog-content class="p-x-24 p-y-24">
+  <div class="form-grid">
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Project</mat-label>
+        <mat-select formControlName="project" multiple (selectionChange)="onProjectChange(); toggleAllSelection('project')">
+          <mat-option *ngFor="let p of projects" [value]="p">{{ p }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Brand</mat-label>
+        <mat-select formControlName="brand" multiple (selectionChange)="onBrandChange(); toggleAllSelection('brand')">
+          <mat-option *ngFor="let b of brands" [value]="b">{{ b }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+   
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>OS Type</mat-label>
+        <mat-select formControlName="osType" multiple (selectionChange)="onOsTypeChange(); toggleAllSelection('osType')">
+          <mat-option *ngFor="let o of osTypes" [value]="o">{{ o }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type" multiple (selectionChange)="onTypeChange(); toggleAllSelection('type')">
+          <mat-option *ngFor="let t of types" [value]="t">{{ t }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Firmware</mat-label>
+        <mat-select formControlName="firmware" multiple (selectionChange)="onFirmwareChange(); toggleAllSelection('firmware')">
+          <mat-option *ngFor="let f of firmwares" [value]="f">{{ f }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Serial No</mat-label>
+        <mat-select formControlName="serialNo" multiple (selectionChange)="onSerialNoChange(); toggleAllSelection('serialNo')">
+          <mat-option *ngFor="let s of serialNos" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Part No</mat-label>
+        <mat-select formControlName="partNo" multiple (selectionChange)="toggleAllSelection('partNo')">
+          <mat-option *ngFor="let p of partNos" [value]="p">{{ p }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Severity Type</mat-label>
+        <mat-select formControlName="severityType" multiple (selectionChange)="toggleAllSelection('severityType')">
+          <mat-option *ngFor="let s of severityTypes" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-col">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>CVSS Score</mat-label>
+        <mat-select formControlName="cvssScore" multiple (selectionChange)="toggleAllSelection('cvssScore')">
+          <mat-option *ngFor="let c of cvssScores" [value]="c">{{ c }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="scan-type-row">
+    <span class="scan-type-label">Scan Type</span>
+    <mat-slide-toggle formControlName="scanType" color="primary"></mat-slide-toggle>
+    <span class="scan-type-value">{{ form.value.scanType ? 'Automatic' : 'Manual' }}</span>
+  </div>
+</form>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" (click)="onCancel()">Close</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">Save</button>
+</mat-dialog-actions>

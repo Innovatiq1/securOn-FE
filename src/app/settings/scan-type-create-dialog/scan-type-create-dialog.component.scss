@@ -1,0 +1,103 @@
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.form-col {
+  flex: 1 1 30%;
+  min-width: 250px;
+  max-width: 33%;
+}
+
+.scan-type-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  .scan-type-label {
+    font-size: 16px;
+    color: #b0b8c1;
+  }
+  .scan-type-value {
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+  }
+}
+
+.full-screen-modal .mat-dialog-container,
+.full-screen-modal .mat-dialog-title,
+.full-screen-modal .mat-dialog-content,
+.full-screen-modal .mat-dialog-actions,
+.full-screen-modal {
+  border-radius: 0 !important;
+}
+
+::ng-deep .full-screen-modal .mat-dialog-container,
+::ng-deep .full-screen-modal .mat-dialog-title,
+::ng-deep .full-screen-modal .mat-dialog-content,
+::ng-deep .full-screen-modal .mat-dialog-actions,
+::ng-deep .full-screen-modal {
+  border-radius: 0 !important;
+}
+
+.mat-dialog-title {
+  border-radius: 0 !important;
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+button.mat-raised-button {
+  border-radius: 4px !important;
+}
+
+.custom-alert {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  width: fit-content;
+  min-width: 300px;
+  box-sizing: border-box;
+  background: rgba(0,0,0,0.2); // fallback for dark theme
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  left: auto;
+  z-index: 2000;
+  margin: 0;
+  border: none;
+  color: #fff;
+}
+.custom-alert.success {
+  background: #4ade80;
+  color: #fff;
+  border: none;
+}
+.custom-alert.error {
+  color: #fff;
+  background: #f87171;
+  border: none;
+}
+.alert-close-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 400;
+  margin-left: auto;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

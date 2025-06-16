@@ -237,44 +237,7 @@ export class AssetsComponent {
       });
   }
 
-  // public loadAssets() {
-  //   this.vulnerabilityDataService.show();
 
-  //   const currentStartDate = localStorage.getItem('startDate') || '';
-  //   const currentEndDate = localStorage.getItem('endDate') || '';
-  //   const fromDate = currentStartDate ? moment(currentStartDate).format('YYYY-MM-DD') : '';
-  //   const toDate = currentEndDate ? moment(currentEndDate).format('YYYY-MM-DD') : '';
-
-  //   this.logCveService.loadAllAssets(fromDate, toDate).subscribe((data: any[]) => {
-  //     this._assets = data;
-  //     this.dataSource = data;
-  //     this.vulnerabilityDataService.hide();
-
-  //     if (this._assets) {
-  //       this.prepareFilters();
-  //     }
-
-
-  //     this._projectChange();
-  //     const storedVendors = sessionStorage.getItem('selectedVendor') || '';
-
-  //     if (storedVendors) {
-  //       const parsedVendors = JSON.parse(storedVendors);
-
-  //       if (Array.isArray(parsedVendors) && parsedVendors.length > 0) {
-  //         this._selectedVendor = parsedVendors;
-  //         // this.vendorChange();
-  //       }
-  //     }
-  //     this._osTypeChange();
-  //     this.productChange();
-  //     this._firmwareVersionChange();
-  //     this.cdr.detectChanges();
-
-      
-  //     this.paginate();
-  //   });
-  // }
 
   public loadAssets() {
     this.vulnerabilityDataService.show();

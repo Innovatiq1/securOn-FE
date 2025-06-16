@@ -20,6 +20,18 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
+        path: 'settings',
+        loadChildren: () =>
+          import('./settings/settings.routes').then((m) => m.SettingsRoutes),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'patches',
+        loadChildren: () =>
+          import('./patches/patches.routes').then((m) => m.PatchesRoutes),
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'starter',
         loadChildren: () =>
           import('./pages/pages.routes').then((m) => m.PagesRoutes),
