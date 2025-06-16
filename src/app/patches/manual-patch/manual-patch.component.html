@@ -1,16 +1,18 @@
 <mat-card>
   <div class="container-fluid">
       <div class="cardWithShadow">
-      
-            <div class="p-x-24 p-b-24">
+          <div class="d-flex align-items-center justify-content-between p-y-16 p-x-24">
+            <h3>Manual Patch</h3>
+            <mat-form-field appearance="outline" class="ms-5 filter-box-narrow">
+              <mat-label>Filter</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Search..." #input>
+            </mat-form-field>
+          </div>
+          <div class="p-x-24 p-b-24">
                 <div *ngIf="alertMessage" class="custom-alert {{alertType}}" role="alert">
                   <strong>{{ alertType | titlecase }} – </strong>{{ alertMessage }}
                   <button class="alert-close-btn" (click)="alertMessage = null" aria-label="Close alert">&times;</button>
                 </div>
-                <mat-form-field appearance="outline" class="w-100 mb-3 m-t-12">
-                  <mat-label>Filter</mat-label>
-                  <input matInput (keyup)="applyFilter($event)" placeholder="Search..." #input>
-                </mat-form-field>
                 <mat-card-content>
                   <div class="table-responsive">
                       <table mat-table [dataSource]="dataSource" matSort>

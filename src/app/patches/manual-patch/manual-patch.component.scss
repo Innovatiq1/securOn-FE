@@ -87,3 +87,37 @@
 }
 
 // Remove duplicate class definitions that were causing background issues 
+
+.filter-box-narrow {
+  width: 250px; /* Increased width */
+  max-width: 250px; /* Ensure it doesn't grow beyond this */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  padding-bottom: 0.2em !important; /* Increased for taller height */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  padding: 0.3em 1em !important; /* Increased for taller height */
+}
+
+.mat-form-field-outline {
+  height: 36px !important; /* Increased for taller height */
+}
+
+.mat-form-field-flex {
+  align-items: center !important;
+}
+
+.mat-form-field-label {
+  top: 0.3em !important; /* Adjusted label position for taller height */
+}
+
+.mat-form-field-infix {
+  padding: 0.3em 0 !important; /* Increased inner padding for taller height */
+}
+
+.badge-manual {
+  // background: #bfdbc6;
+  color: #ca7864;
+} 

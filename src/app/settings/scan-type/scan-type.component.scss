@@ -135,3 +135,32 @@
   // background: #bfdbc6;
   color: #ca7864;
 }
+
+.filter-box-narrow {
+  width: 200px; /* Adjusted width as per screenshot */
+  max-width: 200px; /* Ensure it doesn\'t grow beyond this */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  padding-bottom: 0.2em !important; /* Adjusted for smaller height */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  padding: 0.3em 1em !important; /* Adjusted for smaller height */
+}
+
+.mat-form-field-outline {
+  height: 36px !important; /* Adjusted for smaller height */
+}
+
+.mat-form-field-flex {
+  align-items: center !important;
+}
+
+.mat-form-field-label {
+  top: 0.3em !important; /* Adjusted label position */
+}
+
+.mat-form-field-infix {
+  padding: 0.3em 0 !important; /* Adjusted inner padding */
+}

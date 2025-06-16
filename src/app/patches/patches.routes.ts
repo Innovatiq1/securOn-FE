@@ -11,9 +11,9 @@ export const PatchesRoutes: Routes = [
         path: 'manual',
         component: ManualPatchComponent,
         data: {
-          title: 'Manual Patch',
+          // title: 'Manual Patch',
           urls: [
-            { title: 'Patches', url: '/patches' },
+            // { title: 'Patches', url: '/patches' },
             // { title: 'Manual Patch' },
           ],
         },
@@ -22,9 +22,9 @@ export const PatchesRoutes: Routes = [
         path: 'auto',
         component: AutomaticPatchComponent,
         data: {
-          title: 'Auto Patch',
+          // title: 'Auto Patch',
           urls: [
-            { title: 'Patches', url: '/patches' },
+            // { title: 'Patches', url: '/patches' },
             // { title: 'Auto Patch' },
           ],
         },
@@ -33,9 +33,9 @@ export const PatchesRoutes: Routes = [
         path: 'approval',
         component: ApprovalComponent,
         data: {
-          title: 'Approval',
+          // title: 'Approval',
           urls: [
-            { title: 'Patches', url: '/patches' },
+            // { title: 'Patches', url: '/patches' },
             // { title: 'Approval' },
           ],
         },

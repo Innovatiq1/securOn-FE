@@ -1,22 +1,29 @@
 <mat-card>
     <div class="container-fluid">
-        <div class="cardWithShadow">
-          <div class="d-flex align-items-center justify-content-end p-y-16 p-x-24">
-            <!-- <h4>Scan Types</h4> -->
-            <button mat-raised-button color="primary" (click)="onCreate()">
-              <!-- <i-tabler name="plus" class="icon-18 me-2"></i-tabler> -->
-              Create
-            </button>
+        <div class="cardWithimage.pngShadow">
+          <div class="d-flex align-items-center justify-content-between p-y-16 p-x-24">
+            <h3>Scan Type</h3>
+            <div class="d-flex align-items-center">
+              <mat-form-field appearance="outline" class="me-3 filter-box-narrow">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search..." #input>
+              </mat-form-field>
+              <mat-radio-group aria-label="Select a scan type filter" [(ngModel)]="scanTypeFilter" (change)="onScanTypeFilterChange()" class="me-3">
+                <label class="me-2">Filter by:</label>
+                <mat-radio-button value="all" class="me-2">All</mat-radio-button>
+                <mat-radio-button value="manual" class="me-2">Manual</mat-radio-button>
+                <mat-radio-button value="automatic">Automatic</mat-radio-button>
+              </mat-radio-group>
+              <button mat-raised-button color="primary" (click)="onCreate()">
+                Create
+              </button>
+            </div>
           </div>
-              <div class="p-x-24 p-b-24">
+          <div class="p-x-24 p-b-24">
                   <div *ngIf="alertMessage" class="custom-alert {{alertType}}" role="alert">
                     <strong>{{ alertType | titlecase }} – </strong>{{ alertMessage }}
                     <button class="alert-close-btn" (click)="alertMessage = null" aria-label="Close alert">&times;</button>
                   </div>
-                  <mat-form-field appearance="outline" class="w-100 mb-3">
-                    <mat-label>Filter</mat-label>
-                    <input matInput (keyup)="applyFilter($event)" placeholder="Search..." #input>
-                  </mat-form-field>
                   <mat-card-content>
                     <div class="table-responsive">
                         <table mat-table [dataSource]="dataSource" matSort class="w-100">
