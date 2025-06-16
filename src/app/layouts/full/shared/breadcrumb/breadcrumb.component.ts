@@ -38,7 +38,8 @@ export class AppBreadcrumbComponent {
       // tslint:disable-next-line - Disables all
       .subscribe((event) => {
         // tslint:disable-next-line - Disables all
-        this.titleService.setTitle(event['title'] + 'CVE - Tracker™');
+        const pageTitle = event['title'] ? event['title'] + ' ' : '';
+        this.titleService.setTitle(pageTitle + 'CVE - Tracker™');
         this.pageInfo = event;
       });
   }
