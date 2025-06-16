@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, throwError } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
@@ -39,7 +39,11 @@ import { UserService } from '../auth/user.service';
 @Injectable()
 export class VulnerabilitiesService {
   private currentRouteName: string = '';
-  
+  private selectedAssetProject: string[] = [];
+  private selectedAssetVendor: string[] = [];
+  private selectedAssetPartNo: string[] = [];
+  private selectedAssetOsType: string[] = [];
+  private selectedAssetFwVersion: string[] = [];
   private selectedVendorSubject: BehaviorSubject<string[]> =
     new BehaviorSubject<string[]>([]);
   public selectedVendor$: Observable<string[]> =
@@ -66,6 +70,7 @@ public selectedOsType$: Observable<string[]> =
 public selectedVersion$: Observable<string[]> =
   this.selectedVersionSubject.asObservable();
   currentPageIndex$: any;
+  selectedProject: string[];
 
   constructor(private store$: Store, private readonly httpClient: HttpClient,
     private readonly userService: UserService,) {}
@@ -90,6 +95,7 @@ public selectedVersion$: Observable<string[]> =
     return this.selectedVendor$;
   }
 
+  
 
   setSelectedOsType(selectedOsType: string[]): void {
     this.selectedOsTypeSubject.next(selectedOsType);
@@ -108,9 +114,6 @@ public selectedVersion$: Observable<string[]> =
     return this.selectedVersion$;
   }
 
-  setSelectedPartNo(selectedPartNo: string[]): void {
-    this.selectedPartNoSubject.next(selectedPartNo);
-  }
 
   setSelectedProject(selectedProject: string[]): void {
     this.selectedProjectSubject.next(selectedProject);
@@ -119,9 +122,57 @@ public selectedVersion$: Observable<string[]> =
     return this.selectedProject$;
   }
 
+  setSelectedPartNo(selectedPartNo: string[]): void {
+    this.selectedPartNoSubject.next(selectedPartNo);
+  }
+
   getSelectedPartNo(): Observable<string[]> {
     return this.selectedPartNo$;
   }
+
+  //Asset
+
+  setSelectedAssetVendor(vendor: string[]): void {
+    this.selectedAssetVendor = vendor;
+  }
+
+  getSelectedAssetVendor(): string[] {
+    return this.selectedAssetVendor;
+  }
+
+  setSelectedAssetProject(projects: string[]): void {
+    this.selectedAssetProject = projects;
+  }
+
+  
+  getSelectedAssetProject(): string[] {
+    return this.selectedAssetProject;
+  }
+
+  setSelectedAssetPartNo(projects: string[]): void {
+    this.selectedAssetPartNo = projects;
+  }
+
+  getSelectedAssetPartNo(): string[] {
+    return this.selectedAssetPartNo;
+  }
+
+  setSelectedAssetOsType(projects: string[]): void {
+    this.selectedAssetOsType = projects;
+  }
+
+  getSelectedAssetOsType(): string[] {
+    return this.selectedAssetOsType;
+  }
+
+  setSelectedAssetFwVersion(projects: string[]): void {
+    this.selectedAssetFwVersion = projects;
+  }
+
+  getSelectedAssetFwVesrion(): string[] {
+    return this.selectedAssetFwVersion;
+  }
+
 
   public getAllVulnerabilities(): Observable<any[]> {
     return this.store$.select(getAllVulnerabilities);
@@ -184,6 +235,7 @@ public selectedVersion$: Observable<string[]> =
   }
 
   public deleteAssets(assets: any[]): void {
+    // console.log("hello ",assets)
     this.store$.dispatch(deleteAssets({ assets }));
   }
 
@@ -241,17 +293,180 @@ public selectedVersion$: Observable<string[]> =
     const url = `${environment.baseUrl}/getCveDataByProject`;
     return this.httpClient.post(url, body);
   }
-  
+  public getCveDataCountByProject(body: any): Observable<any> {
+    const url = `${environment.baseUrl}/getCveDataCountByProject`;
+    return this.httpClient.post(url, body);
+  }
+  // public getCveDataByCriticality(body: any): Observable<any> {
+  //   const url = `${environment.baseUrl}/getCveDataBySeviarity`;
+  //   return this.httpClient.post(url, body);
+  // }
+
   public getCveDataByCriticality(body: any): Observable<any> {
     const url = `${environment.baseUrl}/getCveDataBySeviarity`;
-    return this.httpClient.post(url, body);
+    return this.httpClient.post(url,body);
   }
 
   public getCveDataFromAssets(body: any): Observable<any> {
     const url = `${environment.baseUrl}/fetchcves`;
     return this.httpClient.post(url, body);
   }
+  public getCveCountByWeakness(body: any): Observable<any> {
+    const url = `${environment.baseUrl}/getCveCountByWeakness`;
+    return this.httpClient.post(url, body);
+  }
 
+  public getCveRecordsByWeaknessAndDate(body: any): Observable<any> {
+    const url = `${environment.baseUrl}/getCveRecordsByWeaknessAndDate`;
+    return this.httpClient.post(url, body);
+  }
+
+
+
+ 
+  deleteAsset(requestData: any): Observable<any> {
+    const url = environment.baseUrl + '/deleteAssets';
+    return this.httpClient
+      .post<any>(url, requestData, { headers: this.userService.getRequestHeaders().headers })
+      .pipe(
+        map((response) => response),
+        catchError((error: any) => {
+          console.error('Error deleting asset:', error);
+          return throwError(() => new Error('Failed to delete the asset.'));
+        })
+      );
+}
+
+public getVenderProductForGraphs(req: any): Observable<any> {
+  const body = {
+    seviarity:req.seviarity,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getVenderProductForGraphs`;
+  return this.httpClient.post(url, body);
+}
+
+public getVenderProductCves(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getVenderProductCves`;
+  return this.httpClient.post(url, body);
+}
+
+public getNewUpdatedCves(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getNewUpdatedCves`;
+  return this.httpClient.post(url, body);
+}
+// public getFilteredCves(req: any): Observable<any> {
+//   const body = {
+//     formCvssScore:req.formCvssScore,
+//     toCvssScore:req.toCvssScore,
+//     fromDate: req.fromDate,
+//     toDate: req.toDate,
+//   };
+
+//   const url = `${environment.baseUrl}/getFilteredCves`;
+//   return this.httpClient.post(url, body);
+// }
+public getFilteredCves(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getFilteredCves`;
+  return this.httpClient.post(url, body);
+}
+
+public getTopAffectedProducts(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  const url = `${environment.baseUrl}/getTopAffectedProducts`;
+  return this.httpClient.post(url, body);
+}
+
+public getAffectedProducts(req: any): Observable<any> {
+  const body = {
+    vendor:req.vendor,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  // getAssetsByBrand
+  const url = `${environment.baseUrl}/getAssetsByBrand`;
+  return this.httpClient.post(url, body);
+}
+
+public getAssetsByType(req: any): Observable<any> {
+  const body = {
+    type:req.type,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  // getAssetsByBrand
+  const url = `${environment.baseUrl}/getAssetsByTypeAndDate`;
+  return this.httpClient.post(url, body);
+}
+
+public getAssetsByBrandName(req: any): Observable<any> {
+  const body = {
+    vendor:req.type,
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+  // getAssetsByBrand
+  const url = `${environment.baseUrl}/getAssetsByBrandName`;
+  return this.httpClient.post(url, body);
+}
+public getNistSynchronizationLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getNistLogs`;
+  return this.httpClient.post(url, body);
+}
+
+public getSystemSynLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getSystemLogs`;
+  return this.httpClient.post(url, body);
+}
+  
+public getSchedulerLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getSchedulerLogs`;
+  return this.httpClient.post(url, body);
+}
+public getUserActivityLogs(req: any): Observable<any> {
+  const body = {
+    fromDate: req.fromDate,
+    toDate: req.toDate,
+  };
+
+  const url = `${environment.baseUrl}/getUserActivityLogs`;
+  return this.httpClient.post(url, body);
+}
   public loadVulnerabilitiesByDateRange(req: any): Observable<any> {
     const body = {
       fromDate: req.fromDate,
@@ -263,13 +478,19 @@ public selectedVersion$: Observable<string[]> =
     const url = `${environment.baseUrl}/getCircularDashboardData`;
     return this.httpClient.post(url, body);
   }
+  getAllVendors(): Observable<{ success: boolean; data: string[] }> {
+    return this.httpClient.get<{ success: boolean; data: string[] }>(`${environment.baseUrl}/getAllVendors`);
+  }
+  // getAllVendors(): Observable<any[]> {
+  //   return this.httpClient.get<any[]>(`${environment.baseUrl}/getAllVendors`);
+  // }
 
   loadVulnerabilityTrendData(requestData: any): Observable<any> {
     const url = environment.baseUrl + '/getVulnarabilityTrendData';
     // const body = { year: requestData.year, allData: requestData.allData };
     const body = {
-      startDate: requestData.startDate,
-      endDate: requestData.endDate,
+      startDate: requestData.fromDate,
+      endDate: requestData.toDate,
       allData: requestData.allData,
     };
     return this.httpClient.post<any>(url, body);

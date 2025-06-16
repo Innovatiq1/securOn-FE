@@ -4,7 +4,7 @@
 </mat-card-header>
   <mat-card-content class="b-t-1">
     <div *ngIf="byCriticality">
-      <apx-chart
+      <apx-chart *ngIf="trafficChart?.series && trafficChart?.series.length > 0 "
         [series]="trafficChart.series"
         [plotOptions]="trafficChart.plotOptions"
         [dataLabels]="trafficChart.dataLabels"
@@ -22,7 +22,7 @@
 
       <div class="m-l-16">
         <h5 class="mat-body-2 f-w-600 m-t-4">
-         Total: {{byCriticality?.totalCount || 0}}
+         Total: {{totalCount}}
         </h5>
       </div>
     </div>

@@ -1,0 +1,136 @@
+
+
+
+<mat-card class="cardWithShadow">
+    <mat-card-content>
+        <div class="d-flex justify-content-between">
+            <mat-form-field appearance="outline" class="w-50 hide-hint">
+                <input matInput placeholder="Search By CVE ID..." [formControl]="searchControl" />
+                <mat-icon matSuffix>
+                    <i-tabler name="search" class="icon-20"></i-tabler>
+                </mat-icon>
+            </mat-form-field>
+            <div class="spacing-container">
+              <span class="fs"> Total Vulnerability: {{ _filteredVulnerabilities.data.length }}</span>
+            
+              <div class="inner-spacing">
+                <span class="import-label">Export as</span>
+                <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" (click)="exportToExcel()"/>
+                <button mat-raised-button color="warn" (click)="back()">Back</button>
+              </div>
+            </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+        <ng-container *ngFor="let data of _filteredVulnerabilities.connect() | async">
+    <mat-card class="cardWithShadow m-t-5" >
+  <mat-card-content class="mt-5">
+    <div class="row">
+      <div class="col-8" (click)="view(data?.cveId)">
+        <h3 class="text-primary" style="cursor: pointer;font-weight: 600;">{{ data?.cveId }}</h3>
+        <p
+          class="f-s-13 "
+        >
+          {{ data?.cveDetails?.cve.descriptions[0]?.value }}
+          
+        </p>
+      </div>
+      <div class="col-4">
+        <div class="row">
+            <div class="col-10">
+              <div class="row align-items-center">
+                <div class="col-6">
+                  <h4 class="f-w-700">Severity</h4>
+                </div>
+                <div class="col-6">
+                  <div
+                    [ngClass]="{
+                      'low': data?.seviarity === 'LOW',
+                      'medium': data?.seviarity === 'MEDIUM',
+                      'high': data?.seviarity === 'HIGH',
+                      'critical': data?.seviarity === 'CRITICAL'
+                    }"
+                    class="severity-badge"
+                  >
+                    {{ data?.seviarity }}
+                  </div>
+                </div>
+          
+                <div class="col-6">
+                  <h4 class="f-w-700">Published123</h4>
+                </div>
+                <div class="col-6">
+                  <span class="f-s-15 f-w-700">
+                    {{ data?.cveDetails?.cve?.published | date: 'YYYY-MM-dd' }}
+                  </span>
+                </div>
+          
+                <div class="col-6">
+                  <h4 class="f-w-700">Brand</h4>
+                </div>
+                <div class="col-6">
+                  <span class="f-s-15 f-w-700">
+                    {{ data?.vendorName }}
+                  </span>
+                </div>
+          
+                <div class="col-6" *ngIF="data?.type">
+                  <h4 class="f-w-700">Asset Type</h4>
+                </div>
+                <div class="col-6 value-container" *ngIF="data?.type">
+                  {{ data?.type ? data?.type : '-' }}
+                </div>
+          
+                <div class="col-6">
+                  <h4 class="f-w-700">Part No</h4>
+                </div>
+                <div class="col-6 value-container">
+                  {{ data?.partNo }}
+                </div>
+          
+                <div class="col-6">
+                  <h4 class="f-w-700">Project ID</h4>
+                </div>
+                <div class="col-6 value-container">
+                  {{ data?.project }}
+                </div>
+          
+                <div class="col-6">
+                  <h4 class="f-w-700">Firmware Version</h4>
+                </div>
+                <div class="col-6 value-container">
+                  {{ data?.version }}
+                </div>
+          
+                <div class="col-6">
+                  <h4 class="f-w-700">Serial No</h4>
+                </div>
+                <div class="col-6 value-container">
+                  {{ data?.serialNo }}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+      </div>
+    </div>
+  </mat-card-content>
+ 
+</mat-card>
+
+</ng-container>
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20, 50, 100]"
+  [pageSize]="savedPageSize || 10"
+  showFirstLastButtons
+></mat-paginator>
+
+    
+    <div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">
+      <mat-spinner></mat-spinner>
+      <div *ngIf="vulnerabilityDataService._showLargeRecordsMessage" class="large-records-message">
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;A large number of records is being fetched. Please wait...
+      </div>
+    </div>
+

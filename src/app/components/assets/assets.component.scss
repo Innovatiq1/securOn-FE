@@ -1,14 +1,14 @@
 .browse {
-    float: right;
-    // left: auto;
-    align-self: center;
-    display: flex;
-    align-items: center;
+    // float: right;
+    // // left: auto;
+    // align-self: center;
+    // display: flex;
+    // align-items: center;
 
 
     input[type="file"]::file-selector-button {
         border: 2px solid #00a9ce;
-        background-color: #FFF;
+        background: none;
         border-radius: 5px;
         height: 32px;
         font-size: 14px;
@@ -17,10 +17,25 @@
         font-style: normal;
         line-height: 18px;
         letter-spacing: normal;
-        color: #00a9ce;
+        margin-left: 10px;
+        color: #fff;
 
         &:hover {
             cursor: pointer;
         }
     }
 }
+.import-label {
+    font-size: 16px;
+    color: #fffdfd;
+    // vertical-align: middle; 
+  }
+  
+  .mt-5 {
+    margin-top: 10px;
+  }
+
+  .float-right {
+    margin-right: 10px;
+  }
+  

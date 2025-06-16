@@ -30,9 +30,49 @@ export const navItems: NavItem[] = [
   },
   {
     displayName: 'Administration',
-    iconName: 'point',
+    iconName: 'shield-lock',
     bgcolor: 'success',
     route: 'cve/admin',
+  },
+  {
+    displayName: 'Settings',
+    iconName: 'settings',
+    bgcolor: 'primary',
+    route: 'settings',
+    children: [
+      {
+        displayName: 'Scan Type',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: 'settings/scan-type',
+      }
+    ]
+  },
+  {
+    displayName: 'Patches',
+    iconName: 'package',
+    bgcolor: 'accent',
+    route: 'patches',
+    children: [
+      {
+        displayName: 'Manual Patch',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: 'patches/manual',
+      },
+      {
+        displayName: 'Auto Patch',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: 'patches/auto',
+      },
+      {
+        displayName: 'Approval',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: 'patches/approval',
+      }
+    ]
   },
   // {
   //   navCap: 'Apps',

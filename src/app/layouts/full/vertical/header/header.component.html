@@ -43,18 +43,15 @@
     <div class="d-flex align-items-center gap-2">
       <button mat-stroked-button class="d-none d-lg-flex " >
         <div class="d-flex align-items-center gap-2">
-          <p>Refine with..</p>
+          <p class="pt-2">Refine with..</p>
           <div>
-              <input type="text" placeholder="Date Range" class=" border rounded-3" bsDaterangepicker [(ngModel)]="_selectedRange.value"
+              <input type="text" placeholder="Date Range" class="rounded-3" style="background: none; color: white; border: none;" bsDaterangepicker [(ngModel)]="_selectedRange.value"
                   [bsConfig]="{ ranges: ranges,  rangeInputFormat : 'DD-MM-YYYY', dateInputFormat: 'DD-MM-YYYY' }"  (ngModelChange)="onDateRangeChange($event)"/>
     
           </div>
-    
       </div>
       </button>
-
     </div>
-
 </div>
 
 
@@ -71,7 +68,7 @@
       <div class="m-l-16 text-left d-none d-lg-flex">
         <div>
           <h5 class="f-s-16">{{user | titlecase}}</h5>
-          <span class="f-s-14 mat-body-1">Admin</span>
+          <!-- <span class="f-s-14 mat-body-1">Admin</span> -->
         </div>
       </div>
     </div>
@@ -82,7 +79,7 @@
       
 
       <div class="p-y-12 p-x-32">
-        <button [routerLink]="['/authentication/login']" mat-flat-button color="primary" class="w-100">
+        <button (click)="logout()" mat-flat-button color="primary" class="w-100">
           Logout
         </button>
       </div>

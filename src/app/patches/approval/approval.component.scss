@@ -1,0 +1,70 @@
+.card {
+    margin: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .card-header {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .table-responsive {
+    margin-top: 1rem;
+  }
+  
+  .mat-mdc-table {
+    width: 100%;
+    background: white;
+  }
+  
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.87);
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .mat-column-actions {
+    width: 120px;
+    text-align: center;
+  }
+  
+  .mat-column-id {
+    width: 80px;
+  }
+  
+  // Dark theme support
+  :host-context(.dark-theme) {
+    .card {
+      background-color: #2a2a2a;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+  
+    .card-header {
+      background-color: #333;
+      border-bottom-color: #444;
+    }
+  
+    .mat-mdc-table {
+      background: #2a2a2a;
+    }
+  
+    .mat-mdc-header-cell {
+      color: #fff;
+    }
+  
+    .mat-mdc-row:hover {
+      background-color: #333;
+    }
+  }
+  .mat-mdc-table {
+      background: transparent !important;
+    }

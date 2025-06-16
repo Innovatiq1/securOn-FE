@@ -1,7 +1,7 @@
 <div class="auth-container">
   <div class="auth-main">
     <div class="auth-form-section">
-      <div class="row form-section">
+      <div class="form-section">
         <div *ngIf="!forgot" class="auth-body">
           <div class="d-flex align-items-start align-items-lg-center justify-content-center">
             <div class="row justify-content-center w-100">
@@ -35,11 +35,13 @@
                     <mat-error>Please enter password. </mat-error>
                   </mat-form-field>
 
-                  <mat-hint *ngIf="_showError"><span class="text-error">Invalid Login Details</span></mat-hint>
+                  <mat-hint *ngIf="_showError" class="error-message">
+                    <span class="text-error">{{ errorMessage }}</span>
+                  </mat-hint>
                   <div class="remember align-items-center mb-5">
                     <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input mx-2" type="checkbox" value="" autocomplete="new-password" />
+                        <input class="form-check-input mx-2" type="checkbox" value="" autocomplete="new-password"    formControlName="rememberMe"/>
                         <span class="txt1">Remember me</span>
                         <span class="form-check-sign">
                           <span class="check"></span>
@@ -61,7 +63,7 @@
           <h2 class="welcome-msg">Welcome to CVE Tracker</h2>
           <p class="auth-signup-text">
             Already have an account?
-            <a (click)="signIn()" class="sign-up-link">Sign In</a>
+            <a (click)="signIn()" style="cursor: pointer;" class="sign-up-link">Sign In</a>
           </p>
           <h2 class="login-title">Reset Password</h2>
 

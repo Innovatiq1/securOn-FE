@@ -1,64 +1,59 @@
-<mat-card class="cardWithShadow">
-    <mat-card-content class="p-24">
-        <div style="margin: 15px;">
-            <span class="f-s-20 f-w-700">
-                Search CVE's
-            </span>
-            <span class="search">
-                Dashboard
-            </span>
-            <span class="-copy">
-                /
-            </span>
-            <span class="search">
-                Search
-            </span>
-            <span class="-copy">
-                /
-            </span>
-            <span class="mx-2 f-s-13">
-                CVE - ID View
-            </span>
 
-        </div>
-        <div class="text-center pt-4 f-s-20 f-w-700">
-            <h5>View CVE Details</h5>
-            <hr>
-        </div>
         <mat-card class="cardWithShadow">
-            <mat-card-content class="p-24">
-                <div style="float: right;">
-                    <button mat-raised-button color="warn">Back</button>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-center flex-grow-1">
+                  <h2>View CVE Details</h2>
                 </div>
+                <div class="ms-auto" style="padding-right: 20px;">
+                  <button mat-raised-button color="warn" [routerLink]="['/cve/search']">Back</button>
+                </div>
+              </div>
+             
+            <mat-card-content class="p-24">
+                <hr> 
 
                 <div>
-                    <h5 class="f-s-20 f-w-700">Vulnerability Details: <span class="text-primary" style="font-style: italic;" >CVE-2024-45710</span></h5>
-                    <h6 class="f-s-16 f-w-700">Published: <span class="f-s-13" style="font-weight: lighter;">2024-10-16T08:15:06.387</span></h6>
-                    <h6 class="f-s-16 f-w-700">Updated: <span class="f-s-13" style="font-weight: lighter;">2024-10-17T20:18:04.277</span></h6>
-                    <h6 class="f-s-16 f-w-700">Source: <span class="f-s-13" style="font-weight: lighter;">psirtsolarwinds.com</span></h6>
-                    <h6 class="f-s-16 f-w-700">Description: <span class="f-s-13" style="font-weight: lighter;">SolarWinds Platform is susceptible to an Uncontrolled Search Path Element Local Privilege Escalation vulnerability. This requires a low privilege account and local access to the affected node machine.</span></h6>
+                    <h5 class="f-s-20 f-w-700">Vulnerability Details: <span class="highlight-text" style="font-style: italic;" >{{details[0]?.cve?.id }}</span></h5>
+                    <h6 class="f-s-16 f-w-700">Published: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.published}}</span></h6>
+                    <h6 class="f-s-16 f-w-700">Updated: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.lastModified}}</span></h6>
+                    <h6 class="f-s-16 f-w-700">Source: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.sourceIdentifier}}</span></h6>
+                    <h6 class="f-s-16 f-w-700">Description: <span class="f-s-13" style="font-weight: lighter;">{{details[0]?.cve?.descriptions[0]?.value}}</span></h6>
 
                 </div>
-                <h4 class="f-s-20 f-w-700">CVSS scores for <span>CVE-2024-45710</span></h4>
+                <h4 class="f-s-20 f-w-700">CVSS scores for <span>{{details[0]?.cve?.id}}</span></h4>
                 <div class="row mt-4">
-                    <div class="col-4">
-                        <h6 class="f-s-14 f-w-700">Base Score:
-                            <span style="background-color: #e92040;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
-                              7.8
-                            </span>
-                        </h6>
-                    </div>
+                  <div class="col-4">
+                    <h6 class="f-s-14 f-w-700">Base Score:
+                      <span style="background-color: #e92040;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
+                        {{
+                          details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.cvssData?.baseScore ??
+                          details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.cvssData?.baseScore ??
+                          'N/A'
+                        }}
+                      </span>
+                    </h6>
+                  </div>
                     <div class="col-4">
                         <h6 class="f-s-14 f-w-700">Exploitability Score:
                             <span style="background-color: #2773ae;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
-                              1.8
+                                
+                                {{
+                                  details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.exploitabilityScore ??
+                                  details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.exploitabilityScore ??
+                                  'N/A'
+                                }}
                             </span>
                         </h6>
                     </div>
                     <div class="col-4">
                         <h6 class="f-s-14 f-w-700">Impact Score:
                             <span style="background-color: #378562;color: white;padding: 10px;border-radius: 8px; margin-left: 10px;">
-                              5.9
+                                 
+                                {{
+                                  details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.impactScore ??
+                                  details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.impactScore ??
+                                  'N/A'
+                                }}  
                             </span>
                         </h6>
                     </div>
@@ -66,22 +61,44 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <h6 class="f-s-14 f-w-700">Base Severity: N/A
+                        <h6 class="f-s-14 f-w-700">Base Severity: 
+                          {{
+                            details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.baseSeverity ??
+                            details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.baseSeverity ??
+                            'N/A'
+                          }}
                         </h6>
                     </div>
                     <div class="col-4">
-                        <h6 class="f-s-14 f-w-700">Source: nvdnist.gov
+                        <h6 class="f-s-14 f-w-700">Source: 
+                          {{
+                            details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.source ??
+                            details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.source ??
+                            'N/A'
+                          }}
                         </h6>
                     </div>
                 </div>
                 
                 <div>
-                    <h6 class="f-s-14 f-w-700">CVSS Vector: CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H
+                    <h6 class="f-s-14 f-w-700">CVSS Vector: 
+                      {{
+                        details[0]?.cve?.metrics?.cvssMetricV31?.[0]?.cvssData?.vectorString ??
+                        details[0]?.cve?.metrics?.cvssMetricV2?.[0]?.cvssData?.vectorString ??
+                        'N/A'
+                      }}
                     </h6>
                 </div>
-                <h4 class="f-s-20 f-w-700">CVSS References for <span>CVE-2024-45710</span></h4>
-                <a class="text-primary" href="https://www.solarwinds.com/trust-center/security-advisories/CVE-2024-45710" target="_blank">SolarWinds CVE-2024-45710</a>
+                <h4 class="f-s-20 f-w-700">CVSS References for <span> {{details[0]?.cve?.id}}</span></h4>
+                <table>
+                    <tbody>
+                      <tr *ngFor="let reference of details[0]?.cve?.references">
+                        <td>
+                          <a class="highlight-text"  href="{{reference?.url }}" target="_blank">{{reference?.url || 'N/A'}}</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                <!-- <a class="text-primary" href="{{reference?.url }}" target="_blank">{{reference?.url || 'N/A'}}</a> -->
                 </mat-card-content>
                 </mat-card>
-    </mat-card-content>
-</mat-card>

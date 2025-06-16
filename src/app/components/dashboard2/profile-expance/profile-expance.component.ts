@@ -20,7 +20,7 @@ import { MaterialModule } from '../../../material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { ChartOptions } from 'src/app/pages/charts/area/area.component';
 import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { CommonModule } from '@angular/common';
 
 export interface revenuetwoChart {
@@ -57,7 +57,6 @@ export class AppProfileExpanceCpmponent {
   ngOnInit() {
     this.vulnerabilityDataService.vulnerabilitiesTrendsData$.subscribe((data) => {
       this.trendsData = data;
-      console.log( this.trendsData ,"trends")
       if (this.trendsData) {
         this.trends();  
       }
@@ -66,7 +65,7 @@ export class AppProfileExpanceCpmponent {
   public getNoDataChartOptions(){
     return {
       title: {
-        text: 'No Data Available',
+        text: 'No Data Found',
       },
       credits: {
         enabled: false,
@@ -172,8 +171,8 @@ export class AppProfileExpanceCpmponent {
           },
         },
         min: 0,
-        max: 10000,
-        tickAmount: 4,
+        max: 20000,
+        tickAmount: 5,
       },
       tooltip: {
         theme: 'dark',

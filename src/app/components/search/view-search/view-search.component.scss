@@ -2,7 +2,7 @@
     margin-left: 10px;
     width: 6px;
     height: 17px;
-    color: #e30613;
+    color: rgb(255, 255, 255);
   
   }
   
@@ -11,3 +11,13 @@
     font-weight: 600;
     height: 17px;
   }
+
+  .highlight-text {
+    color: yellow;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.ml{
+  margin-left: 5px;
+}

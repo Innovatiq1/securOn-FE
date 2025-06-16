@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import 'node_modules/ngx-toastr/toastr.css';
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -66,3 +66,52 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     top: 0;
     opacity: 0.5;
   }
+
+
+  .mat-loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+  }
+
+  .card-height {
+height: 390px;
+  }
+
+  .image-excel {
+  cursor: pointer; 
+  width: 35px;
+  height: 35PX;
+}
+// .import-label {
+//   font-size: 18px;
+//   color: #fffdfd;
+//   vertical-align: middle; 
+// }
+.import-label {
+  font-size: 18px;
+  color: #fffdfd;
+  margin-right: 5px; /* Adjust spacing */
+  white-space: nowrap; /* Prevents wrapping */
+}
+.apexcharts-series path {
+  cursor: pointer;
+}
+::ng-deep .apexcharts-series path {
+  cursor: pointer;
+}
+
+.handCursor{
+  cursor: pointer;
+}
+.highlight-icon {
+  color: yellow; 
+  font-size: 20px;
+}

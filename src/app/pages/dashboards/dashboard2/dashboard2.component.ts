@@ -16,6 +16,8 @@ import { VulnerabilityByTypeComponent } from "../../../components/dashboard2/vul
 import { VulnerabilityByCvssScoreComponent } from "../../../components/dashboard2/vulnerability-by-cvss-score/vulnerability-by-cvss-score.component";
 import { VulnerabilityLogsComponent } from "../../../components/dashboard2/vulnerability-logs/vulnerability-logs.component";
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
 
 @Component({
   selector: 'app-dashboard2',
@@ -26,11 +28,7 @@ import { CommonModule } from '@angular/common';
     AppProfileExpanceCpmponent,
     AppProductSalesComponent,
     AppTrafficDistributionComponent,
-    AppNewGoalsComponent,
-    AppProfileCardComponent,
-    AppBlogCardComponent,
-    AppTopEmployeesComponent,
-    AppUpcomingSchedulesComponent,
+    MatProgressSpinnerModule,
     TopBrandsComponent,
     VulnerabilityByTypeComponent,
     VulnerabilityByCvssScoreComponent,
@@ -40,7 +38,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './dashboard2.component.html',
 })
 export class AppDashboard2Component {
-  constructor() {}
+  constructor(public vulnerabilityDataService: VulnerabilityDataService) {}
   @Input() isActive = false;
 
 

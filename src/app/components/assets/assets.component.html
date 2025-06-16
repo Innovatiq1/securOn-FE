@@ -1,37 +1,53 @@
 <div class="rounded bg-white p-y-30 p-x-24 m-b-30 overflow-hidden">
     <div class="d-flex align-items-center justify-content-between">
+    
       <form>
         <div class="row">
           <div class="col-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline"  class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Project</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let project of projects">{{project}}</mat-option>
-               
-              </mat-select>
+              <mat-select [(value)]="_selectedPoject" #select="matSelect"  (selectionChange)="_projectChange()" multiple>
+                <mat-form-field ppearance="outline">
+                  <input matInput placeholder="Search Project" [(ngModel)]="projectFilter" (ngModelChange)="filterProjects()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+              <mat-option *ngFor="let project of filteredProjects" [value]="project"
+                >{{project}}</mat-option>
+            </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Brand</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let vendor of vendors">{{vendor}}</mat-option>
+              <mat-select [(value)]="_selectedVendor" #select1="matSelect" (selectionChange)="vendorChange()" multiple>
+                <mat-form-field>
+                  <input matInput placeholder="Search Brand" [(ngModel)]="vendorFilter" (ngModelChange)="filterVendor()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+                <mat-option *ngFor="let vendor of filteredVendor" [value]="vendor"
+                  >{{vendor}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Part No</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let partno of partNo">{{partno}}</mat-option>
+              <mat-select [(value)]="_selectedProduct" #select2="matSelect" (selectionChange)="productChange()" multiple>
+                <mat-form-field>
+                  <input type="text" matInput placeholder="Search Part No" [(ngModel)]="partNoFilter" (ngModelChange)="filterPartNo()" [ngModelOptions]="{standalone: true}" />
+                </mat-form-field>
+                <mat-option *ngFor="let partNo of filteredPartNo" [value]="partNo"
+               >{{partNo}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select OS Type</mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let ostype of ostypes">{{ostype}}</mat-option>
+              <mat-select [(value)]="_selectedOsType" #select3="matSelect" (selectionChange)="_osTypeChange()" multiple>
+                <mat-form-field>
+                  <input matInput placeholder="Search OS Type" [(ngModel)]="osTypeFilter" (ngModelChange)="filterOsType()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+                <mat-option *ngFor="let osType of filteredOsType" [value]="osType"
+                >{{osType}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -40,32 +56,46 @@
           <div class="col-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Select Firmware Version </mat-label>
-              <mat-select multiple>
-                <mat-option *ngFor="let fwVersion of fwVersion">{{fwVersion}}</mat-option>
+              <mat-select [(value)]="_selectedFirmwareVersion" #select4="matSelect" (selectionChange)="_firmwareVersionChange()" multiple>
+                <mat-form-field>
+                  <input matInput placeholder="Search Firmware Version" [(ngModel)]="fwVersionFilter" (ngModelChange)="filterFwVersion()" [ngModelOptions]="{standalone: true}"/>
+                </mat-form-field>
+                <mat-option *ngFor="let fw of filteredFwVersion" [value]="fw"
+                  >{{fw}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-4" style="margin-top: 10px;">
-            <button mat-raised-button color="primary">Reset Filters</button>
-            <button mat-raised-button color="primary" style="margin-left: 10px;" [routerLink]="['/cve/create-asset']">Create</button>
+          <div class="col-4 mt-5 d-flex justify-content-around">
+            <button mat-raised-button color="primary" (click)="resetFilters()" >Reset Filters</button>
+            <button mat-raised-button color="primary" type="button" [routerLink]="['/cve/create-asset']">Create</button>
           </div>
-          <div class="col-3" style="margin-left: 40px;">
-            <div class="browse">
+          <div class="col-5 browse mt-5" >
+            <div class="d-flex align-items-center justify-content-center">
+              <span class="import-label" >Import as</span>
               <a href="/assets/Inventory List-Oceanshield.xlsx" target="_blank">
                 <img src="/assets/images/svgs/icons8-excel-48.png" alt="img" class="image-excel" title="Sample format" />
               </a>
-              <input class="browse__file" value="Upload Assets" type="file" />
+              <input class="browse" value="Upload Assets" type="file" (change)="uploadFile($event)"/>
             </div>
           </div>
+          <!-- <div class="content-view__toolbar"> -->
+          
+          <!-- </div> -->
         </div>
       </form>
     </div>
   </div>
  
   <mat-card class="cardWithShadow">
+    <div  class="mt-5 d-flex justify-content-end" >
+      <div class="content-view__toolbar-delete float-right">
+        <button *ngIf="_selectedCount >= 2" mat-raised-button color="warn"
+          (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
+      </div>
+    </div>
     <mat-card-content class="p-24">
       <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" class="w-100">
+        <table mat-table [dataSource]="currentPageItems" class="w-100">
           <ng-container matColumnDef="#">
             <th mat-header-cell *matHeaderCellDef>
               <mat-checkbox color="primary">
@@ -73,6 +103,20 @@
             </th>
             <td mat-cell *matCellDef="let row">
               <mat-checkbox color="primary">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="select" >
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? toggleAllRows() : null" color="primary"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+             <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? onRowSelection(row) : null"
+                color="primary" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
               </mat-checkbox>
             </td>
           </ng-container>
@@ -114,7 +158,7 @@
               Product Descritpion
             </th>
             <td mat-cell *matCellDef="let element" class="f-s-14">
-              {{ element.productDesc }}
+              {{ element.product }}
             </td>
           </ng-container>
   
@@ -146,8 +190,10 @@
             <th mat-header-cell *matHeaderCellDef class="f-s-14 f-w-600">
               Total No of Vulnerabilities
             </th>
-            <td mat-cell *matCellDef="let element" class="f-s-14">
-              {{ element.vulnerabilities }}
+            <td mat-cell *matCellDef="let element" class="f-s-14  handCursor">
+              <a (click)="_showVulnerabilities(element)">
+                {{element.vulnerabilitiesCount
+                }} </a>
             </td>
           </ng-container>
   
@@ -157,8 +203,8 @@
             </th>
             <td mat-cell *matCellDef="let element" class="action-link">
               <a class="m-r-10 cursor-pointer" (click)="openDialog('Update', element)"><i-tabler name="edit" class="icon-18"></i-tabler></a>
-              <a class="m-r-10 cursor-pointer">
-                <i-tabler name="trash" class="icon-18"></i-tabler>
+              <a class="m-r-10 cursor-pointer" >
+                <i-tabler name="trash" class="icon-18" (click)="showConfirmation(deleteConfirm, element)"></i-tabler>
               </a>
             </td>
           </ng-container>
@@ -166,7 +212,51 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+        <mat-paginator (page)="_onPageChange($event)" [pageSize]="pageSize" [pageIndex]="currentPageIndex"
+        [disabled]="disablePaginator" [length]="totalItemCount" [pageSizeOptions]="[10, 20, 50]"
+        aria-label="Select page"  [showFirstLastButtons]="true">
+      </mat-paginator>
       </div>
     </mat-card-content>
+    <div *ngIf="vulnerabilityDataService.loading$ | async" class="mat-loader-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
   </mat-card>
+
+  <!-- <div class="content-view__toolbar">
+    <div class="content-view__toolbar-delete">
+      <button *ngIf="_selectedCount > 1" mat-raised-button color="warn"
+        (click)="showConfirmation(deleteMultipleConfirm)">Delete</button>
+    </div>
+
+  </div> -->
+
+
+  <ng-template #deleteConfirm>
+    <div>
+      <h1 mat-dialog-title>Delete Asset</h1>
+      <div mat-dialog-content>
+        <span class="delete-asset__confirm">Are you sure, you want to delete asset?</span><br />
+        <span class="delete-asset__text">{{_assetToDelete?.vendor}}</span><br />
+        <span class="delete-asset__text">{{_assetToDelete?.partNo}}</span>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button mat-dialog-close color="warn">Cancel</button>
+        <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="deleteAsset()">Confirm</button>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #deleteMultipleConfirm>
+    <div>
+      <h1 mat-dialog-title>Delete Assets</h1>
+      <div mat-dialog-content>
+        <span class="delete-asset__confirm">This operation will delete mutiple assets.</span>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button mat-dialog-close color="warn">Cancel</button>
+        <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="deleteAsset(true)">Confirm</button>
+      </div>
+    </div>
+  </ng-template>

@@ -1,40 +1,52 @@
 <div class="row">
     <div class="col-lg-6">
-        <mat-card class="cardWithShadow">
-            <h4 class="m-l-20" style="text-decoration: underline;">Scheduler logs</h4>
-            <div class=" m-l-12 f-s-16 m-t-2 text-primary">
-                <span class="browser">165 1</span>
-                <span class="text-primary">&nbsp;2024-10-11T22:14:15.003Z</span>
-                <span class="f-w-700 text-error">&nbsp;Chrome</span><br>
-                <span class="text-warning">&nbsp;Asset Product cve Mapping Scheduler 1201 ID01 &nbsp;</span>
-                <h5 class="f-w-600 text-white">&nbsp;Scheduler started</h5>
+        <mat-card class="cardWithShadow" style="overflow: auto; height: 190px;">
+            <mat-card-header style="padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <mat-card-title>Scheduler logs</mat-card-title>
+                <div style="display: flex; gap: 10px;">
+                    <span class="import-label" style="margin-right: 6px;margin-top: 8px;">Export as</span>
+                    <img src="/assets/images/svgs/icons8-excel-48.png" (click)="schedulerExcel()" alt="img" class="image-excel" style="height: 45px;"/>
+                    <!-- <img src="/assets/images/svgs/csv.png" alt="img" (click)="schedulerCSV()" class="image-csv" style="height: 40px; margin-top: 3px;"/> -->
+                </div>
+            </mat-card-header>
+            <mat-card-content class="b-t-1 mt-2" style="overflow: auto;">
+                <div *ngIf="!schedulerLogsData?.length" class="m-l-12 f-s-16 mt-2 text-danger">
+                    <h4 class="f-w-700 text-center">No data found</h4>
+                </div>
+            <!-- <h4 class="m-l-20">Scheduler logs</h4> -->
+            <div *ngFor="let log of schedulerLogsData" class=" m-l-12 f-s-16 m-t-2 text-primary">
+                <span class="text-warning">{{ log?.meta?.priority}} {{log?.meta?.version}}</span>
+                <span class="text-warning">&nbsp;{{ log?.meta?.timestamp |date: 'yyyy-MM-ddTHH:mm:ss.SSS' : 'Asia/Singapore' }}</span>
+                <span class="text-warning">&nbsp;{{ log?.hostname}}</span><br>
+                <span class="text-warning">&nbsp;{{ log?.meta?.appName}} {{ log?.meta?.processId}} {{ log?.meta?.msgId}} &nbsp;</span>
+                <h4 class="f-w-700 text-white">&nbsp;{{ log?.message}}</h4>
             </div>
-            <div class=" m-l-12 f-s-16 m-t-2 text-primary">
-                <span class="browser">165 1</span>
-                <span class="text-primary">&nbsp;2024-10-11T22:14:07.003Z</span>
-                <span class="f-w-700 text-error">&nbsp;Chrome</span><br>
-                <span class="text-warning">&nbsp;CVE 1241 ID40 &nbsp;</span>
-                <h5 class="f-w-600 text-white">&nbsp;Fetched information is correct and scheduled</h5>
-            </div>
+           </mat-card-content>
         </mat-card>
     </div>
     <div class="col-lg-6">
-        <mat-card class="cardWithShadow">
-            <h4 class="m-l-20" style="text-decoration: underline;">Audit logs</h4>
-            <div class="m-l-12 f-s-16 m-t-2 text-primary">
-                <span class="browser">165 1</span>
-                <span class="text-primary">&nbsp;2024-10-11T22:13:55.003Z</span>
-                <span class="f-w-700 text-error">&nbsp;Chrome</span><br>
-                <span class="text-warning">&nbsp;CVE 1243 ID42 &nbsp;</span>
-                <h5 class="f-w-600 text-white">&nbsp;User2 Successfully logged in</h5>
+        <mat-card class="cardWithShadow" style="overflow: auto; height: 190px;">
+            <mat-card-header style="padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <mat-card-title>Audit logs</mat-card-title>
+                <div style="display: flex; gap: 10px;">
+                    <span class="import-label" style="margin-right: 6px;margin-top: 8px;">Export as</span>
+                    <img src="/assets/images/svgs/icons8-excel-48.png" (click)="auditExcel()" alt="img" class="image-excel" style="height: 45px;"/>
+                    <!-- <img src="/assets/images/svgs/csv.png" alt="img" (click)="auditCSV()" class="image-csv" style="height: 40px; margin-top: 3px;"/> -->
+                </div>
+            </mat-card-header>
+            <mat-card-content class="b-t-1 mt-2" style="overflow: auto;">
+                <div *ngIf="!UserActivityLogsData?.length" class="m-l-12 f-s-16 mt-2 text-danger">
+                    <h4 class="f-w-700 text-center">No data found</h4>
+                </div>
+            <!-- <h4 class="m-l-20">Audit logs</h4> -->
+            <div *ngFor="let log of UserActivityLogsData" class="m-l-12 f-s-16 m-t-2 text-primary">
+                <span class="text-warning">{{ log?.meta?.priority}} {{log?.meta?.version}}</span>
+                <span class="text-warning">&nbsp;{{ log?.meta?.timestamp |date: 'yyyy-MM-ddTHH:mm:ss.SSS' : 'Asia/Singapore' }}</span>
+                <span class="text-warning">&nbsp;{{ log?.hostname}}</span><br>
+                <span class="text-warning">&nbsp;{{ log?.meta?.appName}} {{ log?.meta?.processId}} {{ log?.meta?.msgId}} &nbsp;</span>
+                <h4 class="f-w-700 text-white">&nbsp;{{ log?.message}}</h4>
             </div>
-            <div class=" m-l-12 f-s-16 m-t-2 text-primary">
-                <span class="browser">165 1</span>
-                <span class="text-primary">&nbsp;2024-10-11T22:13:43.003Z</span>
-                <span class="f-w-700 text-error">&nbsp;Chrome</span><br>
-                <span class="text-warning">&nbsp;CVE 1236 ID03 &nbsp;</span>
-                <h5 class="f-w-600 text-white">&nbsp;User1 login information is incorrect and failed 3 times</h5>
-            </div>
+            </mat-card-content>
         </mat-card>
     </div>
 </div>

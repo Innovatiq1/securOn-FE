@@ -1,0 +1,32 @@
+h4.f-w-700 {
+    margin-top: 0.5rem; /* Adjust this value as needed */
+  }
+
+
+  .spacing-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px; /* Adjust spacing */
+  }
+  
+  .inner-spacing {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .image-excel {
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  button {
+    margin-left: 10px;
+  }
+
+  .fs 
+      {
+        font-size: 18px; 
+        font-weight: 600;
+      }

@@ -12,14 +12,14 @@ import { navItems } from '../sidebar/sidebar-data';
 import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import * as moment from 'moment';
+import moment from 'moment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +28,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { Observable, Subject, firstValueFrom, of, takeUntil } from 'rxjs';
 import { VulnerabilitiesService } from 'src/app/services/api/vulnerabilities.service';
+import { VulnerabilityDataService } from 'src/app/services/api/shared.service';
+import { MsalService } from '@azure/msal-angular';
+import { AuthService } from 'src/app/pages/authentication/auth.service';
 
 interface notifications {
   id: number;
@@ -127,23 +130,25 @@ export class HeaderComponent {
 
   constructor(
     private vsidenav: CoreService,
-    public dialog: MatDialog,
-    private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,
+    public dialog: MatDialog,   private router: Router,private msalService: MsalService,
+    private translate: TranslateService, private vulnerabilitiesService: VulnerabilitiesService, private cdr: ChangeDetectorRef,private localStorageService: VulnerabilityDataService,
+    private authService: AuthService
   ) {
     translate.setDefaultLang('en');
     
   }
 
 
-
   onDateRangeChange(selectedDateRange: Date[]): void {
     this.selectedDateRange = selectedDateRange;
-    const startDate = moment(selectedDateRange[0]);
-    const endDate = moment(selectedDateRange[1]);
-    if (startDate) localStorage.setItem('startDate', startDate.toString());
-    if (endDate) localStorage.setItem('endDate', endDate.toString());
+    const startDate = moment(selectedDateRange[0]).format('YYYY-MM-DD');
+    const endDate = moment(selectedDateRange[1]).format('YYYY-MM-DD');
+    if (startDate) localStorage.setItem('startDate', startDate);
+    if (endDate) localStorage.setItem('endDate', endDate);
+    
+    if (startDate) this.localStorageService.updateStartDate(startDate);
+    if (endDate) this.localStorageService.updateEndDate(endDate);
   }
-
   ngOnInit(){
     this.user = localStorage.getItem('userName') ?? '';
 
@@ -165,10 +170,20 @@ export class HeaderComponent {
     const dialogRef = this.dialog.open(AppSearchDialogComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
     });
   }
-
+  async logout(): Promise<void> {
+    try {
+      // Disable any UI interactions during logout
+      // Use the AuthService to handle logout properly
+      await this.authService.logout();
+      // The navigation will be handled by the AuthService
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Force a page reload to clear any remaining state
+      window.location.href = '/authentication/login';
+    }
+  }
   profiledd: profiledd[] = [
     {
       id: 1,

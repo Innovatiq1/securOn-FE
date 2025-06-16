@@ -1,0 +1,7 @@
+<div class="score-chip" 
+    [class._critical]="score > 8.9"
+    [class._high]="score > 6.9 && score < 8.9"
+    [class._medium]="score > 3.9 && score < 6.9"
+    [class._low]="score <= 3.9">
+    {{score}}
+</div>
