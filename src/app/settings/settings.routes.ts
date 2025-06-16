@@ -9,9 +9,9 @@ export const SettingsRoutes: Routes = [
         path: 'scan-type',
         component: ScanTypeComponent,
         data: {
-          title: 'Scan Type',
+          // title: 'Scan Type',
           urls: [
-            { title: 'Settings', url: '/settings' },
+            // { title: 'Settings', url: '/settings' },
             // { title: 'Scan Type' },
           ],
         },

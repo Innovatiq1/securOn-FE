@@ -10,6 +10,8 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { ScanTypeCreateDialogComponent } from '../scan-type-create-dialog/scan-type-create-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ScanTypeService } from 'src/app/services/api/scan-type.service';
+import { FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
 
 export interface ScanTypeData {
   id?: number;
@@ -17,7 +19,7 @@ export interface ScanTypeData {
   project: string;
   serialNo: string;
   partNo: string;
-  scanType: string;
+  scanType: boolean;
 }
 
 @Component({
@@ -25,7 +27,7 @@ export interface ScanTypeData {
   templateUrl: './scan-type.component.html',
   styleUrls: ['./scan-type.component.scss'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, TablerIconsModule, MatDialogModule, ScanTypeCreateDialogComponent]
+  imports: [CommonModule, MaterialModule, TablerIconsModule, MatDialogModule, ScanTypeCreateDialogComponent, FormsModule, MatRadioModule]
 })
 export class ScanTypeComponent implements OnInit {
   displayedColumns: string[] = ['select', 'brand', 'project', 'serialNo', 'partNo', 'scanType', 'actions'];
@@ -34,6 +36,9 @@ export class ScanTypeComponent implements OnInit {
 
   alertMessage: string | null = null;
   alertType: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' = 'success';
+
+  scanTypeFilter: string = 'all'; // Default to 'all'
+  private filterValue: string = ''; // To store the text input filter value
 
   showAlert(type: typeof this.alertType, message: string) {
     this.alertType = type;
@@ -58,14 +63,60 @@ export class ScanTypeComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.filterPredicate = this.createFilterPredicate();
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = this.filterValue; // Trigger the custom filter predicate
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  onScanTypeFilterChange() {
+    // console.log('Scan type filter changed to:', this.scanTypeFilter);
+    // Combine text filter and scan type filter to ensure re-evaluation
+    this.dataSource.filter = `${this.filterValue.toLowerCase()}::${this.scanTypeFilter}`;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  private createFilterPredicate() {
+    return (data: ScanTypeData, filter: string): boolean => {
+      // console.log('Filter predicate invoked:', { dataScanType: data.scanType, scanTypeFilter: this.scanTypeFilter, filterString: filter }); // Removed console.log
+
+      const filterParts = filter.split('::');
+      const textFilter = filterParts[0] || '';
+      const scanTypeFilterValue = filterParts[1] || 'all';
+
+      // Step 1: Check if the row matches the selected scan type filter
+      let meetsScanTypeCriteria = false;
+      if (scanTypeFilterValue === 'all') {
+        meetsScanTypeCriteria = true;
+      } else if (scanTypeFilterValue === 'manual') {
+        meetsScanTypeCriteria = data.scanType === false; // manual is false
+      } else if (scanTypeFilterValue === 'automatic') {
+        meetsScanTypeCriteria = data.scanType === true; // automatic is true
+      }
+
+      if (!meetsScanTypeCriteria) {
+        return false; // If it doesn't match the scan type criteria, exclude it immediately
+      }
+
+      // Step 2: If it meets scan type criteria, then apply the text filter
+      const textMatches = (
+        String(data.brand || '').toLowerCase().includes(textFilter) ||
+        String(data.project || '').toLowerCase().includes(textFilter) ||
+        String(data.serialNo || '').toLowerCase().includes(textFilter) ||
+        String(data.partNo || '').toLowerCase().includes(textFilter) ||
+        // Include scanType in text search only if 'All' is selected for radio filter
+        (scanTypeFilterValue === 'all' && String(data.scanType === true ? 'automatic' : 'manual').toLowerCase().includes(textFilter))
+      );
+
+      return textMatches;
+    };
   }
 
   isAllSelected() {
